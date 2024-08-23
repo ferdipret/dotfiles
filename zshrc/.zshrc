@@ -1,9 +1,7 @@
 source ~/.zplug/init.zsh
 
-zplug "zsh-users/zsh-history-substring-search"
-zplug "plugins/git",   from:oh-my-zsh
+# Make sure to use double quotes
 zplug "zsh-users/zsh-syntax-highlighting", defer:2
-zplug "~/.zsh", from:local
 
 # Install plugins if there are plugins that have not been installed
 if ! zplug check --verbose; then
@@ -14,6 +12,7 @@ if ! zplug check --verbose; then
 fi
 
 # Then, source plugins and add commands to $PATH
-zplug load --verbose
+zplug load
 
 eval "$(starship init zsh)"
+eval "$(/home/ferdi/.local/bin/mise activate zsh)"
