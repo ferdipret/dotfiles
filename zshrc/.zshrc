@@ -15,4 +15,4 @@ fi
 zplug load
 
 eval "$(starship init zsh)"
-eval "$(/home/ferdi/.local/bin/mise activate zsh)"
+eval "$($HOME/.local/bin/mise activate zsh)"
