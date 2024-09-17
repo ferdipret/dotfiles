@@ -1,5 +1,13 @@
 source ~/.zplug/init.zsh
 
+if [[ -a ~/.aliases.zsh ]]; then
+  source ~/.aliases.zsh
+
+  if [[ -a ~/.aliases.local.zsh ]]; then
+    source ~/.aliases.local.zsh
+  fi
+fi
+
 # Make sure to use double quotes
 zplug "zsh-users/zsh-syntax-highlighting", defer:2
 
