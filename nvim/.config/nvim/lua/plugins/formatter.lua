@@ -11,6 +11,7 @@ return {
 				typescriptreact = { "prettier" },
 				javascript = { "prettier" },
 				javascriptreact = { "prettier" },
+				markdown = { "prettier" },
 			},
 			format_on_save = {
 				lsp_fallback = true,
