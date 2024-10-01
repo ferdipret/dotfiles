@@ -1,15 +1,12 @@
+local lua_ls_init = require("utils.lsp-server-configs").lua_ls_init
+
 return {
-	{ "hrsh7th/cmp-nvim-lsp", lazy = true},
-	{
-		"williamboman/mason.nvim",
-		build = ":MasonUpdate", -- Automatically updates Mason registry on sync
-		config = true
-	},
+	{ "williamboman/mason.nvim", build = ":MasonUpdate", config = true },
 	{
 		"williamboman/mason-lspconfig.nvim",
 		config = function()
 			require("mason-lspconfig").setup({
-				ensure_installed = { "lua_ls" }, -- Add any LSP servers you want here
+				ensure_installed = { "lua_ls" },
 				automatic_installation = true,
 			})
 		end,
@@ -20,36 +17,34 @@ return {
 			local lspconfig = require("lspconfig")
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-			lspconfig.lua_ls.setup {
+			lspconfig.lua_ls.setup({
 				capabilities = capabilities,
-			}
+				on_init = lua_ls_init,
+				settings = {
+					Lua = {},
+				},
+			})
 
-			lspconfig.vtsls.setup {
+			lspconfig.vtsls.setup({
 				capabilities = capabilities,
-			}
-		end,
-	},
-	{
-		"hrsh7th/nvim-cmp",
-		config = function()
-			local cmp = require("cmp")
-			cmp.setup({
-				mapping = cmp.mapping.preset.insert({
-					['<C-d>'] = cmp.mapping.scroll_docs(-4),
-					['<C-f>'] = cmp.mapping.scroll_docs(4),
-					['<C-Space>'] = cmp.mapping.complete(),
-					['<CR>'] = cmp.mapping.confirm({
-						behavior = cmp.ConfirmBehavior.Replace,
-						select = true,
-					}),
-				}),
-				sources = cmp.config.sources({
-					{ name = "nvim_lsp" },
-					{ name = "buffer" },
-					{ name = "path" },
-				}),
 			})
 		end,
-	}
-}
+		keys = {
+			{ "K", vim.lsp.buf.hover },
+			{ "gd", vim.lsp.buf.definition },
+			{ "<leader>ca", vim.lsp.buf.code_action, desc = "Code Actions" },
+		},
+	},
 
+	-- These are used to configure LuaLS for Neovim editing.
+	{
+		"folke/lazydev.nvim",
+		ft = "lua",
+		opts = {
+			library = {
+				{ path = "luvit-meta/library", words = { "vim%.uv" } },
+			},
+		},
+	},
+	{ "Bilal2453/luvit-meta", lazy = true },
+}

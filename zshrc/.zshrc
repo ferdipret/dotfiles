@@ -1,3 +1,5 @@
+# Set sudo editor
+export SUDO_EDITOR="nvim"
 source ~/.zplug/init.zsh
 
 if [[ -a ~/.aliases.zsh ]]; then
@@ -24,8 +26,10 @@ zplug load
 eval "$(starship init zsh)"
 eval "$($HOME/.local/bin/mise activate zsh)"
 
+
 # pnpm
-export PNPM_HOME="/Users/Ferdinand.Pretorius/Library/pnpm"
+# export PNPM_HOME="/Users/Ferdinand.Pretorius/Library/pnpm"
+export PNPM_HOME="$HOME/.local/share/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;

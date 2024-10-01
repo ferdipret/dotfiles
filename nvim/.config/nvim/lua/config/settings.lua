@@ -30,17 +30,24 @@ local settings = {
 	scrolloff = 8,
 	sidescrolloff = 8,
 	list = true,
+	fillchars = {
+		foldopen = "",
+		foldclose = "",
+		fold = " ",
+		foldsep = " ",
+		diff = "╱",
+		eob = " ",
+	},
+	listchars = {
+		trail = "-",
+		tab = "│ ",
+		extends = "",
+		precedes = "",
+		lead = "•",
+		space = " ",
+	},
 }
-
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
-
-vim.diagnostic.config({
-	virtual_text = false,
-})
 
 for k, v in pairs(settings) do
 	vim.opt[k] = v
 end
-
-vim.cmd([[set iskeyword+=-]])
