@@ -11,3 +11,10 @@ keymap("n", "<C-j>", "<C-w>j", opts)
 keymap("n", "<C-k>", "<C-w>k", opts)
 keymap("n", "<C-l>", "<C-w>l", opts)
 keymap("n", "<esc>", ":nohl<CR>", opts)
+
+-- Floating terminal
+keymap("n", "<C-/>", "<cmd>ToggleTerm<cr>", { desc = "Toggle Term(Root)" })
+keymap("i", "<C-/>", "<cmd>ToggleTerm<cr>", { desc = "Toggle Term(Root)" })
+
+-- Terminal Mappings
+keymap("t", "<C-/>", "<cmd>close<cr>", { desc = "Hide Terminal" })

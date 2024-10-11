@@ -48,6 +48,9 @@ local settings = {
 	},
 }
 
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 for k, v in pairs(settings) do
 	vim.opt[k] = v
 end

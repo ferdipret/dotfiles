@@ -29,8 +29,14 @@ return {
 					end,
 				},
 				window = {
-					completion = cmp.config.window.bordered(),
-					documentation = cmp.config.window.bordered(),
+					completion = cmp.config.window.bordered({
+						border = "none",
+						winhighlight = "Normal:NeoTreeNormal",
+					}),
+					documentation = cmp.config.window.bordered({
+						border = "none",
+						winhighlight = "Normal:NeoTreeNormal",
+					}),
 				},
 				mapping = cmp.mapping.preset.insert({
 					["<C-b>"] = cmp.mapping.scroll_docs(-4),
@@ -51,7 +57,9 @@ return {
 					}),
 
 					["<Tab>"] = cmp.mapping(function(fallback)
-						if luasnip.locally_jumpable(1) then
+						if cmp.visible() then
+							cmp.select_next_item()
+						elseif luasnip.locally_jumpable(1) then
 							luasnip.jump(1)
 						else
 							fallback()
@@ -59,7 +67,9 @@ return {
 					end, { "i", "s" }),
 
 					["<S-Tab>"] = cmp.mapping(function(fallback)
-						if luasnip.locally_jumpable(-1) then
+						if cmp.visible() then
+							cmp.select_prev_item()
+						elseif luasnip.locally_jumpable(-1) then
 							luasnip.jump(-1)
 						else
 							fallback()

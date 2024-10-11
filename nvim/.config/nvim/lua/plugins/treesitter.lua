@@ -20,4 +20,7 @@ return {
 		"windwp/nvim-ts-autotag",
 		opts = {},
 	},
+	{
+		"nvim-treesitter/playground",
+	},
 }
