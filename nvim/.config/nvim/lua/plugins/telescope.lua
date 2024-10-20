@@ -1,3 +1,16 @@
+local b = require("utils.borders").box_drawing_chars
+
+local borderchars = {
+	b.horizontal_top_line,
+	b.vertical_right_line,
+	b.horizontal_bottom_line,
+	b.vertical_left_line,
+	b.top_left_corner,
+	b.top_right_corner,
+	b.bottom_right_corner,
+	b.bottom_left_corner,
+}
+
 return {
 	{
 		"nvim-telescope/telescope.nvim",
@@ -10,6 +23,7 @@ return {
 		config = function()
 			require("telescope").setup({
 				defaults = {
+					borderchars = borderchars,
 					prompt_prefix = "   ",
 					selection_caret = " ",
 					entry_prefix = " ",
@@ -35,7 +49,9 @@ return {
 			require("telescope").setup({
 				extensions = {
 					["ui-select"] = {
-						require("telescope.themes").get_dropdown({}),
+						require("telescope.themes").get_dropdown({
+							borderchars = borderchars,
+						}),
 					},
 				},
 			})

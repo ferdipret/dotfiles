@@ -1,3 +1,5 @@
+local b = require("utils.borders").box_drawing_chars
+
 return {
 	{
 		"lewis6991/gitsigns.nvim",
@@ -76,6 +78,17 @@ return {
 		},
 		config = function()
 			require("telescope").load_extension("lazygit")
+
+			vim.g.lazygit_floating_window_border_chars = {
+				b.top_left_corner,
+				b.horizontal_top_line,
+				b.top_right_corner,
+				b.vertical_right_line,
+				b.bottom_right_corner,
+				b.horizontal_bottom_line,
+				b.bottom_left_corner,
+				b.vertical_left_line,
+			}
 		end,
 	},
 }

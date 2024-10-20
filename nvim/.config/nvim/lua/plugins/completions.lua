@@ -1,3 +1,16 @@
+local b = require("utils.borders").box_drawing_chars
+
+local border = {
+	b.top_left_corner,
+	b.horizontal_top_line,
+	b.top_right_corner,
+	b.vertical_right_line,
+	b.bottom_right_corner,
+	b.horizontal_bottom_line,
+	b.bottom_left_corner,
+	b.vertical_left_line,
+}
+
 return {
 	{
 		"hrsh7th/cmp-nvim-lsp",
@@ -29,28 +42,14 @@ return {
 					end,
 				},
 				window = {
-					completion = cmp.config.window.bordered({
-						"─",
-						"│",
-						"─",
-						"│",
-						"╭",
-						"╮",
-						"╯",
-						"╰",
+					completion = {
+						border = border,
 						winhighlight = "Normal:CatFloat,FloatBorder:CatFloatBorder",
-					}),
-					documentation = cmp.config.window.bordered({
-						"─",
-						"│",
-						"─",
-						"│",
-						"╭",
-						"╮",
-						"╯",
-						"╰",
+					},
+					documentation = {
+						border = border,
 						winhighlight = "Normal:CatFloat,FloatBorder:CatFloatBorder",
-					}),
+					},
 				},
 				mapping = cmp.mapping.preset.insert({
 					["<C-b>"] = cmp.mapping.scroll_docs(-4),

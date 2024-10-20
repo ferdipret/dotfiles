@@ -25,6 +25,11 @@ return {
 				},
 			})
 
+			lspconfig.elixirls.setup({
+				capabilities = capabilities,
+				cmd = { "elixir-ls" },
+			})
+
 			lspconfig.vtsls.setup({
 				capabilities = capabilities,
 			})

@@ -13,6 +13,7 @@ return {
 				javascriptreact = { "prettier" },
 				markdown = { "prettier" },
 				json = { "prettier" },
+				html = { "prettier" },
 			},
 			format_on_save = {
 				lsp_fallback = true,
