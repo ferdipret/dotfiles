@@ -1,8 +1,10 @@
 # BEGIN_KITTY_THEME
-# Tokyo Night
+# Catppuccin-Mocha
 include current-theme.conf
 # END_KITTY_THEME
 #
+
+terminal_escape_time 0
 
 # Audio bell
 enable_audio_bell no
@@ -13,9 +15,8 @@ cursor_blink_interval 0
 # Fonts
 # font_family JetBrainsMono NF
 #
-font_size 14
+font_size 10
 modify_font cell_height 120%
-
 
 # BEGIN_KITTY_FONTS
 font_family      family="JetBrainsMono Nerd Font Mono"
