@@ -46,6 +46,9 @@ local settings = {
 		lead = "•",
 		space = " ",
 	},
+
+	laststatus = 3,
+	splitkeep = "screen",
 }
 
 vim.o.ttimeout = true

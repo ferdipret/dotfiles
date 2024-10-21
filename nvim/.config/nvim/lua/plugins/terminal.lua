@@ -20,10 +20,12 @@ return {
 		version = "*",
 		config = function()
 			require("toggleterm").setup({
+				id = 999,
 				direction = "float",
 				float_opts = {
 					border = border,
 				},
+				hidden = true,
 				size = function(term)
 					if term.direction == "horizontal" then
 						return 15
@@ -37,16 +39,39 @@ return {
 
 			local Terminal = require("toggleterm.terminal").Terminal
 
-			local sidebar_term = Terminal:new({
-				direction = "vertical",
-				hidden = true,
-			})
+			local terminals = {}
 
-			local toggle_sidebar_term = function()
-				sidebar_term:toggle()
+			local function toggle_new_terminal()
+				local new_term = Terminal:new({
+					direction = "vertical",
+					hidden = true,
+				})
+
+				table.insert(terminals, new_term)
+				new_term:toggle()
 			end
 
-			set({ "n", "t" }, "<M-/>", toggle_sidebar_term, opts)
+			local function toggle_all_terminals()
+				if #terminals == 0 then
+					toggle_new_terminal()
+				else
+					for _, term in ipairs(terminals) do
+						term:toggle()
+					end
+				end
+			end
+
+			local function close_last_terminal()
+				if #terminals > 0 then
+					local term_to_close = table.remove(terminals)
+					term_to_close:close()
+				end
+			end
+
+			-- Keybindings
+			set({ "n", "t" }, "<M-n>", toggle_new_terminal, opts)
+			set({ "n", "t" }, "<M-c>", close_last_terminal, opts)
+			set({ "n", "t" }, "<M-/>", toggle_all_terminals, opts)
 		end,
 	},
 }
