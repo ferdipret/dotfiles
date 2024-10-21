@@ -69,9 +69,9 @@ return {
 			end
 
 			-- Keybindings
-			set({ "n", "t" }, "<M-n>", toggle_new_terminal, opts)
-			set({ "n", "t" }, "<M-c>", close_last_terminal, opts)
-			set({ "n", "t" }, "<M-/>", toggle_all_terminals, opts)
+			set({ "n", "t" }, "<Leader>tn", toggle_new_terminal, opts)
+			set({ "n", "t" }, "<Leader>tc", close_last_terminal, opts)
+			set({ "n", "t" }, "<C-/>", toggle_all_terminals, opts)
 		end,
 	},
 }
