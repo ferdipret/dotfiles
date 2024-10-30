@@ -1,6 +1,0 @@
-alias la="ls -al"
-alias v="nvim"
-alias pm="pnpm"
-alias pme="pnpm exec"
-alias ls="eza --icons"
-alias lst="eza --icons --tree -I=node_modules"

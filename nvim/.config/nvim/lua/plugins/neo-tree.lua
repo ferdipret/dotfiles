@@ -36,6 +36,14 @@ return {
 							expander_expanded = "",
 						},
 					},
+
+					filesystem = {
+						filtered_items = {
+							visible = true,
+							hide_hidden = false,
+							hide_dotfiles = false,
+						},
+					},
 				})
 			end
 		end
