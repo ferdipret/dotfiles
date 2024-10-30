@@ -17,21 +17,33 @@ return {
 			local lspconfig = require("lspconfig")
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-			lspconfig.lua_ls.setup({
-				capabilities = capabilities,
-				on_init = lua_ls_init,
-				settings = {
-					Lua = {},
-				},
-			})
+			local function setup_lsp(server_name, custom_config)
+				local default_config = {
+					capabilities = capabilities,
+				}
 
-			lspconfig.elixirls.setup({
-				capabilities = capabilities,
-				cmd = { "elixir-ls" },
-			})
+				local config = vim.tbl_deep_extend("force", default_config, custom_config or {})
 
-			lspconfig.vtsls.setup({
-				capabilities = capabilities,
+				lspconfig[server_name].setup(config)
+			end
+
+			require("mason-lspconfig").setup_handlers({
+				function(server_name)
+					setup_lsp(server_name)
+				end,
+				["lua_ls"] = function()
+					setup_lsp("lua_ls", {
+						on_init = lua_ls_init,
+						settings = {
+							Lua = {},
+						},
+					})
+				end,
+				["elixirls"] = function()
+					setup_lsp("elixirls", {
+						cmd = { "elixir-ls" },
+					})
+				end,
 			})
 		end,
 		keys = {

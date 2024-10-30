@@ -17,8 +17,13 @@ return {
 		branch = "0.1.x",
 		dependencies = { "nvim-lua/plenary.nvim" },
 		keys = {
-			{ "<leader>f", require("telescope.builtin").find_files, {} },
-			{ "<leader>,", require("telescope.builtin").buffers, {} },
+			{ "<leader><leader>", require("telescope.builtin").find_files, desc = "Find Files" },
+			{ "<leader>ff", require("telescope.builtin").find_files, desc = "Find Files" },
+			{ "<leader>fh", require("telescope.builtin").help_tags, desc = "Help Tags" },
+			{ "<leader>fg", require("telescope.builtin").live_grep, desc = "Live Grep" },
+			{ "<leader>/", require("telescope.builtin").live_grep, desc = "Live Grep" },
+			{ "<leader>fb", require("telescope.builtin").buffers, desc = "Buffers" },
+			{ "<leader>,", require("telescope.builtin").buffers, desc = "Buffers" },
 		},
 		config = function()
 			require("telescope").setup({

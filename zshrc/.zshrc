@@ -10,14 +10,20 @@ if [[ -a ~/.aliases.zsh ]]; then
   fi
 fi
 
+if command -v vivaldi >/dev/null 2>&1; then
+  export BROWSER="vivaldi"
+else
+  export BROWSER="firefox"  # Set your fallback browser here
+fi
+
 # Make sure to use double quotes
 zplug "zsh-users/zsh-syntax-highlighting", defer:2
 
 # Install plugins if there are plugins that have not been installed
 if ! zplug check --verbose; then
-    printf "Install? [y/N]: "
-    if read -q; then echo; zplug install
-    fi
+  printf "Install? [y/N]: "
+  if read -q; then echo; zplug install
+  fi
 fi
 
 # Then, source plugins and add commands to $PATH

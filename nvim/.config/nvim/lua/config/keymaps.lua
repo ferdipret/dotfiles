@@ -14,8 +14,5 @@ set("n", "<C-l>", "<C-w>l", opts)
 set("n", "<esc>", ":nohl<CR>", opts)
 
 -- Floating terminal
-set({ "n", "i" }, "<Leader>tf", "<cmd>ToggleTerm<cr>", { desc = "Toggle Term(Root)" })
-
--- Terminal Mappings
-set("t", "<C-/>", "<cmd>close<cr>", { desc = "Hide Terminal" })
+set({ "n" }, "<Leader>tf", "<cmd>ToggleTerm<cr>", { desc = "Toggle Term(Root)" })
 set("t", "<Esc>", [[<C-\><C-n>]], opts)

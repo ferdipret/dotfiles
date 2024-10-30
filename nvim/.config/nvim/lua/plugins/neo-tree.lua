@@ -19,13 +19,25 @@ return {
 	init = function()
 		if vim.fn.argc(-1) == 1 then
 			local stat = vim.loop.fs_stat(vim.fn.argv(0))
+
 			if stat and stat.type == "directory" then
 				require("neo-tree").setup({
 					window = {
 						position = "current",
+						mappings = {
+							["e"] = nt.focus_filesystem,
+							["b"] = nt.focus_buffers,
+							["g"] = nt.focus_git_status,
+						},
+					},
+					default_component_configs = {
+						intent = {
+							expander_collapsed = "",
+							expander_expanded = "",
+						},
 					},
 				})
 			end
 		end
-	end
+	end,
 }
