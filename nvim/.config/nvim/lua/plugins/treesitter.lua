@@ -18,7 +18,13 @@ return {
 	},
 	{
 		"windwp/nvim-ts-autotag",
-		opts = {},
+		config = function()
+			require("nvim-ts-autotag").setup({
+				aliases = {
+					["heex"] = "html",
+				},
+			})
+		end,
 	},
 	{
 		"nvim-treesitter/playground",

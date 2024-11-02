@@ -12,6 +12,7 @@ local border = {
 }
 
 return {
+	{ "hrsh7th/cmp-path" },
 	{
 		"hrsh7th/cmp-nvim-lsp",
 	},
@@ -21,6 +22,14 @@ return {
 			"saadparwaiz1/cmp_luasnip",
 			"rafamadriz/friendly-snippets",
 		},
+		config = function()
+			require("luasnip.loaders.from_vscode").lazy_load()
+			require("luasnip.loaders.from_lua").lazy_load({ paths = { "~/.config/nvim/lua/snippets" } })
+			require("luasnip").config.setup({
+				update_events = "TextChanged,TextChangedI",
+				enable_autosnippets = true,
+			})
+		end,
 	},
 	{
 		"hrsh7th/nvim-cmp",
@@ -31,7 +40,6 @@ return {
 			local cmp = require("cmp")
 			local luasnip = require("luasnip")
 			local cmp_autopairs = require("nvim-autopairs.completion.cmp")
-			require("luasnip.loaders.from_vscode").lazy_load()
 
 			cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
 
@@ -94,6 +102,7 @@ return {
 					{ name = "luasnip" },
 				}, {
 					{ name = "buffer" },
+					{ name = "path" },
 				}),
 				formatting = {
 					expandable_indicator = true,
