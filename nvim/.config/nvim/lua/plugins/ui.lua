@@ -59,7 +59,7 @@ return {
 		config = function()
 			require("lualine").setup({
 				options = {
-					theme = "tokyonight",
+					theme = "nordic",
 					section_separators = { left = "", right = "" },
 					component_separators = { left = "│", right = "│" },
 					ignore_focus = {
