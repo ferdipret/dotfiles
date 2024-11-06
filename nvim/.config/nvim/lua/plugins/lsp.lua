@@ -44,6 +44,56 @@ return {
 						cmd = { "elixir-ls" },
 					})
 				end,
+
+				["emmet_language_server"] = function()
+					setup_lsp("emmet_language_server", {
+						filetypes = {
+							"html",
+							"css",
+							"javascript",
+							"javascriptreact",
+							"typescript",
+							"typescriptreact",
+							"elixir",
+							"heex",
+						},
+					})
+				end,
+
+				["tailwindcss"] = function()
+					setup_lsp("tailwindcss", {
+						filetypes = {
+							"html",
+							"css",
+							"javascript",
+							"javascriptreact",
+							"typescript",
+							"typescriptreact",
+							"elixir",
+							"heex",
+						},
+						root_dir = function(fname)
+							return require("lspconfig.util").root_pattern(
+								"tailwind.config.js",
+								"tailwind.config.ts",
+								"package.json",
+								".git",
+								"mix.exs"
+							)(fname)
+						end,
+						settings = {
+							tailwindCSS = {
+								experimental = {
+									classRegex = {
+										-- Phoenix LiveView class syntax
+										{ 'class\\s*=\\s*"([^"]*)"' },
+										{ 'class:\\s*"([^"]*)"' },
+									},
+								},
+							},
+						},
+					})
+				end,
 			})
 		end,
 		keys = {

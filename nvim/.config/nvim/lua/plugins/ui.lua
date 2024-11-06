@@ -161,4 +161,10 @@ return {
 			set({ "n", "t" }, "<C-_>", toggle_all_terminals, opts)
 		end,
 	},
+	{
+		"brenoprata10/nvim-highlight-colors",
+		config = function()
+			require("nvim-highlight-colors").setup({})
+		end,
+	},
 }
