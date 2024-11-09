@@ -7,7 +7,7 @@ local M = {}
 
 M.shared_elixir_snippets = {
 	s("%=", { t("<%= "), i(1, "code"), t(" %>") }),
-	s("%==", { t("<% "), i(1, "expr"), t(" %>") }, { priority = 1001 }),
+	s("%==", { t("<% "), i(1, "expr"), t(" %>") }),
 }
 
 return M
