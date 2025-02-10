@@ -1,0 +1,11 @@
+vim.opt.number = true      -- Show line numbers
+vim.opt.relativenumber = true  -- Relative line numbers
+vim.opt.tabstop = 2        -- Tabs are 4 spaces
+vim.opt.expandtab = true  -- Use tabs instead of spaces
+vim.opt.termguicolors = true  -- Enable true color
+vim.opt.ignorecase = true  -- Ignore case when searching
+vim.opt.smartcase = true   -- But be case-sensitive when capital letters are used
+vim.opt.clipboard = "unnamedplus" -- Use system clipboard
+vim.opt.cursorline = true  -- Highlight the current line
+vim.opt.scrolloff = 5      -- Keep cursor in view
+vim.opt.wrap = false       -- Disable line wrapping
