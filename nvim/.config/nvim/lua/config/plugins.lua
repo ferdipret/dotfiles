@@ -1,61 +1,23 @@
--- Load Lazy.nvim
-vim.opt.rtp:prepend("~/.local/share/nvim/lazy/lazy.nvim")
+-- Load Lazy.nvim plugin manager
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+    vim.fn.system({
+        "git",
+        "clone",
+        "--filter=blob:none",
+        "https://github.com/folke/lazy.nvim.git",
+        "--branch=stable", -- latest stable release
+        lazypath,
+    })
+end
+vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-	-- File Explorer
-	{
-		"nvim-neo-tree/neo-tree.nvim",
-		dependencies = { "nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim" },
-		opts = {
-			filesystem = { hijack_netrw_behavior = "disabled" },
-		},
-		config = function(_, opts)
-			require("neo-tree").setup(opts)
-		end,
+	spec = {
+		{ import = "plugins" },
 	},
-
-	-- Dashboard
-	{
-		"nvimdev/dashboard-nvim",
-		event = "VimEnter",
-		dependencies = { "nvim-tree/nvim-web-devicons" },
-		config = function()
-			require("dashboard").setup({
-				theme = "hyper",
-				config = {
-					header = {
-						"███████╗██╗   ██╗ ██████╗  █████╗ ██████╗ ██╗",
-						"██╔════╝██║   ██║██╔════╝ ██╔══██╗██╔══██╗██║",
-						"█████╗  ██║   ██║██║  ███╗███████║██║  ██║██║",
-						"██╔══╝  ██║   ██║██║   ██║██╔══██║██║  ██║██║",
-						"██║     ╚██████╔╝╚██████╔╝██║  ██║██████╔╝███████╗",
-						"╚═╝      ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═════╝ ╚══════╝",
-						"       🚀 Stay Focused, Keep Building!       ",
-					},
-					shortcut = {
-						{ desc = "📁 Files", action = "Telescope find_files", key = "f" },
-						{ desc = "🔍 Grep", action = "Telescope live_grep", key = "g" },
-						{ desc = "🚪 Quit", action = "q", key = "q" },
-					},
-				},
-			})
-		end,
-	},
-
-	-- Fuzzy Finder
-	{
-		"nvim-telescope/telescope.nvim",
-		dependencies = { "nvim-lua/plenary.nvim" },
-		config = function()
-			require("telescope").setup({})
-		end,
-	},
-
-	-- Which-Key
-	{
-		"folke/which-key.nvim",
-		config = function()
-			require("which-key").setup({})
-		end,
+	change_detection = {
+		enabled = true,
+		notify = false,
 	},
 })
