@@ -10,7 +10,3 @@ map("n", "<C-l>", "<C-w>l")
 
 -- Escape clears search highlights
 map("n", "<esc>", ":nohlsearch<CR>")
-
--- Toggle file explorer (Neo-tree)
-map("n", "<leader>e", "<cmd>Neotree toggle<CR>", { desc = "Toggle file explorer" })
-
