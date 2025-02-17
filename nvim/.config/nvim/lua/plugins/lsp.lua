@@ -56,6 +56,7 @@ return {
 							"typescriptreact",
 							"elixir",
 							"heex",
+							"eex"
 						},
 					})
 				end,
