@@ -1,12 +1,8 @@
 local map = vim.keymap.set
-
-vim.g.mapleader = " " -- Space as leader key
+local opts = { noremap = true, silent = true }
 
 -- Better window navigation
-map("n", "<C-h>", "<C-w>h")
-map("n", "<C-j>", "<C-w>j")
-map("n", "<C-k>", "<C-w>k")
-map("n", "<C-l>", "<C-w>l")
-
--- Escape clears search highlights
-map("n", "<esc>", ":nohlsearch<CR>")
+map("n", "<C-h>", "<C-w>h", opts)
+map("n", "<C-j>", "<C-w>j", opts)
+map("n", "<C-k>", "<C-w>k", opts)
+map("n", "<C-l>", "<C-w>l", opts)
