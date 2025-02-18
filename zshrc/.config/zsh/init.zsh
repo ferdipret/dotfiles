@@ -9,11 +9,10 @@ export SUDO_EDITOR="nvim"
 
 source "$ZSH_CONFIG_DIR/aliases.zsh"
 source "$ZSH_CONFIG_DIR/packages.zsh"
+source "$ZSH_CONFIG_DIR/config.zsh"
 
-# === Browser Selection ===
-# Set the default browser based on availability
-if command -v vivaldi >/dev/null 2>&1; then
-	export BROWSER="vivaldi"
-else
-	export BROWSER="firefox" # Fallback to Firefox
-fi
+
+code() {
+    nohup /usr/bin/code "$@" >/dev/null 2>&1 & disown
+}
+

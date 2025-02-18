@@ -8,4 +8,5 @@ vim.opt.cursorline = true
 vim.opt.wrap = false
 vim.opt.signcolumn = "yes"
 vim.opt.clipboard = "unnamedplus"
+vim.opt.pumheight = 12
 
