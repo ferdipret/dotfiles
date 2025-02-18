@@ -1,31 +1,3 @@
-local cmp_kinds = {
-  Text = '  ',
-  Method = '  ',
-  Function = '  ',
-  Constructor = '  ',
-  Field = '  ',
-  Variable = '  ',
-  Class = '  ',
-  Interface = '  ',
-  Module = '  ',
-  Property = '  ',
-  Unit = '  ',
-  Value = '  ',
-  Enum = '  ',
-  Keyword = '  ',
-  Snippet = '  ',
-  Color = '  ',
-  File = '  ',
-  Reference = '  ',
-  Folder = '  ',
-  EnumMember = '  ',
-  Constant = '  ',
-  Struct = '  ',
-  Event = '  ',
-  Operator = '  ',
-  TypeParameter = '  ',
-}
-
 return {
 	{
 		"xzbdmw/colorful-menu.nvim",
@@ -76,16 +48,12 @@ return {
 				mapping = cmp.mapping.preset.insert({
 					["<Tab>"] = cmp.mapping(function(fallback)
 						if cmp.visible() then
-							-- Accept the first item in the completion menu
 							cmp.confirm({ select = true })
 						elseif suggestion.has_suggestion() then
-							-- Accept Supermaven’s inline AI suggestion
 							suggestion.on_accept_suggestion()
 						elseif luasnip.expand_or_jumpable() then
-							-- If inside a snippet, jump forward
 							luasnip.expand_or_jump()
 						else
-							-- Default Tab behavior (inserts a tab character)
 							fallback()
 						end
 					end, { "i", "s" }),
@@ -101,8 +69,11 @@ return {
 					end, { "i", "s" }),
 
 
-					["<CR>"] = cmp.mapping.confirm({ select = false }), -- Confirms selection (only if manually chosen)
-					["<C-e>"] = cmp.mapping.abort(), -- Abort completion
+					["<CR>"] = cmp.mapping.confirm({ select = false }),
+					["<C-e>"] = cmp.mapping.abort(),
+					["<C-b>"] = cmp.mapping.scroll_docs(-4),
+					["<C-f>"] = cmp.mapping.scroll_docs(4),
+					["<C-Space>"] = cmp.mapping.complete(),
 				}),
 				formatting = {
 					fields = { "kind", "abbr", "menu" },
@@ -124,6 +95,7 @@ return {
 					{ name = "supermaven" },
 					{ name = "luasnip" },
 					{ name = "buffer" },
+					{ name = "path" },
 				}),
 			})
 		end,
