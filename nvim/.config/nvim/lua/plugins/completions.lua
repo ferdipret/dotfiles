@@ -23,6 +23,11 @@ return {
 
 			vim.api.nvim_set_hl(0, "PmenuBorder", { fg = colors.border_highlight, bg = colors.bg_popup })
 
+			vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
+				border = { "┌", "─", "┐", "│", "┘", "─", "└", "│" },
+				winhighlight = "Normal:Pmenu,FloatBorder:PmenuBorder,Search:None",
+			})
+
 			lspkind.init({
 				symbol_map = {
 					Supermaven = "",
@@ -32,11 +37,11 @@ return {
 			cmp.setup({
 				window = {
 					documentation = {
-						border = {'┌', '─', '┐', '│', '┘', '─', '└', '│'},
+						border = { '┌', '─', '┐', '│', '┘', '─', '└', '│' },
 						winhighlight = "Normal:Pmenu,FloatBorder:PmenuBorder,Search:None",
 					},
 					completion = {
-						border = {'┌', '─', '┐', '│', '┘', '─', '└', '│'},
+						border = { '┌', '─', '┐', '│', '┘', '─', '└', '│' },
 						winhighlight = "Normal:Pmenu,FloatBorder:PmenuBorder,Search:None",
 					}
 				},
@@ -96,6 +101,7 @@ return {
 					{ name = "luasnip" },
 					{ name = "buffer" },
 					{ name = "path" },
+					{ name = 'render-markdown' },
 				}),
 			})
 		end,

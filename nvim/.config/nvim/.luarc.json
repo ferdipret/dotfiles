@@ -3,6 +3,7 @@
         "undefined-doc-name"
     ],
     "diagnostics.globals": [
-        "Snacks"
+        "Snacks",
+        "vim"
     ]
 }
