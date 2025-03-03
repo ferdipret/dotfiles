@@ -49,6 +49,15 @@ return {
 					})
 				end,
 
+				["graphql"] = function()
+					setup_lsp("graphql", {
+						cmd = { "graphql-lsp", "server", "-m", "stream" },
+						filetypes = { "graphql", "javascript", "typescript", "typescriptreact" },
+						root_dir = require 'lspconfig'.util.root_pattern(".graphqlconfig", "package.json", ".git"),
+
+					})
+				end,
+
 				["emmet_language_server"] = function()
 					setup_lsp("emmet_language_server", {
 						filetypes = {
@@ -63,6 +72,8 @@ return {
 						},
 					})
 				end,
+
+
 
 				["tailwindcss"] = function()
 					setup_lsp("tailwindcss", {
