@@ -1,7 +1,26 @@
 local lua_ls_init = require("utils.lsp-server-configs").lua_ls_init
 
 return {
-	{ "williamboman/mason.nvim", build = ":MasonUpdate", config = true },
+	{
+		'dmmulroy/ts-error-translator.nvim',
+		config = function()
+			require("ts-error-translator").setup()
+		end
+	},
+	{
+		"rachartier/tiny-inline-diagnostic.nvim",
+		event = "VeryLazy",
+		priority = 1000,
+		config = function()
+			require('tiny-inline-diagnostic').setup()
+			vim.diagnostic.config({ virtual_text = false })
+		end
+	},
+	{
+		"williamboman/mason.nvim",
+		build = ":MasonUpdate",
+		config = true
+	},
 	{
 		"williamboman/mason-lspconfig.nvim",
 		config = function()
@@ -35,6 +54,7 @@ return {
 				function(server_name)
 					setup_lsp(server_name)
 				end,
+
 				["lua_ls"] = function()
 					setup_lsp("lua_ls", {
 						on_init = lua_ls_init,
@@ -72,8 +92,6 @@ return {
 						},
 					})
 				end,
-
-
 
 				["tailwindcss"] = function()
 					setup_lsp("tailwindcss", {

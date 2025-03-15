@@ -21,6 +21,8 @@ return {
 			local suggestion = require("supermaven-nvim.completion_preview")
 			local colors = require("tokyonight.colors").setup({ style = "night" })
 
+			require("luasnip.loaders.from_lua").load({ paths = "~/.config/nvim/lua/snippets" })
+
 			vim.api.nvim_set_hl(0, "PmenuBorder", { fg = colors.border_highlight, bg = colors.bg_popup })
 
 			vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
