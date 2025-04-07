@@ -2,9 +2,10 @@
 alias v="nvim"
 
 # File system aliases
-alias la="ls -al"
-alias ls="eza --icons"
-alias lst="eza --icons --tree -I=node_modules"
+alias ls='eza --icons --group-directories-first --color=always'
+alias la='eza -la --icons --group-directories-first --color=always'
+alias lst='eza -T --level=2 --icons --group-directories-first --color=always -I=node_modules'
+alias lg='eza -l --icons --git --group-directories-first --color=always'
 
 # Package manager aliases
 alias pm="pnpm"
