@@ -26,7 +26,7 @@ return {
 		config = function()
 			require("mason").setup()
 			require("mason-lspconfig").setup({
-				ensure_installed = { "lua_ls", "vtsls" },
+				ensure_installed = { "lua_ls", "vtsls", "eslint" },
 				automatic_installation = true,
 			})
 		end
@@ -55,6 +55,22 @@ return {
 					setup_lsp(server_name)
 				end,
 
+				["eslint"] = function()
+					setup_lsp("eslint", {
+						root_dir = require("lspconfig.util").root_pattern(
+							".eslintrc.cjs",
+							".eslintrc.js",
+							"eslint.config.js",
+							"package.json"
+						),
+						settings = {
+							format = false,
+						},
+						on_attach = function(client)
+							client.server_capabilities.documentFormattingProvider = false
+						end,
+					})
+				end,
 				["lua_ls"] = function()
 					setup_lsp("lua_ls", {
 						on_init = lua_ls_init,
