@@ -41,6 +41,8 @@ return {
 		{ "<leader>fp",      function() Snacks.picker.projects() end,                                desc = "Projects" },
 		{ "<leader>fr",      function() Snacks.picker.recent() end,                                  desc = "Recent" },
 		-- git
+		{ "<leader>gB",      function() Snacks.gitbrowse() end,                                      desc = "Git Browse",               mode = { "n", "v" } },
+		{ "<leader>gg",      function() Snacks.lazygit() end,                                        desc = "Lazygit" },
 		{ "<leader>gb",      function() Snacks.picker.git_branches() end,                            desc = "Git Branches" },
 		{ "<leader>gl",      function() Snacks.picker.git_log() end,                                 desc = "Git Log" },
 		{ "<leader>gL",      function() Snacks.picker.git_log_line() end,                            desc = "Git Log Line" },
@@ -91,8 +93,6 @@ return {
 		{ "<leader>x?",      function() Snacks.notifier.show_history() end,                          desc = "Notification History" },
 		{ "<leader>bd",      function() Snacks.bufdelete() end,                                      desc = "Delete Buffer" },
 		{ "<leader>cR",      function() Snacks.rename.rename_file() end,                             desc = "Rename File" },
-		{ "<leader>gB",      function() Snacks.gitbrowse() end,                                      desc = "Git Browse",               mode = { "n", "v" } },
-		{ "<leader>gg",      function() Snacks.lazygit() end,                                        desc = "Lazygit" },
 		{ "<leader>un",      function() Snacks.notifier.hide() end,                                  desc = "Dismiss All Notifications" },
 		{ "<c-/>",           function() Snacks.terminal() end,                                       desc = "Toggle Terminal" },
 		{ "<c-_>",           function() Snacks.terminal() end,                                       desc = "which_key_ignore" },
@@ -137,7 +137,7 @@ return {
 				Snacks.toggle.diagnostics():map("<leader>ud")
 				Snacks.toggle.line_number():map("<leader>ul")
 				Snacks.toggle.option("conceallevel", { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 }):map(
-				"<leader>uc")
+					"<leader>uc")
 				Snacks.toggle.treesitter():map("<leader>uT")
 				Snacks.toggle.option("background", { off = "light", on = "dark", name = "Dark Background" }):map("<leader>ub")
 				Snacks.toggle.inlay_hints():map("<leader>uh")
