@@ -5,7 +5,7 @@ return {
 		'dmmulroy/ts-error-translator.nvim',
 		config = function()
 			require("ts-error-translator").setup()
-		end
+		end,
 	},
 	{
 		"rachartier/tiny-inline-diagnostic.nvim",
@@ -14,12 +14,12 @@ return {
 		config = function()
 			require('tiny-inline-diagnostic').setup()
 			vim.diagnostic.config({ virtual_text = false })
-		end
+		end,
 	},
 	{
 		"williamboman/mason.nvim",
 		build = ":MasonUpdate",
-		config = true
+		config = true,
 	},
 	{
 		"williamboman/mason-lspconfig.nvim",
@@ -29,7 +29,7 @@ return {
 				ensure_installed = { "lua_ls", "vtsls", "eslint" },
 				automatic_installation = true,
 			})
-		end
+		end,
 	},
 	{
 		"neovim/nvim-lspconfig",
@@ -39,13 +39,27 @@ return {
 		config = function()
 			local lspconfig = require("lspconfig")
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
+			local navic = require("nvim-navic")
+
+			local function make_on_attach(custom_on_attach)
+				return function(client, bufnr)
+					if client.server_capabilities.documentSymbolProvider then
+						navic.attach(client, bufnr)
+					end
+
+					if custom_on_attach then
+						custom_on_attach(client, bufnr)
+					end
+				end
+			end
 
 			local function setup_lsp(server_name, custom_config)
 				local default_config = {
 					capabilities = capabilities,
 				}
-
 				local config = vim.tbl_deep_extend("force", default_config, custom_config or {})
+
+				config.on_attach = make_on_attach(config.on_attach)
 
 				lspconfig[server_name].setup(config)
 			end
@@ -54,7 +68,6 @@ return {
 				function(server_name)
 					setup_lsp(server_name)
 				end,
-
 				["eslint"] = function()
 					setup_lsp("eslint", {
 						root_dir = require("lspconfig.util").root_pattern(
@@ -63,9 +76,7 @@ return {
 							"eslint.config.js",
 							"package.json"
 						),
-						settings = {
-							format = false,
-						},
+						settings = { format = false },
 						on_attach = function(client)
 							client.server_capabilities.documentFormattingProvider = false
 						end,
@@ -84,42 +95,26 @@ return {
 						cmd = { "elixir-ls" },
 					})
 				end,
-
 				["graphql"] = function()
 					setup_lsp("graphql", {
 						cmd = { "graphql-lsp", "server", "-m", "stream" },
 						filetypes = { "graphql", "javascript", "typescript", "typescriptreact" },
-						root_dir = require 'lspconfig'.util.root_pattern(".graphqlconfig", "package.json", ".git"),
-
+						root_dir = require("lspconfig").util.root_pattern(".graphqlconfig", "package.json", ".git"),
 					})
 				end,
-
 				["emmet_language_server"] = function()
 					setup_lsp("emmet_language_server", {
 						filetypes = {
-							"html",
-							"css",
-							"javascript",
-							"javascriptreact",
-							"typescript",
-							"typescriptreact",
-							"elixir",
-							"heex",
+							"html", "css", "javascript", "javascriptreact",
+							"typescript", "typescriptreact", "elixir", "heex",
 						},
 					})
 				end,
-
 				["tailwindcss"] = function()
 					setup_lsp("tailwindcss", {
 						filetypes = {
-							"html",
-							"css",
-							"javascript",
-							"javascriptreact",
-							"typescript",
-							"typescriptreact",
-							"elixir",
-							"heex",
+							"html", "css", "javascript", "javascriptreact",
+							"typescript", "typescriptreact", "elixir", "heex",
 						},
 						root_dir = function(fname)
 							return require("lspconfig.util").root_pattern(
@@ -134,7 +129,6 @@ return {
 							tailwindCSS = {
 								experimental = {
 									classRegex = {
-										-- Phoenix LiveView class syntax
 										{ 'class\\s*=\\s*"([^"]*)"' },
 										{ 'class:\\s*"([^"]*)"' },
 									},
