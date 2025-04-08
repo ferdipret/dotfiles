@@ -10,8 +10,4 @@ export SUDO_EDITOR="nvim"
 source "$ZSH_CONFIG_DIR/config.zsh"
 source "$ZSH_CONFIG_DIR/aliases.zsh"
 source "$ZSH_CONFIG_DIR/packages.zsh"
-
-code() {
-    nohup /usr/bin/code "$@" >/dev/null 2>&1 & disown
-}
-
+source "$ZSH_CONFIG_DIR/config.zsh"
