@@ -41,3 +41,15 @@ fi
 for package_file in "$ZSH_CONFIG_DIR/packages/"*.zsh; do
 	[[ -f $package_file ]] && source "$package_file"
 done
+
+# Auto-chmod anything in ~/.config/zsh/scripts so it’s executable
+SCRIPTS_DIR="$HOME/.config/zsh/scripts"
+
+if [[ -d $SCRIPTS_DIR ]]; then
+  for file in "$SCRIPTS_DIR"/*; do
+    # only regular files, and only if not already executable
+    if [[ -f $file && ! -x $file ]]; then
+      chmod +x "$file"
+    fi
+  done
+fi

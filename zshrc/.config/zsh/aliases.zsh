@@ -11,6 +11,10 @@ alias lg='eza -l --icons --git --group-directories-first --color=always'
 alias pm="pnpm"
 alias pme="pnpm exec"
 
+# Git aliases
+alias review='$HOME/.config/zsh/scripts/review.zsh'
+alias cleanup='$HOME/.config/zsh/scripts/cleanup.zsh'
+
 # Source core alias files
 for alias_file in "$ZSH_CONFIG_DIR/aliases/"*.zsh; do
 	[[ -f $alias_file ]] && source "$alias_file"
