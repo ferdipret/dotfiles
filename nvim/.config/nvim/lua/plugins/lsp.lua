@@ -2,12 +2,6 @@ local lua_ls_init = require("utils.lsp-server-configs").lua_ls_init
 
 return {
 	{
-		'dmmulroy/ts-error-translator.nvim',
-		config = function()
-			require("ts-error-translator").setup()
-		end,
-	},
-	{
 		"rachartier/tiny-inline-diagnostic.nvim",
 		event = "VeryLazy",
 		priority = 1000,
