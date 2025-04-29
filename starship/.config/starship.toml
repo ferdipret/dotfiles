@@ -4,6 +4,7 @@
 # Sets user-defined palette
 # Palettes must be defined _after_ this line
 palette = "catppuccin_mocha"
+command_timeout = 3600
 
 # Starship modules
 [character]
@@ -55,5 +56,4 @@ surface0 = "#313244"
 base = "#1e1e2e"
 mantle = "#181825"
 crust = "#11111b"
-
 
