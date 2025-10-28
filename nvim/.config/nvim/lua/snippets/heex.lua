@@ -1,34 +1,57 @@
-local luasnip = require("luasnip")
+local ls = require("luasnip")
+local s = ls.snippet
+local t = ls.text_node
+local i = ls.insert_node
+local fmt = require("luasnip.extras.fmt").fmt
 
-local s = luasnip.snippet
-local t = luasnip.text_node
-local i = luasnip.insert_node
+-- Most common/useful HEEx snippets converted to proper LuaSnip format
+return {
+	-- EEx basics
+	s("ee", fmt("<%= {} %>", { i(1) })),
+	s("eex", fmt("<% {} %>", { i(1) })),
+	s("eec", fmt("<%!-- {} --%>", { i(1) })),
 
-luasnip.add_snippets("heex", {
-	-- HEEx Expression
-	s("expr", {
-		t("<%= "), i(1, "expression"), t(" %>")
-	}),
+	-- Control flow
+	s("eif", fmt([[
+<%= if {} do %>
+  {}
+<% end %>]], { i(1), i(2) })),
 
-	-- HEEx Comment
-	s("comment", {
-		t("<%# "), i(1, "comment"), t(" %>")
-	}),
+	s("eife", fmt([[
+<%= if {} do %>
+  {}
+<% else %>
+  {}
+<% end %>]], { i(1), i(2), i(3) })),
 
-	-- HEEx IF Statement
-	s("if", {
-		t({ "<%= if " }), i(1, "condition"), t({ " do %>", "  " }),
-		i(2, "body"), t({ "", "<% end %>" })
-	}),
+	s("efor", fmt([[
+<%= for {} <- {} do %>
+  {}
+<% end %>]], { i(1), i(2), i(3) })),
 
-	-- HEEx FOR Loop
-	s("for", {
-		t({ "<%= for " }), i(1, "item <- collection"), t({ " do %>", "  " }),
-		i(2, "body"), t({ "", "<% end %>" })
-	}),
+	-- Phoenix components
+	s("comp", fmt("<.{} {}={{{}}} />", { i(1), i(2), i(3) })),
 
-	-- HEEx Assign Variable
-	s("assign", {
-		t("<% "), i(1, "variable = expression"), t(" %>")
-	})
-})
+	s("link", fmt('<.link navigate={{~p"/{}"}}>{}</.link>', { i(1), i(2) })),
+
+	s("btn", fmt("<.button>{}</.button>", { i(1) })),
+
+	s("btnc", fmt('<.button phx-click="{}">{}</.button>', { i(1), i(2) })),
+
+	s("input", fmt('<.input field={{f[:{}]}} type="{}" label="{}" />', { i(1), i(2), i(3) })),
+
+	s("form", fmt([[
+<.form :let={{f}} for={{@changeset}} phx-submit="{}">
+  {}
+  <.button>{}</.button>
+</.form>]], { i(1), i(2), i(3, "Save") })),
+
+	-- LiveView
+	s("pc", fmt('phx-click="{}"', { i(1) })),
+	s("ps", fmt('phx-submit="{}"', { i(1) })),
+	s("pch", fmt('phx-change="{}"', { i(1) })),
+
+	-- Utilities
+	s("at", fmt("@{}", { i(1) })),
+	s("slot", fmt("<%= render_slot(@{}) %>", { i(1) })),
+}

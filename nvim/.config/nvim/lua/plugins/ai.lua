@@ -39,7 +39,7 @@ return {
 			"MunifTanjim/nui.nvim",
 			--- The below dependencies are optional,
 			"nvim-telescope/telescope.nvim",
-			"hrsh7th/nvim-cmp",
+			"saghen/blink.cmp",
 			"ibhagwan/fzf-lua",
 			"nvim-tree/nvim-web-devicons",
 			{

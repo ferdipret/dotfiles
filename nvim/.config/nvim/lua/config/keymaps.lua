@@ -13,6 +13,4 @@ set("n", "<C-k>", "<C-w>k", opts)
 set("n", "<C-l>", "<C-w>l", opts)
 set("n", "<esc>", ":nohl<CR>", opts)
 
--- Floating terminal
-set({ "n" }, "<Leader>tf", "<cmd>ToggleTerm<cr>", { desc = "Toggle Term(Root)" })
 set("t", "<Esc>", [[<C-\><C-n>]], opts)
