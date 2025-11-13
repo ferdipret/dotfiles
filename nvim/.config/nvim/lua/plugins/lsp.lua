@@ -13,24 +13,24 @@ return {
 	{
 		"williamboman/mason.nvim",
 		build = ":MasonUpdate",
-		config = true,
 	},
-	{
-		"williamboman/mason-lspconfig.nvim",
-		config = function()
-			require("mason").setup()
-			require("mason-lspconfig").setup({
-				ensure_installed = { "lua_ls", "vtsls", "eslint" },
-				automatic_installation = true,
-			})
-		end,
-	},
+	"williamboman/mason-lspconfig.nvim",
 	{
 		"neovim/nvim-lspconfig",
+		event = { "BufReadPre", "BufNewFile" },
+		dependencies = {
+			"williamboman/mason.nvim",
+			"williamboman/mason-lspconfig.nvim",
+			"hrsh7th/cmp-nvim-lsp",
+			"SmiteshP/nvim-navic",
+		},
 		keys = {
 			{ "<leader>ca", vim.lsp.buf.code_action, desc = "Code Actions" },
 		},
 		config = function()
+			-- Setup mason first
+			require("mason").setup()
+
 			local lspconfig = require("lspconfig")
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 			local navic = require("nvim-navic")
@@ -58,79 +58,85 @@ return {
 				lspconfig[server_name].setup(config)
 			end
 
-			require("mason-lspconfig").setup_handlers({
-				function(server_name)
-					setup_lsp(server_name)
-				end,
-				["eslint"] = function()
-					setup_lsp("eslint", {
-						root_dir = require("lspconfig.util").root_pattern(
-							".eslintrc.cjs",
-							".eslintrc.js",
-							"eslint.config.js",
-							"package.json"
-						),
-						settings = { format = false },
-						on_attach = function(client)
-							client.server_capabilities.documentFormattingProvider = false
-						end,
-					})
-				end,
-				["lua_ls"] = function()
-					setup_lsp("lua_ls", {
-						on_init = lua_ls_init,
-						settings = {
-							Lua = {},
-						},
-					})
-				end,
-				["elixirls"] = function()
-					setup_lsp("elixirls", {
-						cmd = { "elixir-ls" },
-					})
-				end,
-				["graphql"] = function()
-					setup_lsp("graphql", {
-						cmd = { "graphql-lsp", "server", "-m", "stream" },
-						filetypes = { "graphql", "javascript", "typescript", "typescriptreact" },
-						root_dir = require("lspconfig").util.root_pattern(".graphqlconfig", "package.json", ".git"),
-					})
-				end,
-				["emmet_language_server"] = function()
-					setup_lsp("emmet_language_server", {
-						filetypes = {
-							"html", "css", "javascript", "javascriptreact",
-							"typescript", "typescriptreact", "elixir", "heex",
-						},
-					})
-				end,
-				["tailwindcss"] = function()
-					setup_lsp("tailwindcss", {
-						filetypes = {
-							"html", "css", "javascript", "javascriptreact",
-							"typescript", "typescriptreact", "elixir", "heex",
-						},
-						root_dir = function(fname)
-							return require("lspconfig.util").root_pattern(
-								"tailwind.config.js",
-								"tailwind.config.ts",
-								"package.json",
-								".git",
-								"mix.exs"
-							)(fname)
-						end,
-						settings = {
-							tailwindCSS = {
-								experimental = {
-									classRegex = {
-										{ 'class\\s*=\\s*"([^"]*)"' },
-										{ 'class:\\s*"([^"]*)"' },
+			-- mason-lspconfig v2.x API with handlers inside setup()
+			require("mason-lspconfig").setup({
+				ensure_installed = { "lua_ls", "vtsls", "eslint" },
+				automatic_installation = true,
+				handlers = {
+					function(server_name)
+						setup_lsp(server_name)
+					end,
+					["eslint"] = function()
+						setup_lsp("eslint", {
+							root_dir = require("lspconfig.util").root_pattern(
+								".eslintrc.cjs",
+								".eslintrc.js",
+								"eslint.config.js",
+								"package.json"
+							),
+							settings = { format = false },
+							on_attach = function(client)
+								client.server_capabilities.documentFormattingProvider = false
+							end,
+						})
+					end,
+					["lua_ls"] = function()
+						setup_lsp("lua_ls", {
+							on_init = lua_ls_init,
+							settings = {
+								Lua = {},
+							},
+						})
+					end,
+					["elixirls"] = function()
+						setup_lsp("elixirls", {
+							cmd = { "elixir-ls" },
+							filetypes = { "elixir", "heex", "eelixir", "surface" },
+						})
+					end,
+					["graphql"] = function()
+						setup_lsp("graphql", {
+							cmd = { "graphql-lsp", "server", "-m", "stream" },
+							filetypes = { "graphql", "javascript", "typescript", "typescriptreact" },
+							root_dir = require("lspconfig").util.root_pattern(".graphqlconfig", "package.json", ".git"),
+						})
+					end,
+					["emmet_language_server"] = function()
+						setup_lsp("emmet_language_server", {
+							filetypes = {
+								"html", "css", "javascript", "javascriptreact",
+								"typescript", "typescriptreact", "elixir", "heex",
+							},
+						})
+					end,
+					["tailwindcss"] = function()
+						setup_lsp("tailwindcss", {
+							filetypes = {
+								"html", "css", "javascript", "javascriptreact",
+								"typescript", "typescriptreact", "elixir", "heex",
+							},
+							root_dir = function(fname)
+								return require("lspconfig.util").root_pattern(
+									"tailwind.config.js",
+									"tailwind.config.ts",
+									"package.json",
+									".git",
+									"mix.exs"
+								)(fname)
+							end,
+							settings = {
+								tailwindCSS = {
+									experimental = {
+										classRegex = {
+											{ 'class\\s*=\\s*"([^"]*)"' },
+											{ 'class:\\s*"([^"]*)"' },
+										},
 									},
 								},
 							},
-						},
-					})
-				end,
+						})
+					end,
+				},
 			})
 		end,
 	},

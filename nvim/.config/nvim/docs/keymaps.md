@@ -261,6 +261,10 @@
 - `<leader>nr` - Rename Note
 - `<leader>np` - Paste Image
 
+### Preview
+
+- `<leader>nP` - Toggle Markdown Preview
+
 ### Todo/Checkbox Management
 
 - `<CR>` - Toggle Checkbox (in markdown)

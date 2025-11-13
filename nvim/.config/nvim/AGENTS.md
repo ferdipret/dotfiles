@@ -22,8 +22,17 @@
 
 ## Testing Guidelines
 - No automated suite exists; rely on headless checks plus manual verification in Neovim.
+- **CRITICAL: Always test configuration changes in headless mode BEFORE claiming they work.**
+  - Use `nvim --headless -c "e <test-file>" -c "sleep 3" -c "messages" -c "quit" 2>&1` to check for errors
+  - Test LSP attachment: `nvim --headless -c "e lua/test.lua" -c "sleep 5" -c "lua local clients = vim.lsp.get_clients({bufnr=0}); print('LSP clients:', #clients); for _, c in ipairs(clients) do print('  - ' .. c.name) end" -c "quit" 2>&1`
+  - Verify `:LspInfo` exists: `nvim --headless -c "e lua/test.lua" -c "sleep 3" -c "lua print('LspInfo:', vim.fn.exists(':LspInfo') == 2 and 'EXISTS' or 'MISSING')" -c "quit" 2>&1`
+  - Clear caches if issues persist: `rm -rf ~/.local/state/nvim/lazy/* ~/.cache/nvim/*`
 - After LSP or completion changes, open representative buffers (`*.lua`, `*.ts`, `*.heex`) and confirm diagnostics and completion still fire.
 - Validate snippet changes with `:LuaSnipEdit` and update `docs/snippets.md` so contributors know the new shape.
+- **Common pitfalls to avoid:**
+  - Plugin loading order: Dependencies must load before they're required (use `dependencies = {}` in plugin specs)
+  - API changes: Always check if plugin APIs have changed (e.g., `mason-lspconfig` v2.0.0 removed `setup_handlers()`)
+  - Filetype restrictions: LSP servers should specify `filetypes = {}` to prevent unwanted attachment
 
 ## Commit & Pull Request Guidelines
 - Follow Conventional Commits as seen in history (`feat:`, `fix:`, `chore:`); use imperative mood and keep subjects under 72 chars.

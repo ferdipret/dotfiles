@@ -352,3 +352,72 @@ return {
 - Files: init.lua, lazy-lock.json, lazyvim.json
 - Appears to be a backup or alternative config
 - Not loaded by main init.lua
+
+## Testing Requirements for AI Agents
+
+### CRITICAL: Always Test Before Confirming
+**When making ANY changes to plugin configurations, LSP setup, or keybindings, you MUST test in headless mode BEFORE claiming the fix works.**
+
+### Required Headless Tests
+
+#### 1. Basic Error Check
+```bash
+nvim --headless -c "e lua/config/keymaps.lua" -c "sleep 3" -c "messages" -c "quit" 2>&1 | grep -iE "error|failed"
+```
+Expected: No output (no errors)
+
+#### 2. LSP Attachment Test
+```bash
+nvim --headless -c "e lua/test.lua" -c "sleep 5" -c "lua local clients = vim.lsp.get_clients({bufnr=0}); print('LSP clients:', #clients); for _, c in ipairs(clients) do print('  - ' .. c.name) end" -c "quit" 2>&1
+```
+Expected: Should show `lua_ls` for Lua files
+
+#### 3. LSP Commands Availability
+```bash
+nvim --headless -c "e lua/test.lua" -c "sleep 3" -c "lua print('LspInfo:', vim.fn.exists(':LspInfo') == 2 and 'EXISTS' or 'MISSING')" -c "quit" 2>&1
+```
+Expected: `LspInfo: EXISTS`
+
+#### 4. Filetype Restriction Test
+```bash
+echo "# Test" > /tmp/test.md && nvim --headless -c "e /tmp/test.md" -c "sleep 5" -c "lua local clients = vim.lsp.get_clients({bufnr=0}); if #clients == 0 then print('✓ Correct: No LSP on markdown') else for _, c in ipairs(clients) do print('ERROR: ' .. c.name .. ' attached incorrectly') end end" -c "quit" 2>&1
+```
+Expected: No LSP servers attached to markdown files (unless explicitly configured)
+
+### Cache Clearing
+If tests fail unexpectedly, clear Neovim caches:
+```bash
+rm -rf ~/.local/state/nvim/lazy/* ~/.cache/nvim/*
+```
+
+### Common Issues to Watch For
+
+1. **Plugin Loading Order**
+   - Problem: Plugin B requires Plugin A, but A loads after B
+   - Solution: Add `dependencies = { "author/plugin-a" }` to Plugin B spec
+   - Test: Run headless mode and check for "nil value" errors
+
+2. **API Breaking Changes**
+   - Problem: Plugin updates change API (e.g., `mason-lspconfig` v2.0.0 removed `setup_handlers()`)
+   - Solution: Check plugin git tags and documentation for API changes
+   - Test: Verify function exists before calling: `print(type(require('plugin').function))`
+
+3. **Filetype Leakage**
+   - Problem: LSP attaches to wrong filetypes (e.g., `elixirls` on markdown)
+   - Solution: Explicitly set `filetypes = {...}` in LSP config
+   - Test: Open different file types and verify correct LSP attachment
+
+4. **Event-based Loading Failures**
+   - Problem: Plugin loads too late or never loads
+   - Solution: Check `event`, `keys`, `cmd`, and `ft` triggers in plugin spec
+   - Test: Verify commands/functions exist: `vim.fn.exists(':CommandName')`
+
+### Testing Workflow for AI Agents
+
+1. **Make the change** to configuration files
+2. **Run headless tests** (all 4 tests above)
+3. **Clear caches** if tests fail unexpectedly
+4. **Re-run tests** after cache clear
+5. **Only then** report success to the user
+
+**NEVER skip steps 2-4.** Configuration errors cause frustration and waste time.

@@ -23,6 +23,11 @@ return {
 
 			require("luasnip.loaders.from_lua").load({ paths = "~/.config/nvim/lua/snippets" })
 
+			-- Make HEEx snippets available in Elixir files (for LiveView)
+			luasnip.filetype_extend("elixir", { "heex" })
+			-- Also make Elixir snippets available in HEEx files (for sigils in templates)
+			luasnip.filetype_extend("heex", { "elixir" })
+
 			vim.api.nvim_set_hl(0, "PmenuBorder", { fg = colors.border_highlight, bg = colors.bg_popup })
 
 			vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
@@ -37,6 +42,10 @@ return {
 			})
 
 			cmp.setup({
+				preselect = cmp.PreselectMode.Item,
+				completion = {
+					completeopt = 'menu,menuone,noinsert',
+				},
 				window = {
 					documentation = {
 						border = { '┌', '─', '┐', '│', '┘', '─', '└', '│' },
@@ -99,7 +108,6 @@ return {
 				},
 				sources = cmp.config.sources({
 					{ name = "nvim_lsp" },
-					{ name = "supermaven" },
 					{ name = "luasnip" },
 					{ name = "buffer" },
 					{ name = "path" },

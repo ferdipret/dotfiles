@@ -14,3 +14,9 @@ set("n", "<C-l>", "<C-w>l", opts)
 set("n", "<esc>", ":nohl<CR>", opts)
 
 set("t", "<Esc>", [[<C-\><C-n>]], opts)
+
+-- Move lines up and down
+set("n", "<A-j>", ":m .+1<CR>==", opts)
+set("n", "<A-k>", ":m .-2<CR>==", opts)
+set("v", "<A-j>", ":m '>+1<CR>gv=gv", opts)
+set("v", "<A-k>", ":m '<-2<CR>gv=gv", opts)

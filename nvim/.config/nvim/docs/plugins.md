@@ -164,6 +164,11 @@ Complete reference of all plugins in this configuration.
 ### Markdown
 - **render-markdown.nvim** - Live markdown rendering
   - File: `lua/plugins/markdown.lua`
+  - Provides in-buffer syntax highlighting for rich markdown
+
+- **markdown-preview.nvim** - Browser-based preview with autosync scrolling
+  - File: `lua/plugins/markdown.lua`
+  - Key: `<leader>nP`
 
 - **img-clip.nvim** - Paste images in markdown
 
