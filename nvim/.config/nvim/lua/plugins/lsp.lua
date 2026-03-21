@@ -1,5 +1,4 @@
 local lua_ls_init = require("utils.lsp-server-configs").lua_ls_init
-
 return {
 	{
 		"rachartier/tiny-inline-diagnostic.nvim",
@@ -28,115 +27,106 @@ return {
 			{ "<leader>ca", vim.lsp.buf.code_action, desc = "Code Actions" },
 		},
 		config = function()
-			-- Setup mason first
 			require("mason").setup()
-
-			local lspconfig = require("lspconfig")
-			local capabilities = require("cmp_nvim_lsp").default_capabilities()
-			local navic = require("nvim-navic")
-
-			local function make_on_attach(custom_on_attach)
-				return function(client, bufnr)
-					if client.server_capabilities.documentSymbolProvider then
-						navic.attach(client, bufnr)
-					end
-
-					if custom_on_attach then
-						custom_on_attach(client, bufnr)
-					end
-				end
-			end
-
-			local function setup_lsp(server_name, custom_config)
-				local default_config = {
-					capabilities = capabilities,
-				}
-				local config = vim.tbl_deep_extend("force", default_config, custom_config or {})
-
-				config.on_attach = make_on_attach(config.on_attach)
-
-				lspconfig[server_name].setup(config)
-			end
-
-			-- mason-lspconfig v2.x API with handlers inside setup()
 			require("mason-lspconfig").setup({
 				ensure_installed = { "lua_ls", "vtsls", "eslint" },
 				automatic_installation = true,
-				handlers = {
-					function(server_name)
-						setup_lsp(server_name)
-					end,
-					["eslint"] = function()
-						setup_lsp("eslint", {
-							root_dir = require("lspconfig.util").root_pattern(
-								".eslintrc.cjs",
-								".eslintrc.js",
-								"eslint.config.js",
-								"package.json"
-							),
-							settings = { format = false },
-							on_attach = function(client)
-								client.server_capabilities.documentFormattingProvider = false
-							end,
-						})
-					end,
-					["lua_ls"] = function()
-						setup_lsp("lua_ls", {
-							on_init = lua_ls_init,
-							settings = {
-								Lua = {},
-							},
-						})
-					end,
-					["elixirls"] = function()
-						setup_lsp("elixirls", {
-							cmd = { "elixir-ls" },
-							filetypes = { "elixir", "heex", "eelixir", "surface" },
-						})
-					end,
-					["graphql"] = function()
-						setup_lsp("graphql", {
-							cmd = { "graphql-lsp", "server", "-m", "stream" },
-							filetypes = { "graphql", "javascript", "typescript", "typescriptreact" },
-							root_dir = require("lspconfig").util.root_pattern(".graphqlconfig", "package.json", ".git"),
-						})
-					end,
-					["emmet_language_server"] = function()
-						setup_lsp("emmet_language_server", {
-							filetypes = {
-								"html", "css", "javascript", "javascriptreact",
-								"typescript", "typescriptreact", "elixir", "heex",
-							},
-						})
-					end,
-					["tailwindcss"] = function()
-						setup_lsp("tailwindcss", {
-							filetypes = {
-								"html", "css", "javascript", "javascriptreact",
-								"typescript", "typescriptreact", "elixir", "heex",
-							},
-							root_dir = function(fname)
-								return require("lspconfig.util").root_pattern(
-									"tailwind.config.js",
-									"tailwind.config.ts",
-									"package.json",
-									".git",
-									"mix.exs"
-								)(fname)
-							end,
-							settings = {
-								tailwindCSS = {
-									experimental = {
-										classRegex = {
-											{ 'class\\s*=\\s*"([^"]*)"' },
-											{ 'class:\\s*"([^"]*)"' },
-										},
-									},
-								},
-							},
-						})
-					end,
+			})
+
+			local navic = require("nvim-navic")
+
+			vim.api.nvim_create_autocmd("LspAttach", {
+				callback = function(args)
+					local client = vim.lsp.get_client_by_id(args.data.client_id)
+					if client and client.server_capabilities.documentSymbolProvider then
+						navic.attach(client, args.buf)
+					end
+				end,
+			})
+
+			vim.lsp.config("*", {
+				capabilities = require("cmp_nvim_lsp").default_capabilities(),
+			})
+
+			vim.lsp.config("eslint", {
+				root_dir = function(bufnr, on_dir)
+					local fname = vim.api.nvim_buf_get_name(bufnr)
+					on_dir(vim.fs.dirname(vim.fs.find(
+						{ ".eslintrc.cjs", ".eslintrc.js", "eslint.config.js", "package.json" },
+						{ path = fname, upward = true }
+					)[1]))
+				end,
+				settings = { format = false },
+				on_attach = function(client)
+					client.server_capabilities.documentFormattingProvider = false
+				end,
+			})
+
+			vim.lsp.config("lua_ls", {
+				on_init = lua_ls_init,
+				settings = {
+					Lua = {},
 				},
+			})
+
+			vim.lsp.config("elixirls", {
+				cmd = { "elixir-ls" },
+				filetypes = { "elixir", "heex", "eelixir", "surface" },
+			})
+
+			vim.lsp.config("graphql", {
+				cmd = { "graphql-lsp", "server", "-m", "stream" },
+				filetypes = { "graphql", "javascript", "typescript", "typescriptreact" },
+				root_dir = function(bufnr, on_dir)
+					local fname = vim.api.nvim_buf_get_name(bufnr)
+					on_dir(vim.fs.dirname(vim.fs.find(
+						{ ".graphqlconfig", "package.json", ".git" },
+						{ path = fname, upward = true }
+					)[1]))
+				end,
+			})
+
+			vim.lsp.config("emmet_language_server", {
+				filetypes = {
+					"html", "css", "javascript", "javascriptreact",
+					"typescript", "typescriptreact", "elixir", "heex",
+				},
+			})
+
+			vim.lsp.config("tailwindcss", {
+				filetypes = {
+					"html", "css", "javascript", "javascriptreact",
+					"typescript", "typescriptreact", "elixir", "heex",
+				},
+				root_dir = function(bufnr, on_dir)
+					local fname = vim.api.nvim_buf_get_name(bufnr)
+					on_dir(vim.fs.dirname(vim.fs.find(
+						{ "tailwind.config.js", "tailwind.config.ts", "package.json", ".git", "mix.exs" },
+						{ path = fname, upward = true }
+					)[1]))
+				end,
+				settings = {
+					tailwindCSS = {
+						experimental = {
+							classRegex = {
+								{ 'class\\s*=\\s*"([^"]*)"' },
+								{ 'class:\\s*"([^"]*)"' },
+								{ "cva\\(((?:[^)(]|\\([^)(]*\\))*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]" },
+								{ "cn\\(((?:[^)(]|\\([^)(]*\\))*)\\)",  "[\"'`]([^\"'`]*).*?[\"'`]" },
+							},
+						},
+					},
+				},
+			})
+
+			vim.lsp.enable({
+				"eslint",
+				"lua_ls",
+				"vtsls",
+				"elixirls",
+				"graphql",
+				"emmet_language_server",
+				"tailwindcss",
 			})
 		end,
 	},
