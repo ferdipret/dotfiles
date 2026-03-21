@@ -125,7 +125,7 @@ Current completion stack: `nvim-cmp` + `LuaSnip`
 - `<leader>af` - focus the AI panel
 - `<leader>ah` - open chat history
 - `<leader>aM` - open MCP Hub
-- `<leader>am` - select model
+- `<leader>am` - select model or provider
 - `<leader>ao` - switch to OpenCode
 - `<leader>ap` - choose provider
 - `<leader>aR` - show repo map

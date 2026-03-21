@@ -14,22 +14,39 @@ return {
 		config = function()
 			local lint = require("lint")
 
+			local function executable(name)
+				return vim.fn.executable(name) == 1
+			end
+
+			local function available(...)
+				local linters = {}
+				for _, name in ipairs({ ... }) do
+					if executable(name) then
+						table.insert(linters, name)
+					end
+				end
+				return linters
+			end
+
 			lint.linters_by_ft = {
-				javascript = { "eslint_d" },
-				javascriptreact = { "eslint_d" },
-				typescript = { "eslint_d" },
-				typescriptreact = { "eslint_d" },
-				markdown = { "markdownlint-cli2" },
-				python = { "ruff" },
-				sh = { "shellcheck" },
-				zsh = { "shellcheck" },
+				javascript = available("eslint_d"),
+				javascriptreact = available("eslint_d"),
+				typescript = available("eslint_d"),
+				typescriptreact = available("eslint_d"),
+				markdown = available("markdownlint-cli2"),
+				python = available("ruff"),
+				sh = available("shellcheck"),
+				zsh = available("shellcheck"),
 			}
 
 			local group = vim.api.nvim_create_augroup("nvim-lint", { clear = true })
 			vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
 				group = group,
 				callback = function()
-					lint.try_lint()
+					local names = lint.linters_by_ft[vim.bo.filetype]
+					if names and #names > 0 then
+						lint.try_lint(names)
+					end
 				end,
 			})
 		end,

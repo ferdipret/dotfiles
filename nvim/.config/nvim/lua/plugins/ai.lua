@@ -22,6 +22,24 @@ local function select_provider()
 	end)
 end
 
+local function select_model_or_provider()
+	local ok, config = pcall(require, "avante.config")
+	if not ok then
+		return
+	end
+
+	if
+		config.acp_providers
+		and config.acp_providers[config.provider]
+		and not (config.providers and config.providers[config.provider])
+	then
+		select_provider()
+		return
+	end
+
+	vim.cmd("AvanteModels")
+end
+
 return {
 	{
 		"ravitemer/mcphub.nvim",
@@ -43,15 +61,39 @@ return {
 	{
 		"yetone/avante.nvim",
 		event = "VeryLazy",
+		cmd = {
+			"AvanteAsk",
+			"AvanteChat",
+			"AvanteToggle",
+			"AvanteFocus",
+			"AvanteHistory",
+			"AvanteModels",
+			"AvanteShowRepoMap",
+			"AvanteStop",
+			"AvanteEdit",
+			"AvanteSwitchProvider",
+		},
 		version = false,
 		build = "make",
+		config = function(_, opts)
+			require("avante").setup(opts)
+
+			vim.api.nvim_create_user_command("AvanteChooseProvider", select_provider, {
+				desc = "Choose Avante ACP provider",
+			})
+
+			vim.api.nvim_del_user_command("AvanteModels")
+			vim.api.nvim_create_user_command("AvanteModels", select_model_or_provider, {
+				desc = "Select Avante model or provider",
+			})
+		end,
 		keys = {
 			{ "<leader>aa", "<cmd>AvanteAsk<cr>", mode = { "n", "v" }, desc = "Ask AI" },
 			{ "<leader>ac", "<cmd>AvanteChat<cr>", desc = "Chat With Codebase" },
 			{ "<leader>ae", "<cmd>AvanteEdit<cr>", mode = "v", desc = "Edit Selection" },
 			{ "<leader>af", "<cmd>AvanteFocus<cr>", desc = "Focus AI Panel" },
 			{ "<leader>ah", "<cmd>AvanteHistory<cr>", desc = "Chat History" },
-			{ "<leader>am", "<cmd>AvanteModels<cr>", desc = "Select Model" },
+			{ "<leader>am", select_model_or_provider, desc = "Model or Provider" },
 			{ "<leader>ao", switch_provider("opencode"), desc = "Use OpenCode" },
 			{ "<leader>aC", switch_provider("claude-code"), desc = "Use Claude Code" },
 			{ "<leader>ap", select_provider, desc = "Choose Provider" },

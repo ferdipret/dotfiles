@@ -28,6 +28,7 @@
 - `nvim-lint` depends on external CLIs; install `eslint_d`, `markdownlint-cli2`, `ruff`, and `shellcheck` for the matching filetypes you care about.
 - `neotest` adapters depend on your project test runner, such as `pytest` or `vitest`, being available in the project environment.
 - Use `<leader>ro` and `<leader>rO` to inspect test output when a run fails unexpectedly.
+- Missing lint executables are now skipped quietly, so markdown files should no longer throw `markdownlint-cli2` ENOENT errors.
 
 ## MCP Or ACP Issues
 - If Avante ACP providers fail to start, check that `opencode`, `claude`, and `npx` are available in your shell environment.
