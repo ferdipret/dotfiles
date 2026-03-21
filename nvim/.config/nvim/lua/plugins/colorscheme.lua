@@ -2,11 +2,19 @@ return {
 	"folke/tokyonight.nvim",
 	lazy = false,
 	priority = 1000,
-	opts = {},
-	config = function()
-		vim.cmd [[colorscheme tokyonight-night]]
-		local function set_navic_highlights()
-			local colors = require("tokyonight.colors").setup({ style = "night" })
+	opts = function()
+		local theme = require("config.theme")
+		return {
+			style = theme.style,
+		}
+	end,
+	config = function(_, opts)
+		local theme = require("config.theme")
+		require("tokyonight").setup(opts)
+		vim.cmd.colorscheme(theme.colorscheme)
+
+		local function set_navic_highlights(style)
+			local colors = require("tokyonight.colors").setup({ style = style })
 
 			vim.api.nvim_set_hl(0, "NavicIconsFile", { bg = colors.bg, fg = colors.blue })
 			vim.api.nvim_set_hl(0, "NavicIconsModule", { bg = colors.bg, fg = colors.cyan })
@@ -42,12 +50,12 @@ return {
 			vim.api.nvim_set_hl(0, "WinbarSaved", { bg = colors.bg, fg = colors.green })
 		end
 
-		set_navic_highlights()
+		set_navic_highlights(theme.style)
 
 		vim.api.nvim_create_autocmd("ColorScheme", {
 			pattern = "tokyonight*",
 			callback = function()
-				set_navic_highlights()
+				set_navic_highlights(theme.style)
 			end,
 		})
 	end
