@@ -27,6 +27,12 @@
 - Daily notes rely on `~/Documents/notes/.scripts/generate_daily_note.py`. Ensure Python 3 is available and run the script manually (`python3 path/to/script 0`) to confirm it prints a `FILE_PATH:` line.
 - Render and clipboard helpers (`render-markdown.nvim`, `img-clip.nvim`) require `xdg-open`/`wl-copy` on Linux; install them if preview features fail.
 
+## Math Workflow Problems
+- For LaTeX, ensure `latexmk` is installed and available in `$PATH`; `vimtex` and `texlab` both expect it for the default build flow.
+- For PDF viewing, install `zathura` or `okular` if forward search or `VimtexView` does not open a document.
+- For Typst preview, open a `*.typ` file and run `:TypstPreviewUpdate` if the preview binaries have not been downloaded yet.
+- Confirm `tinymist` and `texlab` are installed in Mason when Typst or LaTeX LSP features do not attach.
+
 ## Avante Build Failures
 - `avante.nvim` requires `make` plus a C toolchain. On Debian/Ubuntu install `build-essential`; on macOS install Xcode command-line tools.
 - Configure your OpenAI API key (`export OPENAI_API_KEY=...`) before starting Neovim or the provider will refuse requests.

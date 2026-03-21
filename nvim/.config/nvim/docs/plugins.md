@@ -76,7 +76,7 @@ Complete reference of all plugins in this configuration.
 ### LSP
 - **nvim-lspconfig** - LSP client configurations
   - File: `lua/plugins/lsp.lua`
-  - Servers: lua_ls, vtsls, elixirls, tailwindcss, emmet, eslint
+  - Servers: lua_ls, vtsls, elixirls, tailwindcss, emmet, eslint, texlab, tinymist
   - Loading: `BufReadPre`, `BufNewFile`
 
 - **mason.nvim** - LSP server installer
@@ -110,9 +110,34 @@ Complete reference of all plugins in this configuration.
 - **nvim-treesitter** - Syntax highlighting & parsing
   - File: `lua/plugins/treesitter.lua`
   - Auto-install: true
+  - Parsers: lua, markdown, markdown_inline, latex, bibtex, typst
   - Modules: highlight, indent
 
 - **nvim-ts-autotag** - Auto-close HTML/JSX tags
+
+---
+
+## Math And Research Writing
+
+### Typst
+- **typst-preview.nvim** - Live Typst preview
+  - File: `lua/plugins/math.lua`
+  - Filetype: `typst`
+  - Local keys: `mp`, `ms`, `mf`
+
+- **tinymist** - Typst LSP
+  - File: `lua/plugins/lsp.lua`
+  - Auto-installed via Mason
+
+### LaTeX
+- **vimtex** - LaTeX workflow and tooling
+  - File: `lua/plugins/math.lua`
+  - Compile backend: `latexmk`
+  - Local keys: `mc`, `mv`, `mt`, `me`, `mk`
+
+- **texlab** - LaTeX and BibTeX LSP
+  - File: `lua/plugins/lsp.lua`
+  - Auto-installed via Mason
 
 ---
 
@@ -191,10 +216,10 @@ Complete reference of all plugins in this configuration.
 ## Plugin Loading Order
 
 1. **Immediate** (priority 1000): snacks.nvim
-2. **Immediate**: colorscheme, completion, treesitter, mini.pairs, explorer helpers
+2. **Immediate**: colorscheme, completion, treesitter, mini.pairs, vimtex, explorer helpers
 3. **VeryLazy**: which-key, bufferline, avante, inline diagnostics
 4. **BufReadPre/New**: LSP, formatters, gitsigns
-5. **Keys**: Git tools, obsidian, toggleterm, telescope
+5. **Keys/Filetypes**: Git tools, obsidian, toggleterm, telescope, typst preview
 
 ---
 

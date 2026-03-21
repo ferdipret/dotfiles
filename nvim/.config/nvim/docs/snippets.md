@@ -187,9 +187,31 @@ line 3]], { i(1), i(2) }))
 
 - **HEEx/Phoenix**: `lua/snippets/heex.lua`
 - **Elixir**: `lua/snippets/elixir.lua`
+- **LaTeX**: `lua/snippets/tex.lua`
+- **Typst**: `lua/snippets/typst.lua`
 - **Future additions**: Create new files in `lua/snippets/`
 
 All `.lua` files in `lua/snippets/` are automatically loaded by LuaSnip.
+
+---
+
+## Math Snippets
+
+### LaTeX
+
+- `mm` - inline math
+- `dm` - display math block
+- `ali` - `align*` environment
+- `beg` - generic environment block
+- `thm` - theorem block
+
+### Typst
+
+- `mm` - inline math
+- `dm` - display math block
+- `frac` - fraction helper
+- `sum` - summation expression
+- `mat` - matrix scaffold
 
 ---
 

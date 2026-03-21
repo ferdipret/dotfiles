@@ -82,6 +82,7 @@ require("config.autocmds")   -- Auto commands last
 │   ├── plugins/                  # Plugin configurations
 │   │   ├── completions.lua       # nvim-cmp setup
 │   │   ├── lsp.lua               # LSP + Mason
+│   │   ├── math.lua              # Typst + LaTeX workflows
 │   │   ├── treesitter.lua        # Syntax highlighting
 │   │   ├── formatter.lua         # conform.nvim
 │   │   ├── obsidian.lua          # Notes integration
@@ -99,7 +100,9 @@ require("config.autocmds")   -- Auto commands last
 │   │   └── mini.lua              # mini.pairs
 │   │
 │   ├── snippets/                 # LuaSnip snippets
-│   │   └── heex.lua              # HEEx/Phoenix snippets
+│   │   ├── heex.lua              # HEEx/Phoenix snippets
+│   │   ├── tex.lua               # LaTeX snippets
+│   │   └── typst.lua             # Typst snippets
 │   │
 │   └── utils/                    # Helper utilities
 │       ├── borders.lua           # Border definitions
@@ -157,6 +160,7 @@ require("config.autocmds")   -- Auto commands last
 │   Utilities & Workflow          │
 │   - Snacks (utilities)          │
 │   - Obsidian (notes)            │
+│   - VimTeX / Typst Preview      │
 │   - Trouble (diagnostics)       │
 │   - ToggleTerm (terminal)       │
 └─────────────────────────────────┘
@@ -197,6 +201,8 @@ require("config.autocmds")   -- Auto commands last
 - tailwindcss (TailwindCSS)
 - emmet_language_server (HTML/CSS)
 - eslint (Linting)
+- texlab (LaTeX/BibTeX)
+- tinymist (Typst)
 
 **Loading Strategy:**
 - Event-based: `BufReadPre`, `BufNewFile`
@@ -256,6 +262,18 @@ require("config.autocmds")   -- Auto commands last
 - Day-specific schedules
 - Weekend vs weekday templates
 
+### 7. Math Authoring
+
+**Typst stack:**
+- `tinymist` for LSP features
+- `typst-preview.nvim` for live preview
+- localleader mappings for preview control
+
+**LaTeX stack:**
+- `vimtex` for compile, view, TOC, and error workflows
+- `texlab` for LSP features
+- localleader mappings for document actions
+
 ---
 
 ## Performance Optimization
@@ -264,6 +282,7 @@ require("config.autocmds")   -- Auto commands last
 
 **Never Lazy:**
 - snacks.nvim (priority 1000, needed early)
+- vimtex (loads globally so inverse search and filetype integration stay reliable)
 
 **VeryLazy (after UI):**
 - Bufferline
@@ -282,6 +301,10 @@ require("config.autocmds")   -- Auto commands last
 - Obsidian commands
 - Less-used tools
 
+**On Filetype:**
+- Obsidian on `markdown`
+- Typst preview on `typst`
+
 ### Startup Optimization
 
 This config still has some eager components, so startup behavior should be treated as an area under active improvement rather than a solved problem.
@@ -289,12 +312,13 @@ This config still has some eager components, so startup behavior should be treat
 **Currently eager or early:**
 1. Settings, keymaps, and autocmds
 2. Colorscheme and Snacks core
-3. Completion and Treesitter
+3. Completion, Treesitter, and VimTeX
 
 **Currently deferred:**
 - LSP on buffer read
 - Which-key, bufferline, and Avante on `VeryLazy`
-- Obsidian on markdown buffers
+- Obsidian and markdown helpers on markdown buffers
+- Typst preview on typst buffers
 - Git interfaces and terminal helpers on keys or commands
 
 **Tips for speed:**

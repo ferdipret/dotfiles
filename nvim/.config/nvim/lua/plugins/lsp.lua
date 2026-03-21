@@ -5,7 +5,7 @@ return {
 		event = "VeryLazy",
 		priority = 1000,
 		config = function()
-			require('tiny-inline-diagnostic').setup()
+			require("tiny-inline-diagnostic").setup()
 			vim.diagnostic.config({ virtual_text = false })
 		end,
 	},
@@ -29,7 +29,7 @@ return {
 		config = function()
 			require("mason").setup()
 			require("mason-lspconfig").setup({
-				ensure_installed = { "lua_ls", "vtsls", "eslint" },
+				ensure_installed = { "lua_ls", "vtsls", "eslint", "texlab", "tinymist" },
 				automatic_installation = true,
 			})
 
@@ -51,10 +51,14 @@ return {
 			vim.lsp.config("eslint", {
 				root_dir = function(bufnr, on_dir)
 					local fname = vim.api.nvim_buf_get_name(bufnr)
-					on_dir(vim.fs.dirname(vim.fs.find(
-						{ ".eslintrc.cjs", ".eslintrc.js", "eslint.config.js", "package.json" },
-						{ path = fname, upward = true }
-					)[1]))
+					on_dir(
+						vim.fs.dirname(
+							vim.fs.find(
+								{ ".eslintrc.cjs", ".eslintrc.js", "eslint.config.js", "package.json" },
+								{ path = fname, upward = true }
+							)[1]
+						)
+					)
 				end,
 				settings = { format = false },
 				on_attach = function(client)
@@ -79,31 +83,48 @@ return {
 				filetypes = { "graphql", "javascript", "typescript", "typescriptreact" },
 				root_dir = function(bufnr, on_dir)
 					local fname = vim.api.nvim_buf_get_name(bufnr)
-					on_dir(vim.fs.dirname(vim.fs.find(
-						{ ".graphqlconfig", "package.json", ".git" },
-						{ path = fname, upward = true }
-					)[1]))
+					on_dir(
+						vim.fs.dirname(
+							vim.fs.find({ ".graphqlconfig", "package.json", ".git" }, { path = fname, upward = true })[1]
+						)
+					)
 				end,
 			})
 
 			vim.lsp.config("emmet_language_server", {
 				filetypes = {
-					"html", "css", "javascript", "javascriptreact",
-					"typescript", "typescriptreact", "elixir", "heex",
+					"html",
+					"css",
+					"javascript",
+					"javascriptreact",
+					"typescript",
+					"typescriptreact",
+					"elixir",
+					"heex",
 				},
 			})
 
 			vim.lsp.config("tailwindcss", {
 				filetypes = {
-					"html", "css", "javascript", "javascriptreact",
-					"typescript", "typescriptreact", "elixir", "heex",
+					"html",
+					"css",
+					"javascript",
+					"javascriptreact",
+					"typescript",
+					"typescriptreact",
+					"elixir",
+					"heex",
 				},
 				root_dir = function(bufnr, on_dir)
 					local fname = vim.api.nvim_buf_get_name(bufnr)
-					on_dir(vim.fs.dirname(vim.fs.find(
-						{ "tailwind.config.js", "tailwind.config.ts", "package.json", ".git", "mix.exs" },
-						{ path = fname, upward = true }
-					)[1]))
+					on_dir(
+						vim.fs.dirname(
+							vim.fs.find(
+								{ "tailwind.config.js", "tailwind.config.ts", "package.json", ".git", "mix.exs" },
+								{ path = fname, upward = true }
+							)[1]
+						)
+					)
 				end,
 				settings = {
 					tailwindCSS = {
@@ -112,11 +133,37 @@ return {
 								{ 'class\\s*=\\s*"([^"]*)"' },
 								{ 'class:\\s*"([^"]*)"' },
 								{ "cva\\(((?:[^)(]|\\([^)(]*\\))*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]" },
-								{ "cn\\(((?:[^)(]|\\([^)(]*\\))*)\\)",  "[\"'`]([^\"'`]*).*?[\"'`]" },
+								{ "cn\\(((?:[^)(]|\\([^)(]*\\))*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]" },
 							},
 						},
 					},
 				},
+			})
+
+			vim.lsp.config("texlab", {
+				filetypes = { "tex", "plaintex", "bib" },
+				settings = {
+					texlab = {
+						build = {
+							executable = "latexmk",
+							args = { "-pdf", "-interaction=nonstopmode", "-synctex=1", "%f" },
+							onSave = true,
+						},
+						chktex = {
+							onEdit = false,
+							onOpenAndSave = true,
+						},
+					},
+				},
+			})
+
+			vim.lsp.config("tinymist", {
+				filetypes = { "typst" },
+				root_dir = function(bufnr, on_dir)
+					local fname = vim.api.nvim_buf_get_name(bufnr)
+					local root = vim.fs.find({ "typst.toml", ".git" }, { path = fname, upward = true })[1]
+					on_dir(root and vim.fs.dirname(root) or vim.fs.dirname(fname))
+				end,
 			})
 
 			vim.lsp.enable({
@@ -127,6 +174,8 @@ return {
 				"graphql",
 				"emmet_language_server",
 				"tailwindcss",
+				"texlab",
+				"tinymist",
 			})
 		end,
 	},

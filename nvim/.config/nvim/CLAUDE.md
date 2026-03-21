@@ -19,6 +19,7 @@
 │   │   ├── formatter.lua       # conform.nvim formatting
 │   │   ├── git.lua             # Git integration (gitsigns, neogit, diffview)
 │   │   ├── lsp.lua             # LSP configuration with Mason
+│   │   ├── math.lua            # Typst and LaTeX workflows
 │   │   ├── markdown.lua        # Markdown rendering
 │   │   ├── mini.lua            # mini.pairs for auto-pairing
 │   │   ├── neo-tree.lua        # File explorer
@@ -31,7 +32,9 @@
 │   │   ├── trouble.lua         # Diagnostics panel
 │   │   └── which-key.lua       # Keybinding help
 │   ├── snippets/
-│   │   └── heex.lua            # Custom HEEx snippets
+│   │   ├── heex.lua            # Custom HEEx snippets
+│   │   ├── tex.lua             # LaTeX snippets
+│   │   └── typst.lua           # Typst snippets
 │   └── utils/
 │       ├── borders.lua         # Border character definitions
 │       ├── completion-kinds.lua # LSP kind icons
@@ -94,6 +97,8 @@
 - **mini.pairs**: Auto-pairing brackets
 - **dressing.nvim**: Enhanced UI for vim.ui.select/input
 - **obsidian.nvim**: Obsidian vault integration
+- **vimtex**: LaTeX compile/view workflow
+- **typst-preview.nvim**: Typst live preview
 
 ## Configuration Flow
 
@@ -120,6 +125,8 @@
 - `graphql` - GraphQL
 - `emmet_language_server` - HTML/CSS snippets
 - `tailwindcss` - TailwindCSS
+- `texlab` - LaTeX/BibTeX
+- `tinymist` - Typst
 
 ### LSP Features
 - Automatic server installation via mason-lspconfig
@@ -133,12 +140,14 @@
 - **emmet_language_server**: Enabled for Elixir/HEEx filetypes
 - **eslint**: Formatting disabled (handled by conform)
 - **graphql**: Stream mode with specific filetypes
+- **texlab**: latexmk-based build settings with save-time compilation
+- **tinymist**: Typst root detection via `typst.toml` or `.git`
 
 ## Completion System
 
 ### nvim-cmp Configuration
 - **Engine**: `nvim-cmp`
-- **Snippet engine**: LuaSnip with custom HEEx and Elixir snippets
+- **Snippet engine**: LuaSnip with custom HEEx, Elixir, LaTeX, and Typst snippets
 - **Keybindings**:
   - `<Tab>`: Confirm completion or jump snippet
   - `<S-Tab>`: Previous item or jump back in snippet
@@ -190,6 +199,8 @@
 - `gd/gr/gI/gy/gD` - LSP navigation via Snacks picker
 - `<leader>ca` - Code actions
 - `<leader>cf` - Format file/range
+- `<leader>a*` - AI workflows via Avante
+- `m...` - filetype-local note and math workflows
 - `<leader>z/Z` - Zen mode / Zoom
 - `[[/]]` - Jump to prev/next word reference
 
@@ -222,6 +233,18 @@
 - Reasoning effort: high
 - Dependencies: Telescope, blink.cmp, fzf-lua, img-clip, render-markdown
 
+## Math Authoring
+
+### Typst
+- `typst-preview.nvim` provides live preview commands
+- Local mappings: `mp` preview, `ms` sync, `mf` follow cursor
+- `tinymist` provides Typst LSP support
+
+### LaTeX
+- `vimtex` handles compile, view, TOC, and errors
+- Local mappings: `mc` compile, `mv` view, `mt` TOC, `me` errors, `mk` clean
+- `texlab` provides LaTeX/BibTeX LSP support
+
 ## Custom Utilities
 
 ### `utils/borders.lua`
@@ -252,7 +275,7 @@
 
 ### Configuration
 - Auto-install parsers
-- Ensure installed: lua (minimal set)
+- Ensure installed: lua, markdown, markdown_inline, latex, bibtex, typst
 - Sync install: false
 - Modules: highlight, indent
 - Aliases: heex → html (for autotag)

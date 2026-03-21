@@ -285,6 +285,28 @@ These are buffer-local in markdown buffers and use `m` as the local leader.
 
 ---
 
+## Math And Research Writing
+
+### Local LaTeX Actions
+
+These are buffer-local in `tex` and `plaintex` buffers and use `m` as the local leader.
+
+- `mc` - compile document
+- `me` - show errors
+- `mk` - clean aux files
+- `mt` - open table of contents
+- `mv` - view PDF
+
+### Local Typst Actions
+
+These are buffer-local in `typst` buffers and use `m` as the local leader.
+
+- `mf` - toggle preview follow cursor
+- `mp` - toggle preview
+- `ms` - sync preview to cursor
+
+---
+
 ## Notes
 
 - `m` is the configured local leader, but most filetype-local workflows have not yet moved there.

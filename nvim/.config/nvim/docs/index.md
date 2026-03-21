@@ -32,6 +32,11 @@ nvim --version
 npm install -g prettier eslint_d
 cargo install stylua
 go install mvdan.cc/sh/v3/cmd/shfmt@latest
+
+# Optional research tools
+mise use -g typst@latest
+# Linux example
+sudo apt install latexmk zathura
 ```
 
 ### Setup
@@ -61,17 +66,22 @@ nvim
 - **Fuzzy Finder**: Snacks picker (primary), Telescope (backup)
 
 ### 💡 Intelligence
-- **LSP**: lua_ls, vtsls, elixirls, tailwindcss, emmet
+- **LSP**: lua_ls, vtsls, elixirls, tailwindcss, emmet, texlab, tinymist
 - **Completion**: nvim-cmp with LuaSnip and LSP sources
 - **Formatting**: conform.nvim (auto on save)
 - **AI assistant**: Avante
-- **Snippets**: LuaSnip with HEEx and Elixir snippets
+- **Snippets**: LuaSnip with code, LaTeX, and Typst snippets
 
 ### 📝 Notes & Obsidian
 - **Integration**: obsidian-nvim (community fork)
 - **Daily Notes**: Python script with date-aware generation
 - **Templates**: Daily, meeting, project, todo templates
 - **Workflows**: Quick capture, backlinks, tags, search
+
+### ∑ Research & Math
+- **Typst**: tinymist LSP with live preview and localleader mappings
+- **LaTeX**: VimTeX + texlab with compile, view, TOC, and error workflows
+- **Writing ergonomics**: wrap and spell enabled in Typst and LaTeX buffers
 
 ### 🔧 Development
 - **Git**: Gitsigns, Neogit, Lazygit, Diffview
