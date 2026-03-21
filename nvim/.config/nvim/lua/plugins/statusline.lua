@@ -1,8 +1,9 @@
 return {
 	{
 		"nvim-lualine/lualine.nvim",
-		dependencies = { "nvim-lua/lsp-status.nvim" },
 		config = function()
+			local theme = require("config.theme")
+
 			local function get_active_lsp()
 				local clients = vim.lsp.get_clients({ bufnr = 0 })
 				if #clients == 0 then return "No LSP" end
@@ -11,13 +12,6 @@ return {
 					table.insert(lsp_names, client.name)
 				end
 				return table.concat(lsp_names, " | ")
-			end
-
-			local function is_supermaven_active()
-				if package.loaded["supermaven-nvim"] then
-					return " Supermaven"
-				end
-				return ""
 			end
 
 			local function get_winbar_content()
@@ -43,9 +37,9 @@ return {
 				return winbar_str
 			end
 
-			require("lualine").setup({
+				require("lualine").setup({
 				options = {
-					theme = "tokyonight",
+					theme = theme.lualine,
 					globalstatus = true,
 					section_separators = { left = "", right = "" },
 					component_separators = { left = "│", right = "│" },
@@ -56,7 +50,6 @@ return {
 					lualine_b = { "branch", "diff", "diagnostics" },
 					lualine_c = {
 						{ get_active_lsp, icon = "  LSP" },
-						{ is_supermaven_active },
 					},
 					lualine_x = { "encoding", "fileformat", "filetype" },
 					lualine_y = { "progress" },
@@ -69,11 +62,6 @@ return {
 				},
 			})
 		end,
-	},
-
-	{
-		'romgrk/barbar.nvim',
-		enabled = false, -- Temporarily disabled due to 'for' loop bug
 	},
 	{
 		'akinsho/bufferline.nvim',

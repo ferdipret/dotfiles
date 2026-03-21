@@ -9,7 +9,10 @@ return {
 		"hrsh7th/nvim-cmp",
 		dependencies = {
 			"xzbdmw/colorful-menu.nvim",
+			"hrsh7th/cmp-buffer",
+			"hrsh7th/cmp-calc",
 			"hrsh7th/cmp-nvim-lsp",
+			"hrsh7th/cmp-path",
 			"L3MON4D3/LuaSnip",
 			"saadparwaiz1/cmp_luasnip",
 			"onsails/lspkind.nvim",
@@ -17,9 +20,8 @@ return {
 		config = function()
 			local cmp = require("cmp")
 			local luasnip = require("luasnip")
-			local lspkind = require("lspkind")
-			local suggestion = require("supermaven-nvim.completion_preview")
-			local colors = require("tokyonight.colors").setup({ style = "night" })
+			local theme = require("config.theme")
+			local colors = require("tokyonight.colors").setup({ style = theme.style })
 
 			require("luasnip.loaders.from_lua").load({ paths = "~/.config/nvim/lua/snippets" })
 
@@ -35,11 +37,7 @@ return {
 				winhighlight = "Normal:Pmenu,FloatBorder:PmenuBorder,Search:None",
 			})
 
-			lspkind.init({
-				symbol_map = {
-					Supermaven = "",
-				},
-			})
+			require("lspkind").init()
 
 			cmp.setup({
 				preselect = cmp.PreselectMode.Item,
@@ -65,8 +63,6 @@ return {
 					["<Tab>"] = cmp.mapping(function(fallback)
 						if cmp.visible() then
 							cmp.confirm({ select = true })
-						elseif suggestion.has_suggestion() then
-							suggestion.on_accept_suggestion()
 						elseif luasnip.expand_or_jumpable() then
 							luasnip.expand_or_jump()
 						else
