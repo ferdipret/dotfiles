@@ -34,6 +34,7 @@
 - If Avante ACP providers fail to start, check that `opencode`, `claude`, and `npx` are available in your shell environment.
 - Linear MCP requires `LINEAR_API_KEY`; GitHub MCP requires `GITHUB_TOKEN` for the current config.
 - The staged MCP servers are intentionally created as disabled by default in `~/.config/mcphub/servers.json`; enable them in `:MCPHub` once their credentials are ready.
+- On this setup, put MCP credentials in `~/.config/openclaw/mcp.env` and restart your shell before launching Neovim.
 
 ## Obsidian Workflow Problems
 - The vault is expected at `~/Documents/notes`. Update `lua/plugins/obsidian.lua` if you relocate it.
