@@ -104,6 +104,7 @@ Complete reference of all plugins in this configuration.
 - **avante.nvim** - ChatGPT/AI assistant
   - File: `lua/plugins/ai.lua`
   - Model: OpenAI o3-mini
+  - Key group: `<leader>a*`
 
 ### Treesitter
 - **nvim-treesitter** - Syntax highlighting & parsing

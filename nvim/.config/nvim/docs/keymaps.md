@@ -116,6 +116,19 @@ Current completion stack: `nvim-cmp` + `LuaSnip`
 
 ---
 
+## AI
+
+- `<leader>aa` - ask AI about the current code or selection
+- `<leader>ac` - chat with the codebase
+- `<leader>af` - focus the AI panel
+- `<leader>ah` - open chat history
+- `<leader>am` - select model
+- `<leader>aR` - show repo map
+- `<leader>as` - stop current AI request
+- `<leader>at` - toggle AI panel
+
+---
+
 ## Git
 
 ### Snacks Git
