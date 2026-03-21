@@ -45,6 +45,7 @@ Complete reference of all plugins in this configuration.
   - File: `lua/plugins/which-key.lua`
   - Auto-appears after typing leader
   - Preset: helix
+  - Uses rounded popups, icons, and named command groups
 
 ---
 

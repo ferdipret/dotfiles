@@ -15,6 +15,7 @@ This file documents the current live keymap layout.
 - `m` - open the local-leader which-key menu when a filetype provides local mappings
 - `<leader>sk` - search all keymaps with Snacks picker
 - `<leader>?` - show buffer-local keymaps
+- which-key groups now include icons and clearer category labels
 
 ---
 
@@ -105,7 +106,7 @@ Current completion stack: `nvim-cmp` + `LuaSnip`
 ### Actions
 
 - `<leader>ca` - code actions
-- `<leader>cf` - format file or range
+- `<leader>cf` - format buffer
 - `<leader>cR` - rename file
 
 ### References
@@ -161,10 +162,10 @@ Current completion stack: `nvim-cmp` + `LuaSnip`
 
 - `<leader>cl` - LSP definitions, references, and more in Trouble
 - `<leader>cs` - symbols in Trouble
-- `<leader>xx` - diagnostics
-- `<leader>xX` - buffer diagnostics
-- `<leader>xL` - location list
-- `<leader>xQ` - quickfix list
+- `<leader>dd` - workspace diagnostics
+- `<leader>db` - buffer diagnostics
+- `<leader>dl` - location list
+- `<leader>dq` - quickfix list
 
 ### Notifications
 
