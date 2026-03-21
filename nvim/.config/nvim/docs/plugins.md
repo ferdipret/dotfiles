@@ -101,10 +101,17 @@ Complete reference of all plugins in this configuration.
 - **lspkind.nvim** - VS Code-style icons
 
 ### AI
-- **avante.nvim** - ChatGPT/AI assistant
+- **avante.nvim** - ACP-capable coding agent interface
   - File: `lua/plugins/ai.lua`
-  - Model: OpenAI o3-mini
+  - Primary agent: `opencode`
+  - Secondary agent: `claude-code`
   - Key group: `<leader>a*`
+
+- **mcphub.nvim** - MCP server manager and Avante bridge
+  - File: `lua/plugins/ai.lua`
+  - Config: `~/.config/mcphub/servers.json`
+  - Key: `<leader>aM`
+  - Planned servers: Linear, GitHub, Context7, Playwright, Sequential Thinking
 
 ### Quality
 - **nvim-lint** - External linter integration

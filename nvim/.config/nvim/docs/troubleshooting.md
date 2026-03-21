@@ -20,12 +20,19 @@
 ## Completion or AI Issues
 - Confirm `nvim-cmp` source plugins are installed by checking `:Lazy` for `cmp-buffer`, `cmp-path`, `cmp-calc`, and `cmp-nvim-lsp`.
 - If completion stops working, run `:messages` and `:Lazy log` to look for source-loading or config errors.
-- Avante requires a valid `OPENAI_API_KEY`; if requests fail, restart Neovim after exporting the variable in your shell.
+- OpenCode ACP requires the `opencode` executable to be available in `$PATH` or at your configured location.
+- Claude Code ACP requires `claude` plus `ANTHROPIC_API_KEY`.
+- MCP Hub server definitions live in `~/.config/mcphub/servers.json`; if MCP tools are missing, open `:MCPHub` and verify the server is enabled and healthy.
 
 ## Linting Or Test Issues
 - `nvim-lint` depends on external CLIs; install `eslint_d`, `markdownlint-cli2`, `ruff`, and `shellcheck` for the matching filetypes you care about.
 - `neotest` adapters depend on your project test runner, such as `pytest` or `vitest`, being available in the project environment.
 - Use `<leader>ro` and `<leader>rO` to inspect test output when a run fails unexpectedly.
+
+## MCP Or ACP Issues
+- If Avante ACP providers fail to start, check that `opencode`, `claude`, and `npx` are available in your shell environment.
+- Linear MCP requires `LINEAR_API_KEY`; GitHub MCP requires `GITHUB_TOKEN` for the current config.
+- The staged MCP servers are intentionally created as disabled by default in `~/.config/mcphub/servers.json`; enable them in `:MCPHub` once their credentials are ready.
 
 ## Obsidian Workflow Problems
 - The vault is expected at `~/Documents/notes`. Update `lua/plugins/obsidian.lua` if you relocate it.
@@ -40,4 +47,4 @@
 
 ## Avante Build Failures
 - `avante.nvim` requires `make` plus a C toolchain. On Debian/Ubuntu install `build-essential`; on macOS install Xcode command-line tools.
-- Configure your OpenAI API key (`export OPENAI_API_KEY=...`) before starting Neovim or the provider will refuse requests.
+- For this config, make sure `opencode` is installed for the primary ACP flow and `claude` plus `ANTHROPIC_API_KEY` are available for the secondary provider.

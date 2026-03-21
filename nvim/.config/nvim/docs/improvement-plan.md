@@ -218,3 +218,4 @@ The config reaches the target state when:
 - update this plan as each phase lands
 - keep commits small and verifiable
 - update runtime docs in the same change as behavior changes
+- document reusable project-level Avante rules and skill-like workflows once the ACP/MCP stack settles

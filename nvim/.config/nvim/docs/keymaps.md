@@ -120,9 +120,14 @@ Current completion stack: `nvim-cmp` + `LuaSnip`
 
 - `<leader>aa` - ask AI about the current code or selection
 - `<leader>ac` - chat with the codebase
+- `<leader>aC` - switch to Claude Code
+- `<leader>ae` - edit the selected code
 - `<leader>af` - focus the AI panel
 - `<leader>ah` - open chat history
+- `<leader>aM` - open MCP Hub
 - `<leader>am` - select model
+- `<leader>ao` - switch to OpenCode
+- `<leader>ap` - choose provider
 - `<leader>aR` - show repo map
 - `<leader>as` - stop current AI request
 - `<leader>at` - toggle AI panel

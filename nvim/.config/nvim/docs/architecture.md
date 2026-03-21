@@ -137,7 +137,7 @@ require("config.autocmds")   -- Auto commands last
 │   Code Intelligence             │
 │   - LSP (nvim-lspconfig)        │
 │   - Completion (nvim-cmp)       │
-│   - AI (Avante)                 │
+│   - AI (Avante ACP)             │
 │   - Quality (lint + tests)      │
 │   - Snippets (LuaSnip)          │
 └─────────────────────────────────┘
@@ -162,6 +162,7 @@ require("config.autocmds")   -- Auto commands last
 │   - Snacks (utilities)          │
 │   - Obsidian (notes)            │
 │   - VimTeX / Typst Preview      │
+│   - MCP Hub                     │
 │   - Trouble (diagnostics)       │
 │   - ToggleTerm (terminal)       │
 └─────────────────────────────────┘
@@ -220,7 +221,19 @@ require("config.autocmds")   -- Auto commands last
 - `neotest` provides a unified test runner UI
 - Adapters are configured for plenary, Python, and Vitest workflows
 
-### 4. Picker System (Snacks)
+### 4. AI And MCP Workflows
+
+**Avante:**
+- uses ACP agent mode instead of direct API-only chat
+- primary provider is `opencode`
+- secondary provider is `claude-code`
+
+**MCP Hub:**
+- provides MCP tool and resource access inside Avante
+- reads server definitions from `~/.config/mcphub/servers.json`
+- enables staged external workflows such as Linear, GitHub, docs, browser automation, and structured reasoning
+
+### 5. Picker System (Snacks)
 
 **Primary Picker:** Snacks.picker
 - Fast, modern, integrated
@@ -236,7 +249,7 @@ require("config.autocmds")   -- Auto commands last
 - LSP integration
 - Git integration
 
-### 5. File Explorer (Neo-tree)
+### 6. File Explorer (Neo-tree)
 
 **Features:**
 - Sidebar position
@@ -247,7 +260,7 @@ require("config.autocmds")   -- Auto commands last
 
 **Replaced:** Snacks explorer (too minimal)
 
-### 6. Git Integration
+### 7. Git Integration
 
 **Three-tier approach:**
 1. **Gitsigns**: Inline decorations, hunk operations
@@ -255,7 +268,7 @@ require("config.autocmds")   -- Auto commands last
 3. **Lazygit**: Full-featured TUI (external)
 4. **Diffview**: View file diffs and history
 
-### 7. Notes System (Obsidian)
+### 8. Notes System (Obsidian)
 
 **Plugin:** obsidian-nvim (community fork)
 - Telescope picker integration
@@ -273,7 +286,7 @@ require("config.autocmds")   -- Auto commands last
 - Day-specific schedules
 - Weekend vs weekday templates
 
-### 8. Math Authoring
+### 9. Math Authoring
 
 **Typst stack:**
 - `tinymist` for LSP features

@@ -72,7 +72,7 @@ nvim
 - **LSP**: lua_ls, vtsls, elixirls, tailwindcss, emmet, texlab, tinymist
 - **Completion**: nvim-cmp with LuaSnip and LSP sources
 - **Formatting**: conform.nvim (auto on save)
-- **AI assistant**: Avante
+- **AI assistant**: Avante in ACP agentic mode with OpenCode and Claude Code
 - **Snippets**: LuaSnip with code, LaTeX, and Typst snippets
 
 ### 📝 Notes & Obsidian
@@ -93,6 +93,11 @@ nvim
 - **Tests**: Neotest with run/output/summary workflows
 - **Linting**: nvim-lint for external CLI diagnostics
 - **Treesitter**: Syntax highlighting and text objects
+
+### 🤖 Agents And MCP
+- **ACP agents**: OpenCode primary, Claude Code secondary through Avante
+- **MCP Hub**: centralized MCP server management with Avante integration
+- **Planned servers**: Linear, GitHub, Context7, Playwright, Sequential Thinking
 
 ---
 

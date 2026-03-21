@@ -72,7 +72,8 @@
 - **tiny-inline-diagnostic.nvim**: Inline diagnostic messages
 
 #### AI & Assistance
-- **avante.nvim**: ChatGPT/AI assistant integration (OpenAI o3-mini model)
+- **avante.nvim**: ACP agent integration with OpenCode and Claude Code
+- **mcphub.nvim**: MCP server management and Avante bridge
 - **img-clip.nvim**: Image pasting for markdown
 - **render-markdown.nvim**: Live markdown rendering
 
@@ -230,12 +231,11 @@
 
 ## AI Integration
 
-### Avante (ChatGPT UI)
-- Provider: OpenAI (o3-mini model)
-- Timeout: 90 seconds
-- Max tokens: 20,000
-- Reasoning effort: high
-- Dependencies: Telescope, blink.cmp, fzf-lua, img-clip, render-markdown
+### Avante (ACP agent UI)
+- Primary provider: OpenCode via ACP
+- Secondary provider: Claude Code via ACP
+- MCP integration: MCP Hub custom tools and slash commands
+- Dependencies: Telescope, fzf-lua, img-clip, render-markdown, mcphub.nvim
 
 ## Math Authoring
 
