@@ -33,8 +33,8 @@
 - Render and clipboard helpers (`render-markdown.nvim`, `img-clip.nvim`) require `xdg-open`/`wl-copy` on Linux; install them if preview features fail.
 
 ## Math Workflow Problems
-- For LaTeX, install a TeX distribution plus `latexmk`; on Debian/Ubuntu a good baseline is `texlive-latex-extra texlive-fonts-recommended texlive-bibtex-extra biber latexmk`.
-- For PDF viewing, install `zathura` or `okular` if forward search or `VimtexView` does not open a document.
+- For LaTeX on Arch, install `texlive-meta biber latexmk`; that gives VimTeX and texlab the expected build tools.
+- For PDF viewing on Arch, install `zathura zathura-pdf-mupdf` if forward search or `VimtexView` does not open a document.
 - For Typst preview, open a `*.typ` file and run `:TypstPreviewUpdate` if the preview binaries have not been downloaded yet.
 - Confirm `tinymist` and `texlab` are installed in Mason when Typst or LaTeX LSP features do not attach.
 

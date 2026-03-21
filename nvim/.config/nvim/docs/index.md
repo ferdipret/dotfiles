@@ -35,11 +35,12 @@ go install mvdan.cc/sh/v3/cmd/shfmt@latest
 
 # Optional research tools
 mise use -g typst@latest
-# Linux example
-sudo apt install texlive-latex-extra texlive-fonts-recommended texlive-bibtex-extra biber latexmk zathura
+
+# Arch Linux LaTeX + PDF viewing
+sudo pacman -S texlive-meta biber latexmk zathura zathura-pdf-mupdf
 ```
 
-If you want the simplest everything-included LaTeX route on Debian/Ubuntu, `texlive-full` also works, but it is much larger.
+If you want a smaller-than-`texlive-meta` setup later, you can trim packages down once your paper workflow is stable.
 
 ### Setup
 ```bash
