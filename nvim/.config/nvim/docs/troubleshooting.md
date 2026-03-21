@@ -4,7 +4,7 @@
 
 ## Plugins Not Installing
 - Run `nvim --headless "+Lazy sync" +qa` to install any missing plugins pinned in `lazy-lock.json`.
-- If a build step fails (e.g., `blink.cmp`, `avante.nvim`), open Neovim and run `:Lazy log` for the full error, then re-run the command from the terminal.
+- If a build step fails (e.g., `avante.nvim`, `markdown-preview.nvim`), open Neovim and run `:Lazy log` for the full error, then re-run the command from the terminal.
 - Delete `.local/share/nvim/lazy/<plugin>` and retry if the cache becomes inconsistent.
 
 ## LSP Servers Not Attaching
@@ -18,9 +18,9 @@
 - For Lua, Stylua runs with tabs at width 2; pass `--indent-type Tabs --indent-width 2` when running manually.
 
 ## Completion or AI Issues
-- Confirm `blink.cmp` is built (`~/.local/share/nvim/lazy/blink.cmp/target` should exist); if not, run `nvim --headless "+Lazy build blink.cmp" +qa`.
-- Supermaven suggestions depend on its background service; reinstall with `:Lazy build supermaven-nvim` if `<Tab>` stops accepting suggestions.
-- Run `:checkhealth blink.cmp` to diagnose missing dependencies.
+- Confirm `nvim-cmp` source plugins are installed by checking `:Lazy` for `cmp-buffer`, `cmp-path`, `cmp-calc`, and `cmp-nvim-lsp`.
+- If completion stops working, run `:messages` and `:Lazy log` to look for source-loading or config errors.
+- Avante requires a valid `OPENAI_API_KEY`; if requests fail, restart Neovim after exporting the variable in your shell.
 
 ## Obsidian Workflow Problems
 - The vault is expected at `~/Documents/notes`. Update `lua/plugins/obsidian.lua` if you relocate it.

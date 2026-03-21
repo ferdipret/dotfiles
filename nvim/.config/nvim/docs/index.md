@@ -10,6 +10,7 @@ Welcome to your Neovim configuration documentation!
 - [Keybindings](keymaps.md) - All keybindings organized by category
 - [Snippets](snippets.md) - Snippet reference and how to add new ones
 - [Troubleshooting](troubleshooting.md) - Common issues and solutions
+- [Configuration Improvement Plan](improvement-plan.md) - Roadmap to an A+ config for coding, research, and math-heavy writing
 - [Documentation Hosting Options](deployment.md) - Netlify strategies & sync workflows
 
 ### Quick Links
@@ -24,13 +25,13 @@ Welcome to your Neovim configuration documentation!
 
 ### Prerequisites
 ```bash
-# Neovim 0.10+
+# Neovim 0.11+
 nvim --version
 
 # Required tools
-npm install -g typescript typescript-language-server
+npm install -g prettier eslint_d
 cargo install stylua
-python3 -m pip install black
+go install mvdan.cc/sh/v3/cmd/shfmt@latest
 ```
 
 ### Setup
@@ -48,8 +49,8 @@ nvim
 ## Key Features
 
 ### 🚀 Performance
-- **Fast startup**: ~75ms with lazy loading
-- **Modern completion**: blink.cmp (Rust-based, 30-50% faster)
+- **Modular lazy-loaded setup**: plugin specs split by feature
+- **Current completion stack**: nvim-cmp + LuaSnip + lspkind
 - **Optimized LSP**: Event-based loading, no blocking
 
 ### 🎨 UI/UX
@@ -61,9 +62,10 @@ nvim
 
 ### 💡 Intelligence
 - **LSP**: lua_ls, vtsls, elixirls, tailwindcss, emmet
-- **Completion**: blink.cmp with Supermaven AI
+- **Completion**: nvim-cmp with LuaSnip and LSP sources
 - **Formatting**: conform.nvim (auto on save)
-- **Snippets**: LuaSnip with HEEx/Phoenix snippets
+- **AI assistant**: Avante
+- **Snippets**: LuaSnip with HEEx and Elixir snippets
 
 ### 📝 Notes & Obsidian
 - **Integration**: obsidian-nvim (community fork)
@@ -92,21 +94,22 @@ nvim
 
 ```
 <Space>      Leader key
+m            Local leader
 <leader>ff   Find files
 <leader>sg   Search in project (grep)
 <leader>e    Toggle file explorer
 <leader>gg   Open Lazygit
-<leader>nd   Open daily note
+<leader>nd   Generate today's daily note
 ```
 
 ### Navigation
 
 ```
 <C-h/j/k/l>  Move between splits
-[b / ]b      Previous/Next buffer
 gd           Go to definition
 gr           Find references
-K            Hover documentation
+<leader>ca   Code actions
+<leader>cf   Format file or range
 ```
 
 ---
@@ -117,7 +120,7 @@ K            Hover documentation
 
 ```
 1. nvim
-2. <leader>nd          # Open today's daily note
+2. <leader>nd          # Generate today's daily note
 3. <leader>ff          # Find files to work on
 4. <leader>gg          # Check git status
 ```
@@ -127,7 +130,7 @@ K            Hover documentation
 ```
 1. <leader>e           # Open file explorer
 2. Navigate and open files
-3. gd / gr / K         # Navigate code with LSP
+3. gd / gr             # Navigate code with LSP
 4. <leader>ca          # Code actions
 5. <leader>cf          # Format file
 ```
@@ -165,7 +168,7 @@ K            Hover documentation
 │   │   ├── autocmds.lua     # Auto commands
 │   │   └── plugins.lua      # Lazy.nvim setup
 │   ├── plugins/             # Plugin configurations
-│   │   ├── completions.lua  # blink.cmp setup
+│   │   ├── completions.lua  # nvim-cmp setup
 │   │   ├── lsp.lua          # LSP configuration
 │   │   ├── obsidian.lua     # Notes integration
 │   │   └── ...
@@ -231,18 +234,18 @@ git commit -m "backup before changes"
 | | `<leader>sw` | Search word |
 | **LSP** | `gd` | Go to definition |
 | | `gr` | References |
-| | `K` | Hover docs |
 | | `<leader>ca` | Code actions |
+| | `<leader>cf` | Format buffer |
 | **Git** | `<leader>gg` | Lazygit |
 | | `<leader>gs` | Git status |
 | | `<leader>gb` | Branches |
 | **Notes** | `<leader>nd` | Daily note |
 | | `<leader>nn` | New note |
 | | `<leader>ns` | Search vault |
-| **Buffers** | `[b` / `]b` | Navigate |
-| | `<leader>bd` | Delete buffer |
+| **Buffers** | `<leader>bd` | Delete buffer |
+| | `<leader>,` | Buffers picker |
 
 ---
 
-*Last updated: 2025-10-27*
+*Last updated: 2026-03-21*
 *For detailed information, explore the documentation sections above.*

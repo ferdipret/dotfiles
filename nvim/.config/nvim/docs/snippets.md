@@ -2,7 +2,7 @@
 
 ## How Snippets Work
 
-Snippets are powered by **LuaSnip** and integrated with **blink.cmp**.
+Snippets are powered by **LuaSnip** and surfaced through **nvim-cmp**.
 
 ### Usage
 
@@ -186,6 +186,7 @@ line 3]], { i(1), i(2) }))
 ## Snippet Locations
 
 - **HEEx/Phoenix**: `lua/snippets/heex.lua`
+- **Elixir**: `lua/snippets/elixir.lua`
 - **Future additions**: Create new files in `lua/snippets/`
 
 All `.lua` files in `lua/snippets/` are automatically loaded by LuaSnip.

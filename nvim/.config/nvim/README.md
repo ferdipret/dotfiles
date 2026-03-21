@@ -1,4 +1,13 @@
-# Neovim Configuration - Optimization & Modernization Guide
+# Historical Optimization Notes
+
+This file is a historical audit and idea dump, not the source of truth for the current runtime config.
+
+Use these files for the live state instead:
+
+- `docs/index.md`
+- `docs/improvement-plan.md`
+- `docs/keymaps.md`
+- `docs/plugins.md`
 
 ## Table of Contents
 
@@ -93,7 +102,6 @@ auto_install = false,  -- Disable on-demand installation
 sources = cmp.config.sources({
   { name = "nvim_lsp", priority = 1000 },
   { name = "luasnip", priority = 750 },
-  { name = "supermaven", priority = 500 },
 }, {
   { name = "buffer", keyword_length = 3, max_item_count = 5 },
   { name = "path", keyword_length = 3 },
@@ -560,7 +568,7 @@ lazy.nvim (bootstrap)
 - Treesitter
 - Formatters (conform)
 - Git plugins (gitsigns, neogit, diffview)
-- AI plugins (supermaven, avante)
+- AI plugins (avante)
 - Utilities (which-key, trouble, dressing)
 ```
 
@@ -578,12 +586,11 @@ lazy.nvim (bootstrap)
 - snacks.nvim
 - nvim-treesitter + nvim-ts-autotag
 - neo-tree.nvim
-- lualine.nvim + barbar.nvim + nvim-navic
+- lualine.nvim + bufferline.nvim + nvim-navic
 - gitsigns.nvim
 - which-key.nvim
 - trouble.nvim
 - mini.pairs
-- supermaven-nvim
 - lspkind.nvim
 
 ### Optional (Remove if not used)

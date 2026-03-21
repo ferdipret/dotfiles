@@ -26,7 +26,7 @@ Complete reference of all plugins in this configuration.
 ### Statusline
 - **lualine.nvim** - Statusline with LSP info
   - File: `lua/plugins/statusline.lua`
-  - Shows: mode, git, diagnostics, LSP clients, Supermaven status
+  - Shows: mode, git, diagnostics, and active LSP clients
   - Global statusline enabled
 
 ### Bufferline
@@ -88,11 +88,10 @@ Complete reference of all plugins in this configuration.
 - **tiny-inline-diagnostic.nvim** - Inline diagnostic messages
 
 ### Completion
-- **blink.cmp** - Fast Rust-based completion
+- **nvim-cmp** - Completion engine
   - File: `lua/plugins/completions.lua`
-  - 30-50% faster than nvim-cmp
-  - Sources: LSP, snippets, path, buffer
-  - Score priority: LSP(100) > Snippets(80) > Path(50) > Buffer(40)
+  - Sources: LSP, snippets, path, buffer, markdown rendering, calc
+  - Keymaps: `<Tab>`, `<S-Tab>`, `<CR>`, `<C-e>`, `<C-b>`, `<C-f>`, `<C-Space>`
 
 - **LuaSnip** - Snippet engine
   - File: `lua/snippets/heex.lua`
@@ -101,10 +100,6 @@ Complete reference of all plugins in this configuration.
 - **lspkind.nvim** - VS Code-style icons
 
 ### AI
-- **supermaven-nvim** - AI code completion
-  - File: `lua/plugins/ai.lua`
-  - Tab to accept suggestions
-
 - **avante.nvim** - ChatGPT/AI assistant
   - File: `lua/plugins/ai.lua`
   - Model: OpenAI o3-mini
@@ -112,7 +107,7 @@ Complete reference of all plugins in this configuration.
 ### Treesitter
 - **nvim-treesitter** - Syntax highlighting & parsing
   - File: `lua/plugins/treesitter.lua`
-  - Auto-install: false (manual install recommended)
+  - Auto-install: true
   - Modules: highlight, indent
 
 - **nvim-ts-autotag** - Auto-close HTML/JSX tags
@@ -194,9 +189,9 @@ Complete reference of all plugins in this configuration.
 ## Plugin Loading Order
 
 1. **Immediate** (priority 1000): snacks.nvim
-2. **VeryLazy**: UI plugins, pickers, explorer
-3. **InsertEnter**: completion, AI
-4. **BufReadPre/New**: LSP, treesitter, formatters
+2. **Immediate**: colorscheme, completion, treesitter, mini.pairs, explorer helpers
+3. **VeryLazy**: which-key, bufferline, avante, inline diagnostics
+4. **BufReadPre/New**: LSP, formatters, gitsigns
 5. **Keys**: Git tools, obsidian, toggleterm, telescope
 
 ---

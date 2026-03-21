@@ -6,7 +6,6 @@
 .
 ├── init.lua                    # Main entry point - loads all config modules
 ├── lazy-lock.json              # Lazy.nvim plugin lockfile
-├── stylua.toml                 # Stylua formatter configuration
 ├── lua/
 │   ├── config/
 │   │   ├── autocmds.lua        # Auto commands
@@ -14,9 +13,9 @@
 │   │   ├── plugins.lua         # Lazy.nvim bootstrap and setup
 │   │   └── settings.lua        # Vim options and settings
 │   ├── plugins/
-│   │   ├── ai.lua              # AI tools (Supermaven, Avante)
+│   │   ├── ai.lua              # AI tools (Avante)
 │   │   ├── colorscheme.lua     # TokyoNight theme
-│   │   ├── completions.lua     # blink.cmp completion setup
+│   │   ├── completions.lua     # nvim-cmp completion setup
 │   │   ├── formatter.lua       # conform.nvim formatting
 │   │   ├── git.lua             # Git integration (gitsigns, neogit, diffview)
 │   │   ├── lsp.lua             # LSP configuration with Mason
@@ -38,7 +37,6 @@
 │       ├── completion-kinds.lua # LSP kind icons
 │       ├── keymap.lua          # Keymap helper utilities
 │       └── lsp-server-configs.lua # LSP server custom configs
-└── nvim/                       # Nested config (appears to be LazyVim-based)
 ```
 
 ## Plugin Architecture
@@ -54,7 +52,7 @@
 #### Core UI
 - **tokyonight.nvim**: Colorscheme (night variant)
 - **lualine.nvim**: Statusline with global status
-- **barbar.nvim**: Buffer tabline with neo-tree offset
+- **bufferline.nvim**: Buffer tabline with neo-tree offset
 - **nvim-navic**: Breadcrumb navigation in winbar
 - **which-key.nvim**: Keybinding documentation and discovery
 - **snacks.nvim**: Unified utility collection (dashboard, picker, notifications, terminal, etc.)
@@ -63,15 +61,13 @@
 - **nvim-lspconfig**: LSP client configurations
 - **mason.nvim**: LSP server installer
 - **mason-lspconfig.nvim**: Bridge between mason and lspconfig
-- **blink.cmp**: Modern Rust-based completion engine
-  - Sources: LSP, snippets (LuaSnip), buffer, path
-  - Built-in fuzzy matching and async handling
+- **nvim-cmp**: Completion engine
+  - Sources: LSP, snippets (LuaSnip), buffer, path, calc, markdown rendering
 - **LuaSnip**: Snippet engine with custom snippets
 - **lspkind.nvim**: VS Code-style completion icons
 - **tiny-inline-diagnostic.nvim**: Inline diagnostic messages
 
 #### AI & Assistance
-- **supermaven-nvim**: AI code completion
 - **avante.nvim**: ChatGPT/AI assistant integration (OpenAI o3-mini model)
 - **img-clip.nvim**: Image pasting for markdown
 - **render-markdown.nvim**: Live markdown rendering
@@ -127,8 +123,8 @@
 
 ### LSP Features
 - Automatic server installation via mason-lspconfig
-- Shared `on_attach` function with nvim-navic integration and LSP keybindings
-- Custom capabilities from blink.cmp
+- `nvim-navic` attaches through `LspAttach`
+- Custom capabilities from `cmp-nvim-lsp`
 - Per-server custom configuration with handlers (see `lua/plugins/lsp.lua`)
 - Event-based loading on `BufReadPre` and `BufNewFile`
 
@@ -140,30 +136,22 @@
 
 ## Completion System
 
-### blink.cmp Configuration
-- **Engine**: Rust-based, 30-50% faster than nvim-cmp
-- **Snippet engine**: LuaSnip with custom HEEx snippets (via snippets source with preset)
+### nvim-cmp Configuration
+- **Engine**: `nvim-cmp`
+- **Snippet engine**: LuaSnip with custom HEEx and Elixir snippets
 - **Keybindings**:
-  - `<Tab>`: Accept completion, Supermaven suggestion (via vim.schedule), or jump snippet
+  - `<Tab>`: Confirm completion or jump snippet
   - `<S-Tab>`: Previous item or jump back in snippet
   - `<CR>`: Confirm completion
   - `<C-Space>`: Trigger completion
   - `<C-e>`: Hide completion
   - `<C-b>/<C-f>`: Scroll documentation
-  - `<C-p>/<C-n>`: Navigate items
 
 - **Sources**:
-  1. lsp (with buffer fallback)
-  2. path
-  3. snippets (LuaSnip preset)
-  4. buffer
-
-- **Features**:
-  - Auto-brackets for functions
-  - Built-in fuzzy matching
-  - Signature help integration
-  - TokyoNight theme colors
-  - lspkind icons including Supermaven
+  1. LSP
+  2. snippets
+  3. buffer and path
+  4. calc and markdown helpers
 
 ## Formatting
 
@@ -181,7 +169,7 @@
 
 ### Leader Key
 - `<Space>` - Main leader
-- `\` - Local leader
+- `m` - Local leader
 
 ### Snacks Keybinding Categories
 - **Top-level shortcuts**:
@@ -226,13 +214,6 @@
 - Smart case search
 
 ## AI Integration
-
-### Supermaven
-- Event: InsertEnter
-- Keybindings:
-  - `<Tab>`: Accept suggestion (when no completion menu)
-  - `<C-e>`: Clear suggestion
-  - `<C-j>`: Accept word
 
 ### Avante (ChatGPT UI)
 - Provider: OpenAI (o3-mini model)
@@ -308,11 +289,11 @@ return {
 ## Dependencies Between Plugins
 
 ### Critical Dependencies
-- **blink.cmp** ← LuaSnip, lspkind
-- **nvim-lspconfig** ← mason, mason-lspconfig, blink.cmp (for capabilities), nvim-navic
-- **lualine** ← lsp-status, nvim-navic (for winbar)
+- **nvim-cmp** ← LuaSnip, cmp-nvim-lsp, cmp-buffer, cmp-path, cmp-calc, lspkind
+- **nvim-lspconfig** ← mason, mason-lspconfig, cmp-nvim-lsp (for capabilities), nvim-navic
+- **lualine** ← nvim-navic (for winbar)
 - **avante** ← treesitter, dressing, plenary, nui, telescope, blink.cmp, fzf-lua, img-clip, render-markdown
-- **barbar** ← gitsigns, nvim-web-devicons
+- **bufferline** ← nvim-web-devicons
 - **telescope** ← plenary, telescope-fzf-native
 - **treesitter** ← nvim-ts-autotag, playground
 

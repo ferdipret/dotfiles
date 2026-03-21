@@ -1,301 +1,263 @@
 # Neovim Keybindings
 
-## Leader Keys
+[<- Back to Index](index.md)
 
-- `<Space>` - Main leader
-- `m` - Local leader
+This file documents the current live keymap layout.
 
----
+## Leaders
 
-## LSP (Language Server Protocol)
+- `<Space>` - main leader
+- `m` - local leader
 
-### Navigation (via Snacks Picker)
+## How To Discover Mappings
 
-- `gd` - Goto Definition
-- `gD` - Goto Declaration
-- `gr` - References
-- `gI` - Goto Implementation
-- `gy` - Goto Type Definition
-
-### Code Actions
-
-- `<leader>ca` - Code Actions
-- `<leader>cr` - Rename Symbol
-- `<leader>cf` - Format Buffer
-
-### Documentation
-
-- `K` - Hover Documentation
-
-### Diagnostics
-
-- `gl` - Show Line Diagnostics
-- `[d` - Previous Diagnostic
-- `]d` - Next Diagnostic
+- `<leader>` - open the main which-key menu
+- `m` - open the local-leader which-key menu when a filetype provides local mappings
+- `<leader>sk` - search all keymaps with Snacks picker
+- `<leader>?` - show buffer-local keymaps
 
 ---
 
-## Completion (blink.cmp)
+## Global Editor Maps
 
-- `<Tab>` - Accept completion / Supermaven suggestion / Jump snippet forward
-- `<S-Tab>` - Previous item / Jump snippet backward
-- `<CR>` - Confirm completion (no auto-select)
-- `<C-e>` - Close completion menu / Clear Supermaven suggestion
-- `<C-b>` - Scroll documentation up
-- `<C-f>` - Scroll documentation down
-- `<C-Space>` - Trigger completion manually
-- `<C-p>` - Select previous item
-- `<C-n>` - Select next item
-
-### Supermaven AI
-
-- `<Tab>` - Accept AI suggestion (when no completion menu)
-- `<C-e>` - Clear AI suggestion
-- `<C-j>` - Accept single word from suggestion
+- `<C-h>` - move to left split
+- `<C-j>` - move to lower split
+- `<C-k>` - move to upper split
+- `<C-l>` - move to right split
+- `<Esc>` - clear search highlight
+- `<A-j>` - move current line or selection down
+- `<A-k>` - move current line or selection up
+- terminal `<Esc>` - leave terminal mode
 
 ---
 
-## File Navigation (Snacks Picker)
+## Completion
 
-### Top-Level
+Current completion stack: `nvim-cmp` + `LuaSnip`
 
-- `<leader><space>` - Smart Find Files
-- `<leader>,` - Buffers
-- `<leader>/` - Grep in Project
-- `<leader>:` - Command History
-- `<leader>e` - Toggle Neo-tree Explorer
+- `<Tab>` - confirm visible completion or expand/jump snippet
+- `<S-Tab>` - select previous completion item or jump backward in snippet
+- `<CR>` - confirm completion without auto-select
+- `<C-e>` - abort completion
+- `<C-b>` - scroll docs up
+- `<C-f>` - scroll docs down
+- `<C-Space>` - trigger completion
+
+---
+
+## Files And Pickers
+
+- `<leader><space>` - smart find files
+- `<leader>,` - buffers
+- `<leader>/` - grep
+- `<leader>:` - command history
+- `<leader>e` - explorer
 
 ### Find
 
-- `<leader>fb` - Find Buffers
-- `<leader>fc` - Find Config Files
-- `<leader>ff` - Find Files
-- `<leader>fg` - Find Git Files
-- `<leader>fp` - Projects
-- `<leader>fr` - Recent Files
+- `<leader>fb` - buffers
+- `<leader>fc` - find config file
+- `<leader>ff` - find files
+- `<leader>fg` - find git files
+- `<leader>fp` - projects
+- `<leader>fr` - recent files
 
 ### Search
 
-- `<leader>sb` - Buffer Lines
-- `<leader>sB` - Grep Open Buffers
-- `<leader>sg` - Grep in Project
-- `<leader>sw` - Grep Word under cursor
-- `<leader>s"` - Registers
-- `<leader>s/` - Search History
-- `<leader>sa` - Autocmds
-- `<leader>sc` - Command History
-- `<leader>sC` - Commands
-- `<leader>sd` - Diagnostics (Workspace)
-- `<leader>sD` - Diagnostics (Buffer)
-- `<leader>sh` - Help Pages
-- `<leader>sH` - Highlights
-- `<leader>si` - Icons
-- `<leader>sj` - Jumps
-- `<leader>sk` - Keymaps
-- `<leader>sl` - Location List
-- `<leader>sm` - Marks
-- `<leader>sM` - Man Pages
-- `<leader>sp` - Search Plugin Specs
-- `<leader>sq` - Quickfix List
-- `<leader>sR` - Resume Last Picker
-- `<leader>ss` - LSP Symbols (Buffer)
-- `<leader>sS` - LSP Workspace Symbols
-- `<leader>su` - Undo History
+- `<leader>sa` - autocmds
+- `<leader>sb` - buffer lines
+- `<leader>sB` - grep open buffers
+- `<leader>sc` - command history
+- `<leader>sC` - commands
+- `<leader>sd` - diagnostics
+- `<leader>sD` - buffer diagnostics
+- `<leader>sg` - grep
+- `<leader>sh` - help pages
+- `<leader>sH` - highlights
+- `<leader>si` - icons
+- `<leader>sj` - jumps
+- `<leader>sk` - keymaps
+- `<leader>sl` - location list
+- `<leader>sm` - marks
+- `<leader>sM` - man pages
+- `<leader>sp` - plugin specs
+- `<leader>sq` - quickfix list
+- `<leader>sR` - resume picker
+- `<leader>ss` - LSP symbols
+- `<leader>sS` - LSP workspace symbols
+- `<leader>su` - undo history
+- `<leader>sw` - grep word or selection
+- `<leader>s"` - registers
+- `<leader>s/` - search history
 
 ---
 
-## Git (Snacks, Neogit & Gitsigns)
-
-### Main Git Commands (Snacks)
-
-- `<leader>gg` - Lazygit
-- `<leader>gB` - Git Browse (Open in browser)
-- `<leader>gb` - Git Branches
-- `<leader>gl` - Git Log
-- `<leader>gL` - Git Log Line
-- `<leader>gs` - Git Status
-- `<leader>gS` - Git Stash
-- `<leader>gd` - Git Diff (Hunks)
-- `<leader>gf` - Git Log File
-
-### Neogit
-
-- `<leader>gn` - Neogit Status
-- `<leader>gnc` - Commit
-- `<leader>gnp` - Push
-- `<leader>gnl` - Log
-- `<leader>gnd` - Diff
-- `<leader>gnr` - Reset (unstage)
-
-### Git Hunks (Gitsigns)
-
-- `<leader>ghh` - Preview Hunk
-- `<leader>ghn` - Next Hunk
-- `<leader>ghp` - Previous Hunk
-- `<leader>ghs` - Stage Hunk
-- `<leader>ghu` - Undo Stage Hunk
-- `<leader>ghr` - Reset Hunk
-- `<leader>ghR` - Reset Buffer
-- `<leader>ghb` - Blame Line
-- `<leader>ght` - Toggle Signs
-- `<leader>ghd` - Diff This
-- `<leader>gho` - Open Fold
-- `<leader>ghc` - Toggle Line Blame
-
----
-
-## Diagnostics & Lists (Trouble)
-
-- `<leader>xx` - Toggle diagnostics view
-- `<leader>xX` - Toggle buffer diagnostics
-- `<leader>cs` - Document symbols (Trouble)
-- `<leader>cl` - LSP definitions/references (Trouble)
-- `<leader>xL` - Location list
-- `<leader>xQ` - Quickfix list
-
----
-
-## Buffers (Snacks & Barbar)
-
-- `<leader>bd` - Delete Buffer
-- `<leader>bp` - Pin Buffer
-- `<leader>bP` - Close All But Pinned
-- `<leader>bo` - Close Other Buffers
-- `[b` - Previous Buffer
-- `]b` - Next Buffer
-
----
-
-## UI Toggles
-
-- `<leader>us` - Toggle Spelling
-- `<leader>uw` - Toggle Wrap
-- `<leader>uL` - Toggle Relative Numbers
-- `<leader>ud` - Toggle Diagnostics
-- `<leader>ul` - Toggle Line Numbers
-- `<leader>uc` - Toggle Conceal Level
-- `<leader>uT` - Toggle Treesitter
-- `<leader>ub` - Toggle Dark/Light Background
-- `<leader>uh` - Toggle Inlay Hints
-- `<leader>ug` - Toggle Indent Guides
-- `<leader>uD` - Toggle Dim
-- `<leader>uC` - Change Colorscheme
-- `<leader>un` - Dismiss Notifications
-
----
-
-## Utilities
-
-- `<leader>z` - Toggle Zen Mode
-- `<leader>Z` - Toggle Zoom
-- `<leader>.` - Toggle Scratch Buffer
-- `<leader>S` - Select Scratch Buffer
-- `<leader>cR` - Rename File
-- `<leader>N` - Neovim News
-
-### Notifications
-
-- `<leader>xn` - Notification History
-- `<leader>x?` - Notification History (alternative)
-- `<leader>un` - Dismiss All Notifications
-
-### Terminal
-
-- `<C-/>` - Toggle Terminal
-- `<C-_>` - Toggle Terminal (alternative)
-- `<leader>tf` - Toggle floating terminal rooted at project
-
-### Word References
-
-- `]]` - Next Reference
-- `[[` - Previous Reference
-
----
-
-## Formatting (Conform)
-
-- `<leader>cf` - Format File or Range (normal/visual mode)
-- Format on save: Enabled (500ms timeout)
-
----
-
-## File Explorer (Neo-tree)
-
-- `<leader>e` - Toggle File Explorer
-
----
-
-## Notes & Obsidian
-
-### Core Operations
-
-- `<leader>no` - Open in Obsidian App
-- `<leader>nn` - New Note
-- `<leader>nd` - Generate Today's Daily Note (Python script - date-aware)
-- `<leader>ns` - Search Vault
-- `<leader>nf` - Follow Link
-
-### Enhanced Workflows
-
-- `<leader>nq` - Quick Switch Note
-- `<leader>nb` - Show Backlinks
-- `<leader>nt` - Search Tags
-- `<leader>nl` - Show All Links
-- `<leader>nT` - Table of Contents
-- `<leader>nx` - Extract to New Note (visual mode)
-
-### Templates
-
-- `<leader>nti` - Insert Template
-- `<leader>ntm` - Meeting Template
-- `<leader>ntp` - Project Template
-- `<leader>ntt` - Todo Template
-
-### Quick Capture
-
-- `<leader>nm` - Quick Meeting Note
-- `<leader>ni` - Quick Idea
-
-### File Operations
-
-- `<leader>nr` - Rename Note
-- `<leader>np` - Paste Image
-
-### Preview
-
-- `<leader>nP` - Toggle Markdown Preview
-
-### Todo/Checkbox Management
-
-- `<CR>` - Toggle Checkbox (in markdown)
-- `<leader>nc` - Toggle Checkbox
+## LSP And Code
 
 ### Navigation
 
-- `<leader>ny` - Generate Yesterday's Daily Note (Python script - correct date/schedule)
-- `<leader>nY` - Generate Tomorrow's Daily Note (Python script - correct date/schedule)
-- `<leader>nD` - Browse Daily Notes (picker with all dailies)
-- `<leader>nw` - Switch Workspace
+- `gd` - goto definition
+- `gD` - goto declaration
+- `gr` - references
+- `gI` - goto implementation
+- `gy` - goto type definition
 
-**Why Use Python Script for Daily Notes?**
-The Python script (`generate_daily_note.py`) is date-aware and generates:
-- Correct navigation links (yesterday/tomorrow relative to the note's date)
-- Correct day-of-week specific schedule (e.g., Chess on Tuesday)
-- Correct title and frontmatter for the target date
-- Weekend vs weekday template based on actual day
+### Actions
 
-**Backlinks Navigation:**
-- When viewing backlinks (`:ObsidianBacklinks` or `<leader>nb`):
-  - Use standard picker navigation: `<C-n>`/`<C-p>` or arrow keys
-  - Press `<CR>` to open the selected backlink
-  - Press `<Esc>` to close the picker
+- `<leader>ca` - code actions
+- `<leader>cf` - format file or range
+- `<leader>cR` - rename file
+
+### References
+
+- `]]` - next reference
+- `[[` - previous reference
 
 ---
 
-## General Notes
+## Git
 
-- Most Snacks pickers support fuzzy search
-- LSP features require language server to be installed via Mason
-- Git features require working directory to be a git repository
-- Diagnostic keybindings only active when LSP is attached
-- Obsidian features require markdown filetype
+### Snacks Git
+
+- `<leader>gB` - git browse
+- `<leader>gb` - git branches
+- `<leader>gd` - git diff hunks
+- `<leader>gf` - git log file
+- `<leader>gg` - lazygit
+- `<leader>gl` - git log
+- `<leader>gL` - git log line
+- `<leader>gs` - git status
+- `<leader>gS` - git stash
+
+### Neogit
+
+- `<leader>gn` - Neogit status
+- `<leader>gnc` - commit
+- `<leader>gnd` - diff
+- `<leader>gnl` - log
+- `<leader>gnp` - push
+- `<leader>gnr` - reset (unstage)
+
+### Gitsigns
+
+- `<leader>ghb` - blame line
+- `<leader>ghc` - toggle current line blame
+- `<leader>ghd` - diff this
+- `<leader>ghh` - preview hunk
+- `<leader>ghn` - next hunk
+- `<leader>gho` - open fold
+- `<leader>ghp` - previous hunk
+- `<leader>ghr` - reset hunk
+- `<leader>ghR` - reset buffer
+- `<leader>ghs` - stage hunk
+- `<leader>ght` - toggle signs
+- `<leader>ghu` - undo stage hunk
+
+---
+
+## Lists, Diagnostics, And Notifications
+
+### Trouble
+
+- `<leader>cl` - LSP definitions, references, and more in Trouble
+- `<leader>cs` - symbols in Trouble
+- `<leader>xx` - diagnostics
+- `<leader>xX` - buffer diagnostics
+- `<leader>xL` - location list
+- `<leader>xQ` - quickfix list
+
+### Notifications
+
+- `<leader>xn` - notification history picker
+- `<leader>x?` - notification history window
+- `<leader>un` - dismiss notifications
+
+---
+
+## Buffers, Scratch, And UI
+
+- `<leader>bd` - delete buffer
+- `<leader>.` - toggle scratch buffer
+- `<leader>S` - select scratch buffer
+- `<leader>z` - toggle zen mode
+- `<leader>Z` - toggle zoom
+- `<leader>N` - Neovim news
+
+### UI Toggles
+
+- `<leader>ub` - dark background
+- `<leader>uC` - colorschemes
+- `<leader>uc` - conceal level
+- `<leader>uD` - dim
+- `<leader>ud` - diagnostics
+- `<leader>ug` - indent guides
+- `<leader>uh` - inlay hints
+- `<leader>uL` - relative numbers
+- `<leader>ul` - line numbers
+- `<leader>un` - dismiss notifications
+- `<leader>us` - spelling
+- `<leader>uT` - Treesitter
+- `<leader>uw` - wrap
+
+---
+
+## Terminal
+
+- `<C-/>` - toggle Snacks terminal
+- `<C-_>` - alternate terminal toggle
+- `<leader>tf` - toggle floating terminal rooted at the project git dir
+
+---
+
+## Notes And Obsidian
+
+### Core
+
+- `<leader>nb` - show backlinks
+- `<leader>nD` - browse daily notes
+- `<leader>nd` - generate today's daily note
+- `<leader>nf` - follow link
+- `<leader>nl` - show all links
+- `<leader>nn` - new note
+- `<leader>no` - open in Obsidian app
+- `<leader>nq` - quick switch note
+- `<leader>ns` - search vault
+- `<leader>nT` - table of contents
+- `<leader>nt` - search tags
+- `<leader>nw` - switch workspace
+
+### Capture And File Operations
+
+- `<leader>ni` - quick idea
+- `<leader>nm` - quick meeting note
+- `<leader>np` - paste image
+- `<leader>nr` - rename note
+- `<leader>nx` - extract selection to a new note
+- `<leader>nc` - toggle markdown checkbox
+
+### Templates
+
+- `<leader>nti` - insert template
+- `<leader>ntd` - decision template
+- `<leader>ntg` - debug template
+- `<leader>ntl` - learning template
+- `<leader>ntm` - meeting template
+- `<leader>ntp` - project template
+- `<leader>ntt` - todo template
+
+### Daily Navigation
+
+- `<leader>ny` - generate yesterday's daily note
+- `<leader>nY` - generate tomorrow's daily note
+
+### Preview
+
+- `<leader>nP` - toggle markdown preview
+
+---
+
+## Notes
+
+- `m` is the configured local leader, but most filetype-local workflows have not yet moved there.
+- The most reliable in-editor cheatsheets are `<leader>`, `<leader>sk`, and `<leader>?`.
+- This file is intended to track the live config during the Phase 1 cleanup.

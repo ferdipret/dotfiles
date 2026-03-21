@@ -43,8 +43,7 @@ require("config.autocmds")   -- Auto commands last
 - Pickers
 
 **Event = "InsertEnter"**
-- blink.cmp completion
-- Supermaven AI
+- Currently unused for the core editing stack
 
 **Event = "BufReadPre", "BufNewFile"**
 - LSP configuration
@@ -81,7 +80,7 @@ require("config.autocmds")   -- Auto commands last
 │   │   └── autocmds.lua          # Auto commands
 │   │
 │   ├── plugins/                  # Plugin configurations
-│   │   ├── completions.lua       # blink.cmp setup
+│   │   ├── completions.lua       # nvim-cmp setup
 │   │   ├── lsp.lua               # LSP + Mason
 │   │   ├── treesitter.lua        # Syntax highlighting
 │   │   ├── formatter.lua         # conform.nvim
@@ -92,7 +91,7 @@ require("config.autocmds")   -- Auto commands last
 │   │   ├── telescope.lua         # Fuzzy finder (backup)
 │   │   ├── snacks/
 │   │   │   └── init.lua          # Snacks utilities
-│   │   ├── ai.lua                # Supermaven + Avante
+│   │   ├── ai.lua                # Avante
 │   │   ├── colorscheme.lua       # TokyoNight theme
 │   │   ├── which-key.lua         # Keybinding help
 │   │   ├── trouble.lua           # Diagnostics panel
@@ -134,8 +133,8 @@ require("config.autocmds")   -- Auto commands last
 ┌─────────────────────────────────┐
 │   Code Intelligence             │
 │   - LSP (nvim-lspconfig)        │
-│   - Completion (blink.cmp)      │
-│   - AI (Supermaven, Avante)     │
+│   - Completion (nvim-cmp)       │
+│   - AI (Avante)                 │
 │   - Snippets (LuaSnip)          │
 └─────────────────────────────────┘
            ▼
@@ -167,23 +166,21 @@ require("config.autocmds")   -- Auto commands last
 
 ## Key Components
 
-### 1. Completion System (blink.cmp)
+### 1. Completion System (nvim-cmp)
 
-**Why blink.cmp?**
-- 30-50% faster than nvim-cmp (Rust-based)
-- Built-in fuzzy matching
-- Better async handling
-- Native snippet support
+**Current stack**
+- `nvim-cmp` for completion menus and source orchestration
+- `LuaSnip` for snippet expansion and jumps
+- `lspkind.nvim` for completion item icons
 
 **Source Priority:**
-1. LSP (score: 100)
-2. Snippets (score: 80)
-3. Path (score: 50)
-4. Buffer (score: 40)
+1. LSP
+2. Snippets
+3. Buffer and path
+4. Utility sources such as calc and markdown rendering
 
 **Integration:**
 - LuaSnip for snippets
-- Supermaven for AI suggestions
 - lspkind for icons
 
 ### 2. LSP Configuration
@@ -244,8 +241,7 @@ require("config.autocmds")   -- Auto commands last
 ### 6. Notes System (Obsidian)
 
 **Plugin:** obsidian-nvim (community fork)
-- Better blink.cmp integration
-- Snacks picker support
+- Telescope picker integration
 - Active maintenance
 
 **Workflow:**
@@ -270,19 +266,15 @@ require("config.autocmds")   -- Auto commands last
 - snacks.nvim (priority 1000, needed early)
 
 **VeryLazy (after UI):**
-- Statusline, bufferline
-- File explorer
-- Pickers
+- Bufferline
 - Which-key
-
-**On InsertEnter:**
-- Completion engine
-- AI suggestions
+- Avante
+- Inline diagnostics
 
 **On BufRead:**
 - LSP configuration
-- Treesitter
 - Formatters
+- Gitsigns
 - Gitsigns
 
 **On Keypress:**
@@ -292,19 +284,23 @@ require("config.autocmds")   -- Auto commands last
 
 ### Startup Optimization
 
-Current startup time: **~75ms**
+This config still has some eager components, so startup behavior should be treated as an area under active improvement rather than a solved problem.
 
-**What's loaded immediately:**
-1. Settings, keymaps, autocmds
-2. Snacks.nvim (utilities)
+**Currently eager or early:**
+1. Settings, keymaps, and autocmds
+2. Colorscheme and Snacks core
+3. Completion and Treesitter
 
-**What's deferred:**
-- Everything else loads on-demand
+**Currently deferred:**
+- LSP on buffer read
+- Which-key, bufferline, and Avante on `VeryLazy`
+- Obsidian on markdown buffers
+- Git interfaces and terminal helpers on keys or commands
 
 **Tips for speed:**
-- Don't load Snacks eagerly unless needed
-- Keep `ensure_installed` minimal for Treesitter
-- Use event-based loading for LSP
+- profile with `nvim --startuptime startup.log`
+- use `:Lazy profile`
+- keep optional UI and workflow plugins lazy where practical
 
 ---
 
@@ -401,10 +397,10 @@ end
 
 ### Why These Choices?
 
-**blink.cmp over nvim-cmp**
-- Faster (Rust-based)
-- Simpler API
-- Better async
+**nvim-cmp for completion**
+- Mature ecosystem
+- Works well with LuaSnip and existing source plugins
+- Good enough while the config is being cleaned up
 
 **Snacks over individual plugins**
 - Unified interface
