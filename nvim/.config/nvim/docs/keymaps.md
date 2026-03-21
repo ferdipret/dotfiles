@@ -129,6 +129,18 @@ Current completion stack: `nvim-cmp` + `LuaSnip`
 
 ---
 
+## Run And Quality
+
+- `<leader>ra` - run all tests
+- `<leader>rf` - run tests in the current file
+- `<leader>rl` - lint the current buffer
+- `<leader>rn` - run the nearest test
+- `<leader>ro` - open test output
+- `<leader>rO` - toggle test output panel
+- `<leader>rs` - toggle test summary
+
+---
+
 ## Git
 
 ### Snacks Git

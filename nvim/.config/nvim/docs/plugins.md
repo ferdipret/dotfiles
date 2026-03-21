@@ -106,6 +106,17 @@ Complete reference of all plugins in this configuration.
   - Model: OpenAI o3-mini
   - Key group: `<leader>a*`
 
+### Quality
+- **nvim-lint** - External linter integration
+  - File: `lua/plugins/quality.lua`
+  - Key: `<leader>rl`
+  - Linters: eslint_d, markdownlint-cli2, ruff, shellcheck
+
+- **neotest** - Unified test runner
+  - File: `lua/plugins/quality.lua`
+  - Key group: `<leader>r*`
+  - Adapters: plenary, python, vitest
+
 ### Treesitter
 - **nvim-treesitter** - Syntax highlighting & parsing
   - File: `lua/plugins/treesitter.lua`

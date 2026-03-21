@@ -22,6 +22,11 @@
 - If completion stops working, run `:messages` and `:Lazy log` to look for source-loading or config errors.
 - Avante requires a valid `OPENAI_API_KEY`; if requests fail, restart Neovim after exporting the variable in your shell.
 
+## Linting Or Test Issues
+- `nvim-lint` depends on external CLIs; install `eslint_d`, `markdownlint-cli2`, `ruff`, and `shellcheck` for the matching filetypes you care about.
+- `neotest` adapters depend on your project test runner, such as `pytest` or `vitest`, being available in the project environment.
+- Use `<leader>ro` and `<leader>rO` to inspect test output when a run fails unexpectedly.
+
 ## Obsidian Workflow Problems
 - The vault is expected at `~/Documents/notes`. Update `lua/plugins/obsidian.lua` if you relocate it.
 - Daily notes rely on `~/Documents/notes/.scripts/generate_daily_note.py`. Ensure Python 3 is available and run the script manually (`python3 path/to/script 0`) to confirm it prints a `FILE_PATH:` line.

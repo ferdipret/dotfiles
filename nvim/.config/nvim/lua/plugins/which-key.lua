@@ -26,6 +26,7 @@ return {
 			{ "<leader>gn", group = "Neogit", icon = "󰊢" },
 			{ "<leader>n", group = "Notes", icon = "󱞁" },
 			{ "<leader>nt", group = "Templates", icon = "󰗴" },
+			{ "<leader>r", group = "Run", icon = "󰜎" },
 			{ "<leader>s", group = "Search", icon = "󰱼" },
 			{ "<leader>t", group = "Terminal", icon = "󰆍" },
 			{ "<leader>u", group = "UI", icon = "󰙵" },

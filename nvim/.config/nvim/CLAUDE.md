@@ -24,6 +24,7 @@
 │   │   ├── mini.lua            # mini.pairs for auto-pairing
 │   │   ├── neo-tree.lua        # File explorer
 │   │   ├── obsidian.lua        # Obsidian.nvim integration
+│   │   ├── quality.lua         # Linting and test workflows
 │   │   ├── snacks/
 │   │   │   └── init.lua        # Snacks.nvim utilities
 │   │   ├── statusline.lua      # Lualine + Barbar + Navic
@@ -99,6 +100,8 @@
 - **obsidian.nvim**: Obsidian vault integration
 - **vimtex**: LaTeX compile/view workflow
 - **typst-preview.nvim**: Typst live preview
+- **nvim-lint**: External linter integration
+- **neotest**: Unified test runner
 
 ## Configuration Flow
 
@@ -200,6 +203,7 @@
 - `<leader>ca` - Code actions
 - `<leader>cf` - Format file/range
 - `<leader>a*` - AI workflows via Avante
+- `<leader>r*` - run tests, lint buffers, and inspect output
 - `m...` - filetype-local note and math workflows
 - `<leader>z/Z` - Zen mode / Zoom
 - `[[/]]` - Jump to prev/next word reference

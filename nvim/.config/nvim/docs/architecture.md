@@ -138,6 +138,7 @@ require("config.autocmds")   -- Auto commands last
 │   - LSP (nvim-lspconfig)        │
 │   - Completion (nvim-cmp)       │
 │   - AI (Avante)                 │
+│   - Quality (lint + tests)      │
 │   - Snippets (LuaSnip)          │
 └─────────────────────────────────┘
            ▼
@@ -209,7 +210,17 @@ require("config.autocmds")   -- Auto commands last
 - Automatic attachment to buffers
 - Shared `on_attach` with keybindings
 
-### 3. Picker System (Snacks)
+### 3. Quality Workflows
+
+**Linting:**
+- `nvim-lint` runs CLI linters on buffer enter, write, and insert leave
+- Current linter targets include JS/TS, markdown, Python, and shell scripts
+
+**Testing:**
+- `neotest` provides a unified test runner UI
+- Adapters are configured for plenary, Python, and Vitest workflows
+
+### 4. Picker System (Snacks)
 
 **Primary Picker:** Snacks.picker
 - Fast, modern, integrated
@@ -225,7 +236,7 @@ require("config.autocmds")   -- Auto commands last
 - LSP integration
 - Git integration
 
-### 4. File Explorer (Neo-tree)
+### 5. File Explorer (Neo-tree)
 
 **Features:**
 - Sidebar position
@@ -236,7 +247,7 @@ require("config.autocmds")   -- Auto commands last
 
 **Replaced:** Snacks explorer (too minimal)
 
-### 5. Git Integration
+### 6. Git Integration
 
 **Three-tier approach:**
 1. **Gitsigns**: Inline decorations, hunk operations
@@ -244,7 +255,7 @@ require("config.autocmds")   -- Auto commands last
 3. **Lazygit**: Full-featured TUI (external)
 4. **Diffview**: View file diffs and history
 
-### 6. Notes System (Obsidian)
+### 7. Notes System (Obsidian)
 
 **Plugin:** obsidian-nvim (community fork)
 - Telescope picker integration
@@ -262,7 +273,7 @@ require("config.autocmds")   -- Auto commands last
 - Day-specific schedules
 - Weekend vs weekday templates
 
-### 7. Math Authoring
+### 8. Math Authoring
 
 **Typst stack:**
 - `tinymist` for LSP features
@@ -289,6 +300,9 @@ require("config.autocmds")   -- Auto commands last
 - Which-key
 - Avante
 - Inline diagnostics
+
+**On Editor Events:**
+- `nvim-lint` on buffer enter, write, and insert leave
 
 **On BufRead:**
 - LSP configuration

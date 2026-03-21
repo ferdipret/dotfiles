@@ -87,6 +87,8 @@ nvim
 - **Git**: Gitsigns, Neogit, Lazygit, Diffview
 - **Terminal**: Integrated terminal with toggle
 - **Diagnostics**: Trouble.nvim for errors/warnings
+- **Tests**: Neotest with run/output/summary workflows
+- **Linting**: nvim-lint for external CLI diagnostics
 - **Treesitter**: Syntax highlighting and text objects
 
 ---
