@@ -11,3 +11,9 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+
+# OpenClaw Completion
+source "/home/ferdi/.openclaw/completions/openclaw.zsh"
+
+# opencode
+export PATH=/home/ferdi/.opencode/bin:$PATH
