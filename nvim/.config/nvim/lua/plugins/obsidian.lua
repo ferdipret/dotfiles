@@ -1,3 +1,32 @@
+local function toggle_checkbox()
+	if vim.bo.filetype == "markdown" then
+		require("obsidian").util.toggle_checkbox()
+	end
+end
+
+local function generate_daily_note(day_offset, label)
+	return function()
+		local script_path = vim.fn.expand("~/Documents/notes/.scripts/generate_daily_note.py")
+		vim.system(
+			{ "python3", script_path, tostring(day_offset) },
+			{ text = true },
+			vim.schedule_wrap(function(obj)
+				if obj.code == 0 then
+					for _, line in ipairs(vim.split(obj.stdout, "\n")) do
+						local file_path = line:match("FILE_PATH:(.*)")
+						if file_path then
+							vim.cmd("edit " .. vim.fn.fnameescape(file_path))
+							return
+						end
+					end
+				else
+					vim.notify("Failed to generate " .. label .. ": " .. obj.stderr, vim.log.levels.ERROR)
+				end
+			end)
+		)
+	end
+end
+
 return {
 	"obsidian-nvim/obsidian.nvim", -- Community fork with modern picker support
 	dependencies = {
@@ -171,90 +200,59 @@ return {
 		-- Todo/checkbox management
 		{
 			"<leader>nc",
-			function()
-				if vim.bo.filetype == "markdown" then
-					require("obsidian").util.toggle_checkbox()
-				end
-			end,
+			toggle_checkbox,
 			desc = "Toggle Checkbox",
 		},
 
 		-- Navigation (using Python script for date-aware generation)
 		{
 			"<leader>nd",
-			function()
-				local script_path = vim.fn.expand("~/Documents/notes/.scripts/generate_daily_note.py")
-				vim.system(
-					{ "python3", script_path, "0" },
-					{ text = true },
-					vim.schedule_wrap(function(obj)
-						if obj.code == 0 then
-							for _, line in ipairs(vim.split(obj.stdout, "\n")) do
-								local file_path = line:match("FILE_PATH:(.*)")
-								if file_path then
-									vim.cmd("edit " .. vim.fn.fnameescape(file_path))
-									return
-								end
-							end
-						else
-							vim.notify("Failed to generate daily note: " .. obj.stderr, vim.log.levels.ERROR)
-						end
-					end)
-				)
-			end,
-			desc = "Generate Today's Daily Note"
+			generate_daily_note(0, "today's daily note"),
+			desc = "Generate Today's Daily Note",
 		},
 		{
 			"<leader>ny",
-			function()
-				local script_path = vim.fn.expand("~/Documents/notes/.scripts/generate_daily_note.py")
-				vim.system(
-					{ "python3", script_path, "-1" },
-					{ text = true },
-					vim.schedule_wrap(function(obj)
-						if obj.code == 0 then
-							for _, line in ipairs(vim.split(obj.stdout, "\n")) do
-								local file_path = line:match("FILE_PATH:(.*)")
-								if file_path then
-									vim.cmd("edit " .. vim.fn.fnameescape(file_path))
-									return
-								end
-							end
-						else
-							vim.notify("Failed to generate yesterday's note: " .. obj.stderr, vim.log.levels.ERROR)
-						end
-					end)
-				)
-			end,
-			desc = "Generate Yesterday's Daily Note"
+			generate_daily_note(-1, "yesterday's daily note"),
+			desc = "Generate Yesterday's Daily Note",
 		},
 		{
 			"<leader>nY",
-			function()
-				local script_path = vim.fn.expand("~/Documents/notes/.scripts/generate_daily_note.py")
-				vim.system(
-					{ "python3", script_path, "1" },
-					{ text = true },
-					vim.schedule_wrap(function(obj)
-						if obj.code == 0 then
-							for _, line in ipairs(vim.split(obj.stdout, "\n")) do
-								local file_path = line:match("FILE_PATH:(.*)")
-								if file_path then
-									vim.cmd("edit " .. vim.fn.fnameescape(file_path))
-									return
-								end
-							end
-						else
-							vim.notify("Failed to generate tomorrow's note: " .. obj.stderr, vim.log.levels.ERROR)
-						end
-					end)
-				)
-			end,
-			desc = "Generate Tomorrow's Daily Note"
+			generate_daily_note(1, "tomorrow's daily note"),
+			desc = "Generate Tomorrow's Daily Note",
 		},
 		{ "<leader>nD", "<cmd>ObsidianDailies<cr>", desc = "Browse Daily Notes" },
 
 		-- Workspace management (if you add more workspaces later)
 		{ "<leader>nw", "<cmd>ObsidianWorkspace<cr>", desc = "Switch Workspace" },
 	},
+	config = function(_, opts)
+		require("obsidian").setup(opts)
+
+		local group = vim.api.nvim_create_augroup("obsidian-local-keymaps", { clear = true })
+
+		vim.api.nvim_create_autocmd("FileType", {
+			group = group,
+			pattern = "markdown",
+			callback = function(event)
+				local map = function(lhs, rhs, desc, mode)
+					vim.keymap.set(mode or "n", lhs, rhs, {
+						buffer = event.buf,
+						desc = desc,
+						silent = true,
+					})
+				end
+
+				map("<localleader>o", "<cmd>ObsidianOpen<cr>", "Open in Obsidian")
+				map("<localleader>b", "<cmd>ObsidianBacklinks<cr>", "Show Backlinks")
+				map("<localleader>l", "<cmd>ObsidianLinks<cr>", "Show Links")
+				map("<localleader>t", "<cmd>ObsidianTags<cr>", "Search Tags")
+				map("<localleader>r", "<cmd>ObsidianRename<cr>", "Rename Note")
+				map("<localleader>p", "<cmd>ObsidianPasteImg<cr>", "Paste Image")
+				map("<localleader>c", toggle_checkbox, "Toggle Checkbox")
+				map("<localleader>d", generate_daily_note(0, "today's daily note"), "Generate Today's Daily Note")
+				map("<localleader>y", generate_daily_note(-1, "yesterday's daily note"), "Generate Yesterday's Daily Note")
+				map("<localleader>Y", generate_daily_note(1, "tomorrow's daily note"), "Generate Tomorrow's Daily Note")
+			end,
+		})
+	end,
 }

@@ -255,6 +255,21 @@ Current completion stack: `nvim-cmp` + `LuaSnip`
 
 - `<leader>nP` - toggle markdown preview
 
+### Local Note Actions
+
+These are buffer-local in markdown buffers and use `m` as the local leader.
+
+- `mb` - show backlinks
+- `mc` - toggle checkbox
+- `md` - generate today's daily note
+- `ml` - show links
+- `mo` - open in Obsidian app
+- `mp` - paste image
+- `mr` - rename note
+- `mt` - search tags
+- `my` - generate yesterday's daily note
+- `mY` - generate tomorrow's daily note
+
 ---
 
 ## Notes
