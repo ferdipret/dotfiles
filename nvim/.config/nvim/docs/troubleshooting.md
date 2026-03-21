@@ -8,7 +8,7 @@
 - Delete `.local/share/nvim/lazy/<plugin>` and retry if the cache becomes inconsistent.
 
 ## LSP Servers Not Attaching
-- Verify the server is installed with `:Mason`; install missing entries (`lua_ls`, `vtsls`, `eslint`, `elixirls`, `graphql`, `tailwindcss`, `emmet_language_server`).
+- Verify the server is installed with `:Mason`; install missing entries (`lua_ls`, `vtsls`, `eslint`, `elixirls`, `graphql`, `tailwindcss`, `emmet_language_server`, `texlab`, `tinymist`).
 - Run `:LspInfo` and ensure the buffer filetype matches the server's `filetypes` list.
 - If formatters conflict, remember `eslint` formatting is disabled; rely on `conform.nvim` via `<leader>cf`.
 
@@ -33,7 +33,7 @@
 - Render and clipboard helpers (`render-markdown.nvim`, `img-clip.nvim`) require `xdg-open`/`wl-copy` on Linux; install them if preview features fail.
 
 ## Math Workflow Problems
-- For LaTeX, ensure `latexmk` is installed and available in `$PATH`; `vimtex` and `texlab` both expect it for the default build flow.
+- For LaTeX, install a TeX distribution plus `latexmk`; on Debian/Ubuntu a good baseline is `texlive-latex-extra texlive-fonts-recommended texlive-bibtex-extra biber latexmk`.
 - For PDF viewing, install `zathura` or `okular` if forward search or `VimtexView` does not open a document.
 - For Typst preview, open a `*.typ` file and run `:TypstPreviewUpdate` if the preview binaries have not been downloaded yet.
 - Confirm `tinymist` and `texlab` are installed in Mason when Typst or LaTeX LSP features do not attach.

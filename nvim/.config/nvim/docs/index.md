@@ -36,8 +36,10 @@ go install mvdan.cc/sh/v3/cmd/shfmt@latest
 # Optional research tools
 mise use -g typst@latest
 # Linux example
-sudo apt install latexmk zathura
+sudo apt install texlive-latex-extra texlive-fonts-recommended texlive-bibtex-extra biber latexmk zathura
 ```
+
+If you want the simplest everything-included LaTeX route on Debian/Ubuntu, `texlive-full` also works, but it is much larger.
 
 ### Setup
 ```bash

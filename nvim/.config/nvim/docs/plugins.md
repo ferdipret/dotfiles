@@ -144,6 +144,7 @@ Complete reference of all plugins in this configuration.
 - **vimtex** - LaTeX workflow and tooling
   - File: `lua/plugins/math.lua`
   - Compile backend: `latexmk`
+  - External tools: TeX distribution + `latexmk`, with `zathura` or `okular` recommended for viewing
   - Local keys: `mc`, `mv`, `mt`, `me`, `mk`
 
 - **texlab** - LaTeX and BibTeX LSP
