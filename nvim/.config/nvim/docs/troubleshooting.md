@@ -9,7 +9,7 @@
 
 ## LSP Servers Not Attaching
 - Verify the server is installed with `:Mason`; install missing entries (`lua_ls`, `vtsls`, `eslint`, `elixirls`, `graphql`, `tailwindcss`, `emmet_language_server`, `texlab`, `tinymist`).
-- Run `:LspInfo` and ensure the buffer filetype matches the server's `filetypes` list.
+- Run `:checkhealth vim.lsp` and ensure the buffer filetype matches the server's `filetypes` list.
 - If formatters conflict, remember `eslint` formatting is disabled; rely on `conform.nvim` via `<leader>cf`.
 
 ## Formatting Skipped
@@ -40,6 +40,7 @@
 - The vault is expected at `~/Documents/notes`. Update `lua/plugins/obsidian.lua` if you relocate it.
 - Daily notes rely on `~/Documents/notes/.scripts/generate_daily_note.py`. Ensure Python 3 is available and run the script manually (`python3 path/to/script 0`) to confirm it prints a `FILE_PATH:` line.
 - Render and clipboard helpers (`render-markdown.nvim`, `img-clip.nvim`) require `xdg-open`/`wl-copy` on Linux; install them if preview features fail.
+- Markdown fenced code blocks rely on Treesitter injections; `lua/plugins/treesitter.lua` carries Neovim 0.12 capture-shape shims for nvim-treesitter directives.
 
 ## Math Workflow Problems
 - For LaTeX on Arch, install `texlive-meta biber latexmk`; that gives VimTeX and texlab the expected build tools.

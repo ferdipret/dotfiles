@@ -333,12 +333,11 @@ grep -r "lsp-status" ~/.config/nvim/lua/
 
 ### 3. **Consider mini.nvim Modules Instead of Standalone Plugins**
 
-**Current**: You use `mini.pairs`
+**Current**: You use `mini.pairs` and `mini.surround`
 
 **Other mini.nvim modules to explore**:
 
 - `mini.ai` - Enhanced text objects (better than targets.vim)
-- `mini.surround` - Surround operations (replace vim-surround)
 - `mini.comment` - Commenting (replace Comment.nvim if you add it)
 - `mini.bufremove` - Smart buffer deletion (can replace Snacks.bufdelete)
 
@@ -591,6 +590,7 @@ lazy.nvim (bootstrap)
 - which-key.nvim
 - trouble.nvim
 - mini.pairs
+- mini.surround
 - lspkind.nvim
 
 ### Optional (Remove if not used)

@@ -113,6 +113,9 @@ return {
 						icon = "󱙺",
 					},
 				},
+				selector = {
+					provider = "snacks",
+				},
 				behaviour = {
 					auto_suggestions = false,
 					auto_set_highlight_group = true,
@@ -175,11 +178,9 @@ return {
 		end,
 		dependencies = {
 			"nvim-treesitter/nvim-treesitter",
-			"stevearc/dressing.nvim",
 			"nvim-lua/plenary.nvim",
 			"MunifTanjim/nui.nvim",
 			"nvim-telescope/telescope.nvim",
-			"ibhagwan/fzf-lua",
 			"nvim-tree/nvim-web-devicons",
 			"ravitemer/mcphub.nvim",
 			{

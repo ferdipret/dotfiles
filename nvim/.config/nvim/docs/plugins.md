@@ -105,6 +105,7 @@ Complete reference of all plugins in this configuration.
   - File: `lua/plugins/ai.lua`
   - Primary agent: `opencode`
   - Secondary agent: `claude-code`
+  - Input and selector UI: Snacks
   - Key group: `<leader>a*`
 
 - **mcphub.nvim** - MCP server manager and Avante bridge
@@ -130,6 +131,7 @@ Complete reference of all plugins in this configuration.
   - Auto-install: true
   - Parsers: lua, markdown, markdown_inline, latex, bibtex, typst
   - Modules: highlight, indent
+  - Neovim 0.12 query directive shims keep markdown injections compatible
 
 - **nvim-ts-autotag** - Auto-close HTML/JSX tags
 
@@ -171,6 +173,12 @@ Complete reference of all plugins in this configuration.
 ### Auto-pairs
 - **mini.pairs** - Auto-close brackets/quotes
   - File: `lua/plugins/mini.lua`
+
+### Surround
+- **mini.surround** - Add, delete, and replace surroundings
+  - File: `lua/plugins/mini.lua`
+  - Defaults: `sa` add, `sd` delete, `sr` replace
+  - Example: `saiw"` wraps the word under cursor in double quotes
 
 ---
 
@@ -227,15 +235,12 @@ Complete reference of all plugins in this configuration.
   - Key: `<leader>tf`
   - Direction: float, starts in insert mode
 
-### UI Enhancements
-- **dressing.nvim** - Better vim.ui.select/input
-
 ---
 
 ## Plugin Loading Order
 
 1. **Immediate** (priority 1000): snacks.nvim
-2. **Immediate**: colorscheme, completion, treesitter, mini.pairs, vimtex, explorer helpers
+2. **Immediate**: colorscheme, completion, treesitter, mini.pairs, mini.surround, vimtex, explorer helpers
 3. **VeryLazy**: which-key, bufferline, avante, inline diagnostics
 4. **BufReadPre/New**: LSP, formatters, gitsigns
 5. **Keys/Filetypes**: Git tools, obsidian, toggleterm, telescope, typst preview

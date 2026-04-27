@@ -97,7 +97,7 @@ require("config.autocmds")   -- Auto commands last
 │   │   ├── which-key.lua         # Keybinding help
 │   │   ├── trouble.lua           # Diagnostics panel
 │   │   ├── markdown.lua          # Markdown rendering
-│   │   └── mini.lua              # mini.pairs
+│   │   └── mini.lua              # mini.pairs + mini.surround
 │   │
 │   ├── snippets/                 # LuaSnip snippets
 │   │   ├── heex.lua              # HEEx/Phoenix snippets
@@ -146,7 +146,7 @@ require("config.autocmds")   -- Auto commands last
 │   Editing & Formatting          │
 │   - Treesitter (syntax)         │
 │   - Formatter (conform.nvim)    │
-│   - Auto-pairs (mini.pairs)     │
+│   - Auto-pairs + surround       │
 └─────────────────────────────────┘
            ▼
 ┌─────────────────────────────────┐
@@ -227,6 +227,7 @@ require("config.autocmds")   -- Auto commands last
 - uses ACP agent mode instead of direct API-only chat
 - primary provider is `opencode`
 - secondary provider is `claude-code`
+- uses Snacks for input prompts and selector pickers
 
 **MCP Hub:**
 - provides MCP tool and resource access inside Avante

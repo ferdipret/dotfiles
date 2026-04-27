@@ -26,9 +26,16 @@ This file documents the current live keymap layout.
 - `<C-k>` - move to upper split
 - `<C-l>` - move to right split
 - `<Esc>` - clear search highlight
-- `<A-j>` - move current line or selection down
-- `<A-k>` - move current line or selection up
 - terminal `<Esc>` - leave terminal mode
+
+## Editing
+
+### Surround
+
+- `saiw"` - surround the current word with double quotes
+- visual `sa"` - surround the selection with double quotes
+- `sd"` - delete surrounding double quotes
+- `sr"'` - replace surrounding double quotes with single quotes
 
 ---
 

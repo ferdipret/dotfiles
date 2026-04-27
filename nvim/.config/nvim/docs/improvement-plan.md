@@ -118,7 +118,7 @@ Priority: high
 - refine the `<leader>a*` namespace and which-key descriptions
 - add session or workspace persistence with `auto-session` or `resession`
 - deepen DAP support with real language-specific launch configs and keymaps
-- consider adding `flash.nvim`, `mini.ai`, and `mini.surround`
+- consider adding `flash.nvim` and `mini.ai`
 
 ### Success Criteria
 

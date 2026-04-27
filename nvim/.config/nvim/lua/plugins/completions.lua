@@ -32,27 +32,34 @@ return {
 
 			vim.api.nvim_set_hl(0, "PmenuBorder", { fg = colors.border_highlight, bg = colors.bg_popup })
 
-			vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-				border = { "┌", "─", "┐", "│", "┘", "─", "└", "│" },
-				winhighlight = "Normal:Pmenu,FloatBorder:PmenuBorder,Search:None",
-			})
+			vim.lsp.handlers["textDocument/hover"] = function(err, result, ctx, config)
+				return vim.lsp.handlers.hover(
+					err,
+					result,
+					ctx,
+					vim.tbl_deep_extend("force", config or {}, {
+						border = { "┌", "─", "┐", "│", "┘", "─", "└", "│" },
+						winhighlight = "Normal:Pmenu,FloatBorder:PmenuBorder,Search:None",
+					})
+				)
+			end
 
 			require("lspkind").init()
 
 			cmp.setup({
 				preselect = cmp.PreselectMode.Item,
 				completion = {
-					completeopt = 'menu,menuone,noinsert',
+					completeopt = "menu,menuone,noinsert",
 				},
 				window = {
 					documentation = {
-						border = { '┌', '─', '┐', '│', '┘', '─', '└', '│' },
+						border = { "┌", "─", "┐", "│", "┘", "─", "└", "│" },
 						winhighlight = "Normal:Pmenu,FloatBorder:PmenuBorder,Search:None",
 					},
 					completion = {
-						border = { '┌', '─', '┐', '│', '┘', '─', '└', '│' },
+						border = { "┌", "─", "┐", "│", "┘", "─", "└", "│" },
 						winhighlight = "Normal:Pmenu,FloatBorder:PmenuBorder,Search:None",
-					}
+					},
 				},
 				snippet = {
 					expand = function(args)
@@ -80,7 +87,6 @@ return {
 						end
 					end, { "i", "s" }),
 
-
 					["<CR>"] = cmp.mapping.confirm({ select = false }),
 					["<C-e>"] = cmp.mapping.abort(),
 					["<C-b>"] = cmp.mapping.scroll_docs(-4),
@@ -107,10 +113,10 @@ return {
 					{ name = "luasnip" },
 					{ name = "buffer" },
 					{ name = "path" },
-					{ name = 'render-markdown' },
-					{ name = 'calc' },
+					{ name = "render-markdown" },
+					{ name = "calc" },
 				}),
 			})
 		end,
-	}
+	},
 }
