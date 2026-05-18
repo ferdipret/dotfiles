@@ -1,20 +1,43 @@
 return {
 	{
 		"nvim-treesitter/nvim-treesitter",
+		branch = "main",
+		lazy = false,
 		build = ":TSUpdate",
 		config = function()
-			local configs = require("nvim-treesitter.configs")
-
-			configs.setup({
-				ensure_installed = { "lua", "latex", "bibtex", "typst", "markdown", "markdown_inline" },
-				sync_install = false,
-				highlight = { enable = true },
-				indent = { enable = true },
-				ignore_install = {},
-				auto_install = true,
-				modules = {},
+			require("nvim-treesitter").setup({
+				install_dir = vim.fn.stdpath("data") .. "/site",
 			})
 
+			-- Parsers (your previous list + the ones you'd likely want for your stack)
+			local parsers = {
+				"lua",
+				"latex",
+				"bibtex",
+				"typst",
+				"markdown",
+				"markdown_inline",
+				-- Add anything else you actively use:
+				"vim", "vimdoc", "query",
+				"elixir", "heex", "eex",
+				"typescript", "tsx", "javascript",
+				"html", "css", "json", "yaml", "toml",
+				"bash", "regex",
+			}
+			require("nvim-treesitter").install(parsers)
+
+			-- Enable highlight + indent per-buffer (new API replaces highlight/indent modules)
+			vim.api.nvim_create_autocmd("FileType", {
+				callback = function(args)
+					local ft = args.match
+					local lang = vim.treesitter.language.get_lang(ft)
+					if lang and pcall(vim.treesitter.start, args.buf, lang) then
+						vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+					end
+				end,
+			})
+
+			-- Custom query directives (unchanged — these use vim.treesitter.query, not nvim-treesitter)
 			local query = require("vim.treesitter.query")
 
 			local function first_node(capture)
@@ -48,8 +71,8 @@ return {
 				end
 				local alias = text:lower()
 				metadata["injection.language"] = vim.filetype.match({ filename = "a." .. alias })
-					or lang_aliases[alias]
-					or alias
+						or lang_aliases[alias]
+						or alias
 			end, { force = true, all = false })
 
 			query.add_directive("set-lang-from-mimetype!", function(match, _, bufnr, pred, metadata)
@@ -87,7 +110,5 @@ return {
 			})
 		end,
 	},
-	{
-		"nvim-treesitter/playground",
-	},
+	-- playground removed: deprecated, use built-in :InspectTree and :EditQuery instead
 }
