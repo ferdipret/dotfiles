@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+config_dir="${XDG_CONFIG_HOME:-$HOME/.config}"
+panel_qml="$config_dir/theme-switcher/quickshell/WeatherPanel.qml"
+qs_bin="$(command -v quickshell || command -v qs || true)"
+
+if [ -z "$qs_bin" ]; then
+  notify-send "Weather" "Quickshell is not installed" 2>/dev/null || true
+  exit 1
+fi
+
+pgrep -f "$panel_qml" | xargs -r kill >/dev/null 2>&1 || true
+exec "$qs_bin" -p "$panel_qml"

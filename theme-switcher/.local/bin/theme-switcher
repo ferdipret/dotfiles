@@ -128,11 +128,20 @@ hyprctl reload >/dev/null 2>&1 || true
 
 pkill -x waybar >/dev/null 2>&1 || true
 sleep 0.2
-hyprctl dispatch exec waybar >/dev/null 2>&1 || {
-  if [ -n "${WAYLAND_DISPLAY:-}" ]; then
-    waybar >/dev/null 2>&1 &
-  fi
-}
+if command -v quickshell >/dev/null 2>&1 || command -v qs >/dev/null 2>&1; then
+  pgrep -f "$config_dir/theme-switcher/quickshell/ThemeBar.qml" | xargs -r kill >/dev/null 2>&1 || true
+  hyprctl dispatch exec /home/ferdi/.local/bin/theme-bar >/dev/null 2>&1 || {
+    if [ -n "${WAYLAND_DISPLAY:-}" ]; then
+      /home/ferdi/.local/bin/theme-bar >/dev/null 2>&1 &
+    fi
+  }
+else
+  hyprctl dispatch exec waybar >/dev/null 2>&1 || {
+    if [ -n "${WAYLAND_DISPLAY:-}" ]; then
+      waybar >/dev/null 2>&1 &
+    fi
+  }
+fi
 
 makoctl reload >/dev/null 2>&1 || true
 

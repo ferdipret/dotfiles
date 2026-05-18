@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+config_dir="${XDG_CONFIG_HOME:-$HOME/.config}"
+bar_qml="$config_dir/theme-switcher/quickshell/ThemeBar.qml"
+qs_bin="$(command -v quickshell || command -v qs || true)"
+
+if [ -z "$qs_bin" ]; then
+  notify-send "Theme bar" "Quickshell is not installed" 2>/dev/null || true
+  exit 1
+fi
+
+pkill -x waybar >/dev/null 2>&1 || true
+pgrep -f "$bar_qml" | xargs -r kill >/dev/null 2>&1 || true
+
+exec "$qs_bin" -p "$bar_qml"
