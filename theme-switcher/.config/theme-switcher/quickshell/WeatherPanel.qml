@@ -139,7 +139,7 @@ PanelWindow {
     Rectangle {
         id: panel
         width: Math.min(root.width - 96, 920)
-        height: 560
+        height: 660
         anchors.centerIn: parent
         color: root.bg
         border.color: Qt.rgba(root.border.r, root.border.g, root.border.b, 0.34)
@@ -284,14 +284,15 @@ PanelWindow {
 
             ForecastCard {
                 Layout.fillWidth: true
-                Layout.fillHeight: true
+                Layout.preferredHeight: 292
+                Layout.minimumHeight: 292
                 cardBg: root.bgAlt
                 cardBorder: root.border
 
                 ColumnLayout {
                     anchors.fill: parent
                     anchors.margins: 18
-                    spacing: 12
+                    spacing: 10
 
                     Repeater {
                         model: root.daily.slice(0, 5)
@@ -318,6 +319,7 @@ PanelWindow {
 
             RowLayout {
                 Layout.fillWidth: true
+                Layout.preferredHeight: 18
 
                 Text {
                     Layout.fillWidth: true
