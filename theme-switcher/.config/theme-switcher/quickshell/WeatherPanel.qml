@@ -14,19 +14,19 @@ PanelWindow {
     property color muted: "#9aa0a6"
     property color border: "#5f6368"
     property color primary: "#fdd663"
-    property var weather: ({})
+    property color cyan: "#7dcfff"
+    property color green: "#9ece6a"
     property var daily: []
     property var hourly: []
     property string locationName: "Weather"
     property string countryName: ""
     property string currentTemp: "--"
-    property string currentIcon: "☁"
+    property string currentIcon: ""
     property string currentDesc: "Loading"
     property string currentTime: ""
     property string precipitation: "--"
     property string humidity: "--"
     property string wind: "--"
-    property string activeMetric: "temperature"
 
     WlrLayershell.namespace: "theme-weather-panel"
     WlrLayershell.layer: WlrLayer.Overlay
@@ -41,24 +41,25 @@ PanelWindow {
         right: true
     }
 
-    function sampleHours() {
+    function displayHours() {
         if (!hourly || hourly.length === 0) return []
-        let out = []
-        let step = Math.max(1, Math.floor(hourly.length / 8))
-        for (let i = 0; i < hourly.length && out.length < 8; i += step) out.push(hourly[i])
+
+        let nowHour = new Date().getHours()
+        let start = 0
+        for (let i = 0; i < hourly.length; i++) {
+            if (hourly[i].hour >= nowHour) {
+                start = i
+                break
+            }
+        }
+
+        let out = hourly.slice(start, start + 8)
+        if (out.length < 8) out = hourly.slice(Math.max(0, hourly.length - 8))
         return out
     }
 
-    function metricValue(point) {
-        if (activeMetric === "precipitation") return point.precipitation || 0
-        if (activeMetric === "wind") return point.wind || 0
-        return point.tempValue || 0
-    }
-
-    function metricLabel(point) {
-        if (activeMetric === "precipitation") return String(point.precipitation || 0) + "%"
-        if (activeMetric === "wind") return String(point.wind || 0) + " mph"
-        return point.temp || "--"
+    function tempNumber(temp) {
+        return String(temp || "--").replace("°", "")
     }
 
     function applyWeather(data) {
@@ -67,7 +68,6 @@ PanelWindow {
             return
         }
 
-        weather = data
         locationName = data.location ? data.location.name || "Weather" : "Weather"
         countryName = data.location ? data.location.country || "" : ""
         daily = data.daily || []
@@ -82,8 +82,6 @@ PanelWindow {
             humidity = String(data.current.humidity || 0) + "%"
             wind = String(data.current.wind || 0) + " mph"
         }
-
-        chart.requestPaint()
     }
 
     Process {
@@ -98,8 +96,9 @@ PanelWindow {
                     if (t.text) root.fg = t.text
                     if (t.text_muted) root.muted = t.text_muted
                     if (t.border) root.border = t.border
-                    if (t.yellow) root.primary = t.yellow
-                    else if (t.primary) root.primary = t.primary
+                    if (t.primary) root.primary = t.primary
+                    if (t.cyan) root.cyan = t.cyan
+                    if (t.green) root.green = t.green
                 } catch (e) {}
             }
         }
@@ -139,11 +138,11 @@ PanelWindow {
 
     Rectangle {
         id: panel
-        width: 700
-        height: 455
+        width: Math.min(root.width - 96, 920)
+        height: 560
         anchors.centerIn: parent
         color: root.bg
-        border.color: Qt.rgba(root.border.r, root.border.g, root.border.b, 0.35)
+        border.color: Qt.rgba(root.border.r, root.border.g, root.border.b, 0.34)
         border.width: 1
         radius: 0
         focus: true
@@ -155,23 +154,32 @@ PanelWindow {
 
         ColumnLayout {
             anchors.fill: parent
-            anchors.margins: 22
-            spacing: 14
+            anchors.margins: 24
+            spacing: 18
 
             RowLayout {
                 Layout.fillWidth: true
+                spacing: 12
 
                 Text {
-                    text: "󰍎  " + root.locationName + (root.countryName ? ", " + root.countryName : "")
+                    text: "󰍎"
                     color: root.fg
                     font.family: "JetBrainsMono Nerd Font"
-                    font.pixelSize: 14
+                    font.pixelSize: 18
+                }
+
+                Text {
+                    text: root.locationName + (root.countryName ? ", " + root.countryName : "")
+                    color: root.fg
+                    elide: Text.ElideRight
+                    Layout.maximumWidth: 420
+                    font.family: "JetBrainsMono Nerd Font"
+                    font.pixelSize: 15
                     font.bold: true
                 }
 
                 Text {
-                    Layout.fillWidth: true
-                    text: "•  Choose area"
+                    text: "Choose area"
                     color: "#8ab4f8"
                     font.family: "JetBrainsMono Nerd Font"
                     font.pixelSize: 13
@@ -186,255 +194,136 @@ PanelWindow {
                     }
                 }
 
+                Item { Layout.fillWidth: true }
+
                 Text {
-                    text: ""
+                    text: root.currentTime
                     color: root.muted
-                    font.pixelSize: 20
+                    font.family: "JetBrainsMono Nerd Font"
+                    font.pixelSize: 13
                 }
             }
 
             RowLayout {
                 Layout.fillWidth: true
-                spacing: 18
+                spacing: 24
 
                 Text {
                     text: root.currentIcon
-                    font.family: "JetBrainsMono Nerd Font"
-                    font.pixelSize: 48
                     color: root.fg
+                    font.family: "JetBrainsMono Nerd Font"
+                    font.pixelSize: 54
                 }
 
                 Row {
-                    spacing: 4
+                    spacing: 5
                     Text {
-                        text: root.currentTemp.replace("°", "")
+                        text: root.tempNumber(root.currentTemp)
                         color: root.fg
                         font.family: "JetBrainsMono Nerd Font"
-                        font.pixelSize: 44
+                        font.pixelSize: 52
                         font.weight: Font.Light
                     }
                     Text {
                         text: "°C"
                         color: root.muted
-                        font.family: "JetBrainsMono Nerd Font"
-                        font.pixelSize: 13
                         anchors.verticalCenter: parent.verticalCenter
+                        font.family: "JetBrainsMono Nerd Font"
+                        font.pixelSize: 14
                     }
                 }
 
                 Column {
                     Layout.fillWidth: true
-                    spacing: 2
+                    spacing: 5
                     Text {
-                        text: "Precipitation: " + root.precipitation
-                        color: root.muted
-                        font.family: "JetBrainsMono Nerd Font"
-                        font.pixelSize: 12
-                    }
-                    Text {
-                        text: "Humidity: " + root.humidity
-                        color: root.muted
-                        font.family: "JetBrainsMono Nerd Font"
-                        font.pixelSize: 12
-                    }
-                    Text {
-                        text: "Wind: " + root.wind
-                        color: root.muted
-                        font.family: "JetBrainsMono Nerd Font"
-                        font.pixelSize: 12
-                    }
-                }
-
-                Column {
-                    spacing: 2
-                    Text {
-                        anchors.right: parent.right
-                        text: "Weather"
+                        text: root.currentDesc
                         color: root.fg
                         font.family: "JetBrainsMono Nerd Font"
-                        font.pixelSize: 20
+                        font.pixelSize: 22
                     }
-                    Text {
-                        anchors.right: parent.right
-                        text: root.currentTime
-                        color: root.muted
-                        font.family: "JetBrainsMono Nerd Font"
-                        font.pixelSize: 14
-                    }
-                    Text {
-                        anchors.right: parent.right
-                        text: root.currentDesc
-                        color: root.muted
-                        font.family: "JetBrainsMono Nerd Font"
-                        font.pixelSize: 16
+                    Row {
+                        spacing: 12
+                        WeatherPill { label: "Precip"; value: root.precipitation; accent: root.primary }
+                        WeatherPill { label: "Humidity"; value: root.humidity; accent: root.cyan }
+                        WeatherPill { label: "Wind"; value: root.wind; accent: root.green }
                     }
                 }
             }
 
-            Row {
-                spacing: 8
-
-                MetricTab {
-                    label: "Temperature"
-                    metric: "temperature"
-                }
-
-                MetricTab {
-                    label: "Precipitation"
-                    metric: "precipitation"
-                }
-
-                MetricTab {
-                    label: "Wind"
-                    metric: "wind"
-                }
-            }
-
-            Rectangle {
-                width: root.activeMetric === "precipitation" ? 92 : (root.activeMetric === "wind" ? 38 : 79)
-                height: 3
-                color: root.primary
-            }
-
-            Item {
+            ForecastCard {
                 Layout.fillWidth: true
-                Layout.preferredHeight: 112
+                Layout.preferredHeight: 140
+                cardBg: root.bgAlt
+                cardBorder: root.border
 
-                Canvas {
-                    id: chart
+                RowLayout {
                     anchors.fill: parent
-                    onPaint: {
-                        let ctx = getContext("2d")
-                        ctx.reset()
-                        let points = root.sampleHours()
-                        if (!points || points.length < 2) return
-
-                        let values = points.map((p) => root.metricValue(p))
-                        let minTemp = Math.min.apply(Math, values)
-                        let maxTemp = Math.max.apply(Math, values)
-                        let spread = Math.max(1, maxTemp - minTemp)
-                        let left = 10
-                        let right = width - 10
-                        let top = 18
-                        let bottom = height - 34
-
-                        ctx.fillStyle = Qt.rgba(root.primary.r, root.primary.g, root.primary.b, 0.22)
-                        ctx.beginPath()
-                        for (let i = 0; i < points.length; i++) {
-                            let x = left + (right - left) * (i / (points.length - 1))
-                            let y = bottom - ((root.metricValue(points[i]) - minTemp) / spread) * (bottom - top)
-                            if (i === 0) ctx.moveTo(x, y)
-                            else ctx.lineTo(x, y)
-                        }
-                        ctx.lineTo(right, bottom + 10)
-                        ctx.lineTo(left, bottom + 10)
-                        ctx.closePath()
-                        ctx.fill()
-
-                        ctx.strokeStyle = root.primary
-                        ctx.lineWidth = 2
-                        ctx.beginPath()
-                        for (let j = 0; j < points.length; j++) {
-                            let lx = left + (right - left) * (j / (points.length - 1))
-                            let ly = bottom - ((root.metricValue(points[j]) - minTemp) / spread) * (bottom - top)
-                            if (j === 0) ctx.moveTo(lx, ly)
-                            else ctx.lineTo(lx, ly)
-                        }
-                        ctx.stroke()
-                    }
-                }
-
-                Row {
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.bottom: parent.bottom
-                    anchors.leftMargin: 8
-                    anchors.rightMargin: 8
+                    anchors.margins: 18
+                    spacing: 12
 
                     Repeater {
-                        model: root.sampleHours()
+                        model: root.displayHours()
 
-                        Column {
+                        HourCard {
                             required property var modelData
-                            width: (chart.width - 16) / Math.max(1, root.sampleHours().length)
-                            spacing: 18
+                            required property int index
 
-                            Text {
-                                anchors.horizontalCenter: parent.horizontalCenter
-                                text: root.metricLabel(modelData)
-                                color: root.fg
-                                font.family: "JetBrainsMono Nerd Font"
-                                font.pixelSize: 11
-                                font.bold: true
-                            }
-                            Text {
-                                anchors.horizontalCenter: parent.horizontalCenter
-                                text: modelData.time
-                                color: root.muted
-                                font.family: "JetBrainsMono Nerd Font"
-                                font.pixelSize: 11
-                            }
+                            Layout.fillWidth: true
+                            hourText: index === 0 ? "Now" : modelData.time
+                            iconText: modelData.icon
+                            tempText: modelData.temp
+                            descText: modelData.description
+                            fg: root.fg
+                            muted: root.muted
+                            accent: root.primary
                         }
                     }
                 }
             }
 
-            Row {
+            ForecastCard {
                 Layout.fillWidth: true
-                spacing: 8
+                Layout.fillHeight: true
+                cardBg: root.bgAlt
+                cardBorder: root.border
 
-                Repeater {
-                    model: root.daily.slice(0, 8)
+                ColumnLayout {
+                    anchors.fill: parent
+                    anchors.margins: 18
+                    spacing: 12
 
-                    Rectangle {
-                        required property var modelData
-                        required property int index
-                        width: 76
-                        height: 90
-                        color: index === 0 ? Qt.rgba(root.border.r, root.border.g, root.border.b, 0.22) : "transparent"
-                        radius: 0
+                    Repeater {
+                        model: root.daily.slice(0, 5)
 
-                        Column {
-                            anchors.centerIn: parent
-                            spacing: 4
+                        DayRow {
+                            required property var modelData
+                            required property int index
 
-                            Text {
-                                anchors.horizontalCenter: parent.horizontalCenter
-                                text: modelData.day
-                                color: root.fg
-                                font.family: "JetBrainsMono Nerd Font"
-                                font.pixelSize: 14
-                            }
-                            Text {
-                                anchors.horizontalCenter: parent.horizontalCenter
-                                text: modelData.icon
-                                font.family: "JetBrainsMono Nerd Font"
-                                font.pixelSize: 28
-                            }
-                            Text {
-                                anchors.horizontalCenter: parent.horizontalCenter
-                                text: modelData.high + " " + modelData.low
-                                color: root.fg
-                                font.family: "JetBrainsMono Nerd Font"
-                                font.pixelSize: 12
-                            }
+                            Layout.fillWidth: true
+                            dayText: index === 0 ? "Today" : modelData.day
+                            iconText: modelData.icon
+                            lowText: modelData.low
+                            highText: modelData.high
+                            minTemp: modelData.tempMin
+                            maxTemp: modelData.tempMax
+                            fg: root.fg
+                            muted: root.muted
+                            accent: root.primary
+                            cool: root.cyan
                         }
                     }
                 }
-            }
-
-            Rectangle {
-                Layout.fillWidth: true
-                height: 1
-                color: Qt.rgba(root.border.r, root.border.g, root.border.b, 0.35)
             }
 
             RowLayout {
                 Layout.fillWidth: true
+
                 Text {
                     Layout.fillWidth: true
                     text: ""
                 }
+
                 Text {
                     text: "Open-Meteo"
                     color: root.muted
@@ -448,17 +337,21 @@ PanelWindow {
                         onClicked: Quickshell.execDetached(["xdg-open", "https://open-meteo.com/"])
                     }
                 }
+
                 Text {
-                    text: " • "
+                    text: "  •  "
                     color: root.muted
+                    font.family: "JetBrainsMono Nerd Font"
                     font.pixelSize: 11
                 }
+
                 Text {
                     text: "Close"
                     color: root.muted
                     font.family: "JetBrainsMono Nerd Font"
                     font.pixelSize: 11
                     font.underline: true
+
                     MouseArea {
                         anchors.fill: parent
                         cursorShape: Qt.PointingHandCursor
@@ -469,22 +362,196 @@ PanelWindow {
         }
     }
 
-    component MetricTab: Text {
+    component ForecastCard: Rectangle {
+        property color cardBg: "#2b2c31"
+        property color cardBorder: "#5f6368"
+
+        color: Qt.rgba(cardBg.r, cardBg.g, cardBg.b, 0.86)
+        border.color: Qt.rgba(cardBorder.r, cardBorder.g, cardBorder.b, 0.26)
+        border.width: 1
+        radius: 0
+    }
+
+    component WeatherPill: Rectangle {
         required property string label
-        required property string metric
+        required property string value
+        required property color accent
 
-        text: label
-        color: root.activeMetric === metric ? root.fg : root.muted
-        font.family: "JetBrainsMono Nerd Font"
-        font.pixelSize: 14
-        font.bold: root.activeMetric === metric
+        width: 132
+        height: 46
+        radius: 0
+        color: Qt.rgba(accent.r, accent.g, accent.b, 0.12)
+        border.color: Qt.rgba(accent.r, accent.g, accent.b, 0.32)
+        border.width: 1
 
-        MouseArea {
+        Column {
+            anchors.centerIn: parent
+            spacing: 2
+
+            Text {
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: label
+                color: root.muted
+                font.family: "JetBrainsMono Nerd Font"
+                font.pixelSize: 10
+            }
+
+            Text {
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: value
+                color: root.fg
+                font.family: "JetBrainsMono Nerd Font"
+                font.pixelSize: 13
+                font.bold: true
+            }
+        }
+    }
+
+    component HourCard: Item {
+        required property string hourText
+        required property string iconText
+        required property string tempText
+        required property string descText
+        required property color fg
+        required property color muted
+        required property color accent
+
+        Layout.minimumWidth: 82
+        Layout.preferredHeight: 104
+
+        ColumnLayout {
             anchors.fill: parent
-            cursorShape: Qt.PointingHandCursor
-            onClicked: {
-                root.activeMetric = metric
-                chart.requestPaint()
+            spacing: 7
+
+            Text {
+                Layout.fillWidth: true
+                text: hourText
+                color: muted
+                horizontalAlignment: Text.AlignHCenter
+                elide: Text.ElideRight
+                font.family: "JetBrainsMono Nerd Font"
+                font.pixelSize: 12
+                font.bold: true
+            }
+
+            Text {
+                Layout.fillWidth: true
+                text: iconText
+                color: accent
+                horizontalAlignment: Text.AlignHCenter
+                font.family: "JetBrainsMono Nerd Font"
+                font.pixelSize: 24
+            }
+
+            Text {
+                Layout.fillWidth: true
+                text: tempText
+                color: fg
+                horizontalAlignment: Text.AlignHCenter
+                font.family: "JetBrainsMono Nerd Font"
+                font.pixelSize: 15
+                font.bold: true
+            }
+
+            Text {
+                Layout.fillWidth: true
+                text: descText
+                color: muted
+                horizontalAlignment: Text.AlignHCenter
+                elide: Text.ElideRight
+                font.family: "JetBrainsMono Nerd Font"
+                font.pixelSize: 10
+            }
+        }
+    }
+
+    component DayRow: Item {
+        required property string dayText
+        required property string iconText
+        required property string lowText
+        required property string highText
+        required property int minTemp
+        required property int maxTemp
+        required property color fg
+        required property color muted
+        required property color accent
+        required property color cool
+
+        Layout.preferredHeight: 42
+
+        RowLayout {
+            anchors.fill: parent
+            spacing: 14
+
+            Text {
+                Layout.preferredWidth: 92
+                text: dayText
+                color: fg
+                elide: Text.ElideRight
+                font.family: "JetBrainsMono Nerd Font"
+                font.pixelSize: 15
+                font.bold: true
+            }
+
+            Text {
+                Layout.preferredWidth: 38
+                text: iconText
+                color: accent
+                horizontalAlignment: Text.AlignHCenter
+                font.family: "JetBrainsMono Nerd Font"
+                font.pixelSize: 21
+            }
+
+            Text {
+                Layout.preferredWidth: 48
+                text: lowText
+                color: muted
+                horizontalAlignment: Text.AlignRight
+                font.family: "JetBrainsMono Nerd Font"
+                font.pixelSize: 13
+                font.bold: true
+            }
+
+            Item {
+                Layout.fillWidth: true
+                Layout.preferredHeight: 12
+
+                Rectangle {
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: 3
+                    color: Qt.rgba(muted.r, muted.g, muted.b, 0.22)
+                    radius: 0
+                }
+
+                Rectangle {
+                    anchors.verticalCenter: parent.verticalCenter
+                    x: parent.width * 0.24
+                    width: Math.max(44, parent.width * Math.min(0.58, Math.max(0.22, (maxTemp - minTemp) / 18)))
+                    height: 4
+                    color: accent
+                    radius: 0
+                }
+
+                Rectangle {
+                    anchors.verticalCenter: parent.verticalCenter
+                    x: parent.width * 0.24
+                    width: 18
+                    height: 4
+                    color: cool
+                    radius: 0
+                }
+            }
+
+            Text {
+                Layout.preferredWidth: 48
+                text: highText
+                color: fg
+                horizontalAlignment: Text.AlignLeft
+                font.family: "JetBrainsMono Nerd Font"
+                font.pixelSize: 13
+                font.bold: true
             }
         }
     }
