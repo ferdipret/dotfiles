@@ -6,6 +6,65 @@ state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/theme-switcher"
 renderer="$config_dir/theme-switcher/render-theme"
 wallpaper_dir="${THEME_SWITCHER_WALLPAPER_DIR:-$HOME/Pictures/Wallpapers}"
 wallpaper_apply="$HOME/.local/bin/apply-wallpaper-theme"
+picker_theme='
+window {
+  width: 82%;
+  location: center;
+  anchor: center;
+  border: @border-width;
+  border-color: @border;
+  border-radius: @radius-none;
+  background-color: @bg;
+}
+
+mainbox {
+  spacing: 10px;
+  padding: 12px;
+}
+
+inputbar {
+  padding: 8px 10px;
+  background-color: @bg-alt;
+  border-radius: @radius-none;
+}
+
+message {
+  padding: 0 2px;
+  background-color: transparent;
+  text-color: @fg-muted;
+}
+
+listview {
+  lines: 1;
+  columns: 5;
+  fixed-height: true;
+  spacing: 8px;
+  scrollbar: false;
+}
+
+element {
+  orientation: vertical;
+  children: [ element-icon, element-text ];
+  spacing: 8px;
+  padding: 8px;
+  border-radius: @radius-none;
+}
+
+element selected {
+  background-color: @blue;
+  text-color: @bg;
+}
+
+element-icon {
+  size: 12em;
+  border-radius: @radius-none;
+}
+
+element-text {
+  horizontal-align: 0.5;
+  vertical-align: 0.5;
+}
+'
 
 theme_menu() {
   current="$(cat "$state_dir/current-name" 2>/dev/null || true)"
@@ -28,7 +87,8 @@ theme_menu() {
         -i \
         -show-icons \
         -p "Theme" \
-        -mesg "Current: ${current:-unknown}"
+        -mesg "Current: ${current:-unknown}" \
+        -theme-str "$picker_theme"
 }
 
 choice="${1:-}"
