@@ -273,7 +273,7 @@ PanelWindow {
                             hourText: index === 0 ? "Now" : modelData.time
                             iconText: modelData.icon
                             tempText: modelData.temp
-                            descText: modelData.description
+                            rainText: String(modelData.precipitation || 0) + "%"
                             fg: root.fg
                             muted: root.muted
                             accent: root.primary
@@ -311,7 +311,6 @@ PanelWindow {
                             fg: root.fg
                             muted: root.muted
                             accent: root.primary
-                            cool: root.cyan
                         }
                     }
                 }
@@ -413,7 +412,7 @@ PanelWindow {
         required property string hourText
         required property string iconText
         required property string tempText
-        required property string descText
+        required property string rainText
         required property color fg
         required property color muted
         required property color accent
@@ -457,12 +456,13 @@ PanelWindow {
 
             Text {
                 Layout.fillWidth: true
-                text: descText
+                text: "󰖗 " + rainText
                 color: muted
                 horizontalAlignment: Text.AlignHCenter
                 elide: Text.ElideRight
                 font.family: "JetBrainsMono Nerd Font"
-                font.pixelSize: 10
+                font.pixelSize: 11
+                font.bold: true
             }
         }
     }
@@ -477,7 +477,6 @@ PanelWindow {
         required property color fg
         required property color muted
         required property color accent
-        required property color cool
 
         Layout.preferredHeight: 42
 
@@ -533,15 +532,6 @@ PanelWindow {
                     width: Math.max(44, parent.width * Math.min(0.58, Math.max(0.22, (maxTemp - minTemp) / 18)))
                     height: 4
                     color: accent
-                    radius: 0
-                }
-
-                Rectangle {
-                    anchors.verticalCenter: parent.verticalCenter
-                    x: parent.width * 0.24
-                    width: 18
-                    height: 4
-                    color: cool
                     radius: 0
                 }
             }
