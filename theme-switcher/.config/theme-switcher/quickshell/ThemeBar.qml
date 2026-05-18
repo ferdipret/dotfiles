@@ -46,7 +46,7 @@ Variants {
                 right: true
             }
 
-            height: 40
+            implicitHeight: 40
             margins { top: 0; bottom: 0; left: 0; right: 0 }
             exclusiveZone: 40
 
@@ -173,10 +173,10 @@ Variants {
 
             RowLayout {
                 anchors.fill: parent
-                anchors.leftMargin: 6
-                anchors.rightMargin: 6
-                anchors.topMargin: 1
-                anchors.bottomMargin: 1
+                anchors.leftMargin: 12
+                anchors.rightMargin: 12
+                anchors.topMargin: 0
+                anchors.bottomMargin: 0
                 spacing: 5
 
                 BarBlock {
@@ -359,8 +359,8 @@ Variants {
                 property color blockBg: "#0c0d17"
                 property color blockFg: "#e2e1ef"
                 property color borderColor: "#908f9c"
-                Layout.preferredHeight: 38
-                height: 38
+                Layout.preferredHeight: 40
+                height: 40
                 color: Qt.rgba(blockBg.r, blockBg.g, blockBg.b, 0.88)
                 border.color: Qt.rgba(borderColor.r, borderColor.g, borderColor.b, 0.20)
                 border.width: 1
