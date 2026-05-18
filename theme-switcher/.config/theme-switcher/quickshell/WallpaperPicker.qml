@@ -18,6 +18,8 @@ PanelWindow {
     property color fgMuted: "#908f9c"
     property color border: "#908f9c"
     property color primary: "#bcc2ff"
+    property int selectedIndex: 0
+    readonly property int totalChoices: wallpapers.count + 1
 
     function fileUrl(path) {
         return "file://" + path.split("/").map(encodeURIComponent).join("/")
@@ -35,6 +37,45 @@ PanelWindow {
     function applyTokyoNight() {
         Quickshell.execDetached([homeDir + "/.local/bin/theme-switcher", "tokyonight-night"])
         Qt.quit()
+    }
+
+    function clampSelected() {
+        selectedIndex = Math.max(0, Math.min(selectedIndex, totalChoices - 1))
+    }
+
+    function moveSelection(delta) {
+        if (totalChoices <= 0) return
+        selectedIndex = (selectedIndex + delta + totalChoices) % totalChoices
+        ensureSelectedVisible()
+    }
+
+    function ensureSelectedVisible() {
+        Qt.callLater(function() {
+            if (!scroller || totalChoices <= 0) return
+
+            let item = selectedIndex === 0 ? tokyoCard : wallpaperRepeater.itemAt(selectedIndex - 1)
+            if (!item) return
+
+            let left = item.x
+            let right = item.x + item.width
+            let pad = 12
+
+            if (left < scroller.contentX) {
+                scroller.contentX = Math.max(0, left - pad)
+            } else if (right > scroller.contentX + scroller.width) {
+                scroller.contentX = Math.min(scroller.contentWidth - scroller.width, right - scroller.width + pad)
+            }
+        })
+    }
+
+    function applySelected() {
+        if (selectedIndex === 0) {
+            applyTokyoNight()
+            return
+        }
+
+        let item = wallpaperRepeater.itemAt(selectedIndex - 1)
+        if (item && item.fileName) applyWallpaper(wallpaperDir + "/" + item.fileName)
     }
 
     WlrLayershell.namespace: "theme-wallpaper-picker"
@@ -81,9 +122,19 @@ PanelWindow {
         }
     }
 
-    Component.onCompleted: themeReader.running = true
+    Component.onCompleted: {
+        forceActiveFocus()
+        themeReader.running = true
+    }
 
     Shortcut { sequence: "Escape"; onActivated: Qt.quit() }
+    Shortcut { sequence: "Left"; onActivated: root.moveSelection(-1) }
+    Shortcut { sequence: "Right"; onActivated: root.moveSelection(1) }
+    Shortcut { sequence: "Home"; onActivated: { root.selectedIndex = 0; root.ensureSelectedVisible() } }
+    Shortcut { sequence: "End"; onActivated: { root.selectedIndex = Math.max(0, root.totalChoices - 1); root.ensureSelectedVisible() } }
+    Shortcut { sequence: "Return"; onActivated: root.applySelected() }
+    Shortcut { sequence: "Enter"; onActivated: root.applySelected() }
+    Shortcut { sequence: "Space"; onActivated: root.applySelected() }
 
     Rectangle {
         anchors.fill: parent
@@ -104,6 +155,13 @@ PanelWindow {
         border.color: root.border
         border.width: 2
         radius: 0
+        focus: true
+
+        Keys.onLeftPressed: root.moveSelection(-1)
+        Keys.onRightPressed: root.moveSelection(1)
+        Keys.onReturnPressed: root.applySelected()
+        Keys.onEnterPressed: root.applySelected()
+        Keys.onSpacePressed: root.applySelected()
 
         MouseArea {
             anchors.fill: parent
@@ -157,6 +215,7 @@ PanelWindow {
                     spacing: 12
 
                     ThemeCard {
+                        id: tokyoCard
                         title: "Tokyo Night"
                         subtitle: "crafted"
                         bg: root.bgAlt
@@ -164,6 +223,9 @@ PanelWindow {
                         muted: root.fgMuted
                         accent: root.primary
                         selected: root.currentName === "Tokyo Night"
+                        focused: root.selectedIndex === 0
+                        choiceIndex: 0
+                        onSelectedChanged: if (selected) root.selectedIndex = 0
                         onClicked: root.applyTokyoNight()
 
                         Rectangle {
@@ -198,10 +260,12 @@ PanelWindow {
                     }
 
                     Repeater {
+                        id: wallpaperRepeater
                         model: wallpapers
 
                         ThemeCard {
                             required property string fileName
+                            required property int index
 
                             title: fileName.replace(/\.[^.]+$/, "")
                             subtitle: "wallpaper"
@@ -210,6 +274,9 @@ PanelWindow {
                             muted: root.fgMuted
                             accent: root.primary
                             selected: root.currentName === ("Wallpaper: " + fileName)
+                            focused: root.selectedIndex === index + 1
+                            choiceIndex: index + 1
+                            onSelectedChanged: if (selected) root.selectedIndex = index + 1
                             onClicked: root.applyWallpaper(root.wallpaperDir + "/" + fileName)
 
                             Image {
@@ -239,12 +306,14 @@ PanelWindow {
         property color muted: "#908f9c"
         property color accent: "#bcc2ff"
         property bool selected: false
+        property bool focused: false
+        property int choiceIndex: 0
 
         width: 260
         height: 318
-        color: mouse.containsMouse || selected ? Qt.lighter(bg, 1.18) : bg
-        border.color: selected ? accent : Qt.rgba(muted.r, muted.g, muted.b, 0.45)
-        border.width: selected ? 3 : 1
+        color: mouse.containsMouse || selected || focused ? Qt.lighter(bg, 1.18) : bg
+        border.color: focused || selected ? accent : Qt.rgba(muted.r, muted.g, muted.b, 0.45)
+        border.width: focused ? 3 : (selected ? 2 : 1)
         radius: 0
 
         Rectangle {
@@ -292,6 +361,7 @@ PanelWindow {
             anchors.fill: parent
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
+            onEntered: root.selectedIndex = card.choiceIndex
             onClicked: card.clicked()
         }
     }
