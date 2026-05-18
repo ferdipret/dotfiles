@@ -6,6 +6,7 @@ state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/theme-switcher"
 renderer="$config_dir/theme-switcher/render-theme"
 wallpaper_dir="${THEME_SWITCHER_WALLPAPER_DIR:-$HOME/Pictures/Wallpapers}"
 wallpaper_apply="$HOME/.local/bin/apply-wallpaper-theme"
+quickshell_picker="$config_dir/theme-switcher/quickshell/WallpaperPicker.qml"
 picker_theme='
 window {
   width: 82%;
@@ -94,6 +95,11 @@ theme_menu() {
 choice="${1:-}"
 
 if [ -z "$choice" ]; then
+  qs_bin="$(command -v quickshell || command -v qs || true)"
+  if [ -n "$qs_bin" ] && [ -f "$quickshell_picker" ]; then
+    exec "$qs_bin" -p "$quickshell_picker"
+  fi
+
   choice="$(theme_menu)"
 fi
 
