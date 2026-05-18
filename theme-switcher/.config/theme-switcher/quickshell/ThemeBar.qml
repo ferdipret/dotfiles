@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
+import Quickshell.Hyprland
 import Quickshell.Io
 import Quickshell.Wayland
 
@@ -28,7 +29,7 @@ Variants {
             property string weatherTemp: "--"
             property string weatherIcon: ""
             property string weatherDesc: "Weather"
-            property int activeWorkspace: 1
+            property int activeWorkspace: Hyprland.focusedWorkspace ? Hyprland.focusedWorkspace.id : 1
             property var occupiedWorkspaces: []
             property string mediaText: ""
             property string volumeText: "--"
@@ -45,7 +46,9 @@ Variants {
                 right: true
             }
 
-            implicitHeight: 58
+            height: 40
+            margins { top: 0; bottom: 0; left: 0; right: 0 }
+            exclusiveZone: 40
 
             function isLeftScreen() {
                 return !bar.screen || bar.screen.name === "DP-4" || bar.screen.x === 0
@@ -102,17 +105,12 @@ Variants {
             }
 
             Process {
-                id: hyprProc
-                command: ["bash", "-c", "hyprctl activeworkspace -j 2>/dev/null; printf '\\n---\\n'; hyprctl workspaces -j 2>/dev/null"]
+                id: workspacesProc
+                command: ["bash", "-c", "hyprctl workspaces -j 2>/dev/null"]
                 stdout: StdioCollector {
                     onStreamFinished: {
-                        let parts = this.text.split("\n---\n")
                         try {
-                            let active = JSON.parse(parts[0])
-                            bar.activeWorkspace = active.id || bar.activeWorkspace
-                        } catch (e) {}
-                        try {
-                            let spaces = JSON.parse(parts[1])
+                            let spaces = JSON.parse(this.text)
                             bar.occupiedWorkspaces = spaces.map((w) => w.id)
                         } catch (e) {}
                     }
@@ -143,8 +141,15 @@ Variants {
                 onTriggered: {
                     bar.timeText = Qt.formatDateTime(new Date(), "HH:mm:ss")
                     bar.dateText = Qt.formatDateTime(new Date(), "dddd, d MMMM")
-                    hyprProc.running = true
                 }
+            }
+
+            Timer {
+                interval: 2000
+                running: true
+                repeat: true
+                triggeredOnStart: true
+                onTriggered: workspacesProc.running = true
             }
 
             Timer {
@@ -168,10 +173,10 @@ Variants {
 
             RowLayout {
                 anchors.fill: parent
-                anchors.leftMargin: 10
-                anchors.rightMargin: 10
-                anchors.topMargin: 10
-                anchors.bottomMargin: 0
+                anchors.leftMargin: 6
+                anchors.rightMargin: 6
+                anchors.topMargin: 1
+                anchors.bottomMargin: 1
                 spacing: 5
 
                 BarBlock {
@@ -225,7 +230,7 @@ Variants {
                                 MouseArea {
                                     anchors.fill: parent
                                     cursorShape: Qt.PointingHandCursor
-                                    onClicked: Quickshell.execDetached(["hyprctl", "dispatch", "workspace", String(parent.ws)])
+                                    onClicked: Hyprland.dispatch("workspace " + parent.ws)
                                 }
                             }
                         }
