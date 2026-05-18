@@ -55,6 +55,7 @@ PY
 }
 
 load_palette
+display_name="${THEME_DISPLAY_NAME:-$THEME_NAME}"
 
 RADIUS_NONE="0px"
 RADIUS_SMALL="0px"
@@ -286,4 +287,4 @@ cat > "$config_dir/gtk-4.0/gtk.css" <<EOF
 EOF
 
 printf '%s\n' "$mode" > "$state_dir/current-mode"
-printf '%s\n' "$THEME_NAME" > "$state_dir/current-name"
+printf '%s\n' "$display_name" > "$state_dir/current-name"

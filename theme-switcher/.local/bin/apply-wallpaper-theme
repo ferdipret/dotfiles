@@ -2,6 +2,10 @@
 set -euo pipefail
 
 wallpaper="${1:-}"
+config_dir="${XDG_CONFIG_HOME:-$HOME/.config}"
+state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/theme-switcher"
+matugen_output="/tmp/qs_colors.json"
+matugen_config="$config_dir/matugen/config.toml"
 
 if [ -z "$wallpaper" ]; then
   notify-send "Wallpaper theme" "Pass a wallpaper path" 2>/dev/null || true
@@ -29,5 +33,20 @@ if ! command -v matugen >/dev/null 2>&1; then
   exit 0
 fi
 
-matugen image --mode dark --type scheme-vibrant --prefer saturation "$wallpaper"
-/home/ferdi/.local/bin/theme-switcher matugen
+mkdir -p "$state_dir"
+rm -f "$matugen_output"
+
+matugen_args=(image --mode dark --type scheme-vibrant --prefer saturation)
+if [ -f "$matugen_config" ]; then
+  matugen_args=(--config "$matugen_config" "${matugen_args[@]}")
+fi
+
+matugen "${matugen_args[@]}" "$wallpaper"
+
+if [ ! -s "$matugen_output" ]; then
+  notify-send "Wallpaper theme" "Wallpaper applied, but Matugen did not generate colors" 2>/dev/null || true
+  exit 1
+fi
+
+printf '%s\n' "$wallpaper" > "$state_dir/current-wallpaper"
+THEME_DISPLAY_NAME="Wallpaper: ${wallpaper##*/}" /home/ferdi/.local/bin/theme-switcher matugen
