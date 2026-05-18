@@ -7,13 +7,13 @@ fi
 # pnpm
 export PNPM_HOME="/home/ferdi/.local/share/pnpm"
 case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
+  *":$PNPM_HOME/bin:"*) ;;
+  *) export PATH="$PNPM_HOME/bin:$PATH" ;;
 esac
 # pnpm end
 
-# OpenClaw Completion
-source "/home/ferdi/.openclaw/completions/openclaw.zsh"
-
 # opencode
 export PATH=/home/ferdi/.opencode/bin:$PATH
+
+export EDITOR=nvim
+export VISUAL=nvim
