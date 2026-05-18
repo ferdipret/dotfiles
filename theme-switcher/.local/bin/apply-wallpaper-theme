@@ -36,7 +36,7 @@ fi
 mkdir -p "$state_dir"
 rm -f "$matugen_output"
 
-matugen_args=(image --mode dark --type scheme-vibrant --prefer saturation)
+matugen_args=(image --mode dark --type scheme-vibrant --source-color-index 0)
 if [ -f "$matugen_config" ]; then
   matugen_args=(--config "$matugen_config" "${matugen_args[@]}")
 fi
