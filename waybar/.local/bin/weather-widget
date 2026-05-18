@@ -1,0 +1,181 @@
+#!/usr/bin/env python3
+import json
+import os
+import subprocess
+import sys
+import time
+import urllib.parse
+import urllib.request
+from datetime import datetime
+from html import escape
+
+CACHE_DIR = os.path.join(os.environ.get("XDG_CACHE_HOME", os.path.expanduser("~/.cache")), "theme-switcher")
+CACHE_FILE = os.path.join(CACHE_DIR, "weather-widget.json")
+CACHE_TTL = 15 * 60
+THEME_FILE = os.path.join(os.environ.get("XDG_CONFIG_HOME", os.path.expanduser("~/.config")), "theme-switcher", "current.json")
+
+
+def fetch_json(url):
+    req = urllib.request.Request(url, headers={"User-Agent": "waybar-weather-widget"})
+    with urllib.request.urlopen(req, timeout=7) as response:
+        return json.load(response)
+
+
+def weather_icon(code, is_day=True):
+    if code == 0:
+        return "" if is_day else "", "Clear"
+    if code in (1, 2):
+        return "", "Partly cloudy"
+    if code == 3:
+        return "", "Overcast"
+    if code in (45, 48):
+        return "󰖑", "Fog"
+    if code in (51, 53, 55, 56, 57):
+        return "󰖗", "Drizzle"
+    if code in (61, 63, 65, 66, 67, 80, 81, 82):
+        return "󰖗", "Rain"
+    if code in (71, 73, 75, 77, 85, 86):
+        return "", "Snow"
+    if code in (95, 96, 99):
+        return "", "Storm"
+    return "", "Cloudy"
+
+
+def strip_plus(value):
+    text = str(value)
+    return text[1:] if text.startswith("+") else text
+
+
+def get_theme():
+    fallback = {"base": "#111318", "primary": "#adc6ff"}
+    try:
+        with open(THEME_FILE, "r", encoding="utf-8") as handle:
+            data = json.load(handle)
+        return {**fallback, **data}
+    except Exception:
+        return fallback
+
+
+def get_location():
+    wttr = fetch_json("https://wttr.in/?format=j1")
+    area = wttr.get("nearest_area", [{}])[0]
+    name = area.get("areaName", [{}])[0].get("value", "Current location")
+    country = area.get("country", [{}])[0].get("value", "")
+    lat = area.get("latitude")
+    lon = area.get("longitude")
+    return name, country, lat, lon
+
+
+def get_weather():
+    os.makedirs(CACHE_DIR, exist_ok=True)
+    if os.path.exists(CACHE_FILE) and time.time() - os.path.getmtime(CACHE_FILE) < CACHE_TTL:
+        with open(CACHE_FILE, "r", encoding="utf-8") as handle:
+            return json.load(handle)
+
+    name, country, lat, lon = get_location()
+    if not lat or not lon:
+        raise RuntimeError("Could not detect location")
+
+    params = {
+        "latitude": lat,
+        "longitude": lon,
+        "timezone": "auto",
+        "current": "temperature_2m,weather_code,is_day",
+        "hourly": "temperature_2m,precipitation_probability,weather_code",
+        "daily": "weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max",
+    }
+    url = "https://api.open-meteo.com/v1/forecast?" + urllib.parse.urlencode(params)
+    data = fetch_json(url)
+    payload = {"location": {"name": name, "country": country}, "forecast": data}
+    with open(CACHE_FILE, "w", encoding="utf-8") as handle:
+        json.dump(payload, handle)
+    return payload
+
+
+def fmt_temp(value):
+    return f"{round(float(value))}°C"
+
+
+def build_lines(payload):
+    theme = get_theme()
+    location = payload["location"]
+    data = payload["forecast"]
+    current = data["current"]
+    current_icon, current_desc = weather_icon(int(current["weather_code"]), bool(current.get("is_day", 1)))
+    current_temp = fmt_temp(current["temperature_2m"])
+
+    title = f"{location['name']}, {location.get('country', '')}".strip(", ")
+    message = f"{current_icon}  {current_temp}  {current_desc}"
+    lines = []
+
+    lines.append("Daily forecast")
+    daily = data["daily"]
+    for day, code, hi, lo, rain in zip(
+        daily["time"],
+        daily["weather_code"],
+        daily["temperature_2m_max"],
+        daily["temperature_2m_min"],
+        daily["precipitation_probability_max"],
+    ):
+        dt = datetime.fromisoformat(day)
+        icon, desc = weather_icon(int(code))
+        lines.append(f"{dt:%A, %d %b}   {icon}  {fmt_temp(lo)}-{fmt_temp(hi)}   {rain:>3}%   {desc}")
+
+    lines.append("")
+    lines.append("Today hourly")
+    today = datetime.now().date().isoformat()
+    current_hour = datetime.now().hour
+    hourly = data["hourly"]
+    for hour, temp, rain, code in zip(
+        hourly["time"],
+        hourly["temperature_2m"],
+        hourly["precipitation_probability"],
+        hourly["weather_code"],
+    ):
+        dt = datetime.fromisoformat(hour)
+        if dt.date().isoformat() != today:
+            continue
+        icon, desc = weather_icon(int(code), 6 <= dt.hour < 20)
+        row = f"{dt:%H:%M}   {icon}  {fmt_temp(temp):>4}   {rain:>3}%   {desc}"
+        if dt.hour == current_hour:
+            row = (
+                f"<span foreground='{escape(theme['base'])}' "
+                f"background='{escape(theme['primary'])}' "
+                f"weight='900'>{escape(row)}</span>"
+            )
+        lines.append(row)
+
+    return title, message, "\n".join(lines)
+
+
+def main():
+    try:
+        title, message, body = build_lines(get_weather())
+    except Exception as exc:
+        title = "Weather"
+        message = "Could not load forecast"
+        body = str(exc)
+
+    subprocess.run(
+        [
+            "rofi",
+            "-dmenu",
+            "-i",
+            "-font",
+            "JetBrainsMono Nerd Font 10",
+            "-p",
+            title,
+            "-mesg",
+            message,
+            "-markup-rows",
+            "-theme-str",
+            "* { font: \"JetBrainsMono Nerd Font 10\"; } window { width: 620px; } mainbox { children: [ message, listview ]; spacing: 6px; padding: 10px; } listview { lines: 36; spacing: 0px; fixed-height: true; } element { padding: 2px 8px; } message { padding: 5px 8px; }",
+        ],
+        input=body,
+        text=True,
+        check=False,
+    )
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,10 @@
+config-file = /home/ferdi/.config/ghostty/theme-current
+
+font-family = JetBrainsMono Nerd Font
+font-size = 11
+
+cursor-style = block
+mouse-scroll-multiplier = discrete:0.5,precision:1
+
+copy-on-select = clipboard
+confirm-close-surface = false

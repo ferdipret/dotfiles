@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+wallpaper="${1:-}"
+
+if [ -z "$wallpaper" ]; then
+  notify-send "Wallpaper theme" "Pass a wallpaper path" 2>/dev/null || true
+  exit 2
+fi
+
+if [ ! -f "$wallpaper" ]; then
+  notify-send "Wallpaper theme" "Not found: $wallpaper" 2>/dev/null || true
+  exit 2
+fi
+
+if command -v hyprctl >/dev/null 2>&1 && pgrep -x hyprpaper >/dev/null 2>&1; then
+  hyprctl hyprpaper preload "$wallpaper" >/dev/null 2>&1 || true
+  hyprctl monitors -j 2>/dev/null \
+    | python3 -c 'import json,sys; print("\n".join(m.get("name","") for m in json.load(sys.stdin)))' 2>/dev/null \
+    | while IFS= read -r monitor; do
+        [ -n "$monitor" ] || continue
+        hyprctl hyprpaper wallpaper "$monitor,$wallpaper" >/dev/null 2>&1 || true
+      done
+fi
+
+if ! command -v matugen >/dev/null 2>&1; then
+  notify-send "Wallpaper theme" "Wallpaper applied, but matugen is not installed" 2>/dev/null || true
+  /home/ferdi/.local/bin/theme-switcher matugen
+  exit 0
+fi
+
+matugen image --mode dark --type scheme-vibrant --prefer saturation "$wallpaper"
+/home/ferdi/.local/bin/theme-switcher matugen

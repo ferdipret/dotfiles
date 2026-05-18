@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+config_dir="${XDG_CONFIG_HOME:-$HOME/.config}"
+state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/theme-switcher"
+renderer="$config_dir/theme-switcher/render-theme"
+
+choice="${1:-}"
+
+if [ -z "$choice" ]; then
+  current="$(cat "$state_dir/current-name" 2>/dev/null || true)"
+  choice="$(printf 'Matugen wallpaper colors\nTokyo Night\n' | rofi -dmenu -i -p "Theme" -mesg "Current: ${current:-unknown}")"
+fi
+
+case "$choice" in
+  matugen|"Matugen wallpaper colors")
+    mode="matugen"
+    ;;
+  tokyonight-night|"Tokyo Night")
+    mode="tokyonight-night"
+    ;;
+  "")
+    exit 0
+    ;;
+  *)
+    notify-send "Theme switcher" "Unknown theme: $choice" 2>/dev/null || true
+    exit 2
+    ;;
+esac
+
+bash "$renderer" "$mode"
+
+hyprctl reload >/dev/null 2>&1 || true
+
+pkill -x waybar >/dev/null 2>&1 || true
+sleep 0.2
+hyprctl dispatch exec waybar >/dev/null 2>&1 || {
+  if [ -n "${WAYLAND_DISPLAY:-}" ]; then
+    waybar >/dev/null 2>&1 &
+  fi
+}
+
+makoctl reload >/dev/null 2>&1 || true
+
+if command -v gsettings >/dev/null 2>&1; then
+  gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' >/dev/null 2>&1 || true
+fi
+
+notify-send "Theme switcher" "Applied $(cat "$state_dir/current-name")" 2>/dev/null || true

@@ -1,0 +1,94 @@
+{
+  "layer": "top",
+  "position": "top",
+  "height": 48,
+  "margin-top": 10,
+  "margin-left": 10,
+  "margin-right": 10,
+  "spacing": 5,
+
+  "modules-left": [
+    "custom/launcher",
+    "hyprland/workspaces",
+    "mpris"
+  ],
+
+  "modules-center": [
+    "custom/time-date",
+    "custom/weather"
+  ],
+
+  "modules-right": [
+    "tray",
+    "pulseaudio",
+    "battery"
+  ],
+
+  "custom/launcher": {
+    "format": "",
+    "tooltip": false,
+    "on-click": "rofi -show drun"
+  },
+
+  "hyprland/workspaces": {
+    "format": "{id}",
+    "on-click": "activate",
+    "all-outputs": false,
+    "persistent-workspaces": {
+      "*": 5
+    }
+  },
+
+  "mpris": {
+    "format": "{player_icon}  {title}",
+    "format-paused": "󰏤  {title}",
+    "format-stopped": "",
+    "player-icons": {
+      "default": "󰎈",
+      "spotify": "",
+      "firefox": "󰈹"
+    },
+    "max-length": 42,
+    "on-click": "playerctl play-pause",
+    "on-click-right": "playerctl next"
+  },
+
+  "custom/time-date": {
+    "interval": 1,
+    "exec": "/home/ferdi/.local/bin/waybar-clock-weather time",
+    "return-type": "json",
+    "format": "{}",
+    "escape": false
+  },
+
+  "custom/weather": {
+    "interval": 60,
+    "exec": "/home/ferdi/.local/bin/waybar-clock-weather weather",
+    "return-type": "json",
+    "format": "{}",
+    "escape": false,
+    "on-click": "/home/ferdi/.local/bin/weather-widget"
+  },
+
+  "pulseaudio": {
+    "format": "󰕾  {volume}%",
+    "format-muted": "󰖁  muted",
+    "on-click": "pavucontrol"
+  },
+
+  "battery": {
+    "format": "{icon}  {capacity}%",
+    "format-charging": "󰂄  {capacity}%",
+    "format-plugged": "󰚥  {capacity}%",
+    "format-icons": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+    "states": {
+      "warning": 30,
+      "critical": 15
+    }
+  },
+
+  "tray": {
+    "icon-size": 16,
+    "spacing": 8
+  }
+}

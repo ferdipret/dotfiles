@@ -1,0 +1,6 @@
+[config]
+reload_apps = false
+
+[templates.theme_switcher]
+input_path = "~/.config/matugen/templates/theme-switcher.json"
+output_path = "/tmp/qs_colors.json"

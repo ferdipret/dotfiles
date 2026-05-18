@@ -1,0 +1,99 @@
+@import "themes/current.rasi"
+
+* {
+    font: @rofi-font;
+    background-color: transparent;
+    text-color: @fg;
+}
+
+window {
+    width: @rofi-width;
+    location: north;
+    anchor: north;
+    y-offset: @rofi-y-offset;
+    border: @border-width;
+    border-color: @border;
+    border-radius: @radius-none;
+    background-color: @bg;
+}
+
+mainbox {
+    children: [ inputbar, message, listview ];
+    spacing: @rofi-spacing;
+    padding: @rofi-padding;
+}
+
+inputbar {
+    spacing: 10px;
+    padding: @input-padding;
+    border: 0;
+    border-radius: @radius-none;
+    background-color: @bg-alt;
+}
+
+prompt {
+    text-color: @blue;
+    str: "";
+}
+
+entry {
+    placeholder: "Search apps, commands, windows...";
+    placeholder-color: @fg-muted;
+}
+
+message {
+    border: 0;
+    border-radius: @radius-none;
+    padding: @item-padding;
+    background-color: @bg-alt;
+}
+
+listview {
+    lines: 10;
+    columns: 1;
+    fixed-height: false;
+    spacing: 8px;
+    scrollbar: false;
+}
+
+element {
+    spacing: 12px;
+    padding: @item-padding;
+    border: 0;
+    border-radius: @radius-none;
+    background-color: transparent;
+}
+
+element selected {
+    background-color: @blue;
+    text-color: @bg;
+}
+
+element-text {
+    vertical-align: 0.5;
+}
+
+element-text selected {
+    text-color: @bg;
+}
+
+element-icon {
+    size: 1.1em;
+}
+
+mode-switcher {
+    spacing: 8px;
+}
+
+button {
+    padding: @item-padding;
+    border: 0;
+    border-radius: @radius-none;
+    background-color: @bg-alt;
+    text-color: @cyan;
+}
+
+button selected {
+    background-color: @purple;
+    text-color: @bg;
+}

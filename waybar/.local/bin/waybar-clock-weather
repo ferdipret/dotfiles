@@ -1,0 +1,92 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}/theme-switcher"
+cache_file="$cache_dir/weather"
+mkdir -p "$cache_dir"
+
+now="$(date +%s)"
+weather_desc="Cloudy"
+weather_temp="--"
+
+if [ -f "$cache_file" ]; then
+  IFS='|' read -r cached_at cached_desc cached_temp < "$cache_file" || true
+  if [ -n "${cached_at:-}" ] && [ "$((now - cached_at))" -lt 900 ]; then
+    weather_desc="${cached_desc:-$weather_desc}"
+    weather_temp="${cached_temp:-$weather_temp}"
+    weather_temp="${weather_temp#+}"
+  fi
+fi
+
+if [ "$weather_temp" = "--" ] && command -v curl >/dev/null 2>&1; then
+  fetched="$(curl -fsS --max-time 2 'https://wttr.in/?format=%C|%t' 2>/dev/null | tr -d '\n' || true)"
+  if [ -n "$fetched" ]; then
+    weather_desc="${fetched%%|*}"
+    weather_temp="${fetched#*|}"
+    weather_temp="${weather_temp#+}"
+    printf '%s|%s|%s\n' "$now" "$weather_desc" "$weather_temp" > "$cache_file"
+  fi
+fi
+
+time_text="$(date '+%H:%M:%S')"
+date_text="$(date '+%A, %d %B')"
+ampm_text="$(date '+%p')"
+mode="${1:-combined}"
+
+theme_env="${XDG_CONFIG_HOME:-$HOME/.config}/theme-switcher/current.env"
+primary="#cdd6f4"
+text="#cdd6f4"
+muted="#a6adc8"
+cyan="#89dceb"
+if [ -f "$theme_env" ]; then
+  # shellcheck disable=SC1090
+  source "$theme_env"
+  primary="${PRIMARY:-$primary}"
+  text="${TEXT:-$text}"
+  muted="${TEXT_MUTED:-$muted}"
+  cyan="${CYAN:-$cyan}"
+fi
+
+python3 - "$mode" "$time_text" "$date_text" "$ampm_text" "$weather_desc" "$weather_temp" "$primary" "$text" "$muted" "$cyan" <<'PY'
+import html
+import json
+import sys
+
+mode, time_text, date_text, ampm_text, weather_desc, weather_temp, primary, text, muted, cyan = sys.argv[1:11]
+desc = weather_desc.lower()
+if "thunder" in desc or "storm" in desc:
+    icon = ""
+elif "snow" in desc or "sleet" in desc:
+    icon = ""
+elif "rain" in desc or "drizzle" in desc or "shower" in desc:
+    icon = "󰖗"
+elif "mist" in desc or "fog" in desc or "haze" in desc:
+    icon = "󰖑"
+elif "clear" in desc or "sun" in desc:
+    icon = ""
+elif "cloud" in desc or "overcast" in desc:
+    icon = ""
+else:
+    icon = ""
+
+if mode == "time":
+    text = (
+        f"<span font_desc='JetBrainsMono Nerd Font 16' weight='900' foreground='{html.escape(primary)}'>{html.escape(time_text)}</span>"
+        f" <span font_desc='JetBrainsMono Nerd Font 11' weight='900' foreground='{html.escape(muted)}'>{html.escape(ampm_text)}</span>"
+        f"\n<span font_desc='JetBrainsMono Nerd Font 10' weight='800' foreground='{html.escape(muted)}'>{html.escape(date_text)}</span>"
+    )
+elif mode == "weather":
+    text = (
+        f"<span font_desc='Iosevka Nerd Font 18' weight='900' foreground='{html.escape(text)}'>{html.escape(icon)}</span>"
+        f"  <span font_desc='JetBrainsMono Nerd Font 16' weight='900' foreground='{html.escape(cyan)}'>{html.escape(weather_temp)}</span>"
+    )
+else:
+    text = (
+        f"<span font_desc='JetBrainsMono Nerd Font 16' weight='900' foreground='{html.escape(primary)}'>{html.escape(time_text)}</span>"
+        f" <span font_desc='JetBrainsMono Nerd Font 11' weight='900' foreground='{html.escape(muted)}'>{html.escape(ampm_text)}</span>"
+        f"      <span font_desc='Iosevka Nerd Font 18' weight='900' foreground='{html.escape(text)}'>{html.escape(icon)}</span>"
+        f"  <span font_desc='JetBrainsMono Nerd Font 16' weight='900' foreground='{html.escape(cyan)}'>{html.escape(weather_temp)}</span>"
+        f"\n<span font_desc='JetBrainsMono Nerd Font 10' weight='800' foreground='{html.escape(muted)}'>{html.escape(date_text)}</span>"
+    )
+print(json.dumps({"text": text, "tooltip": f"{date_text} · {weather_desc} {weather_temp}"}))
+PY
