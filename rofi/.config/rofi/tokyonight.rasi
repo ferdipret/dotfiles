@@ -24,7 +24,7 @@ mainbox {
 }
 
 inputbar {
-    spacing: 10px;
+    spacing: 0;
     padding: @input-padding;
     border: 0;
     border-radius: @radius-none;
@@ -33,7 +33,7 @@ inputbar {
 
 prompt {
     text-color: @blue;
-    str: "";
+    str: "";
 }
 
 entry {
@@ -52,12 +52,12 @@ listview {
     lines: 10;
     columns: 1;
     fixed-height: false;
-    spacing: 8px;
+    spacing: 2px;
     scrollbar: false;
 }
 
 element {
-    spacing: 12px;
+    spacing: 10px;
     padding: @item-padding;
     border: 0;
     border-radius: @radius-none;

@@ -1,7 +1,7 @@
 configuration {
     modi:                       "drun,filebrowser,window";
     show-icons:                 true;
-    display-drun:               "";
+    display-drun:               "";
     display-window:             "";
     display-filebrowser:        "";
     drun-display-format:        "{name}";
