@@ -1,0 +1,105 @@
+#!/usr/bin/env python3
+import json
+import os
+import subprocess
+import sys
+import urllib.parse
+import urllib.request
+
+CACHE_DIR = os.path.join(os.environ.get("XDG_CACHE_HOME", os.path.expanduser("~/.cache")), "theme-switcher")
+CONFIG_DIR = os.path.join(os.environ.get("XDG_CONFIG_HOME", os.path.expanduser("~/.config")), "theme-switcher")
+LOCATION_FILE = os.path.join(CONFIG_DIR, "weather-location.json")
+
+
+def fetch_json(url):
+    req = urllib.request.Request(url, headers={"User-Agent": "theme-shell-weather-location"})
+    with urllib.request.urlopen(req, timeout=7) as response:
+        return json.load(response)
+
+
+def rofi(args, input_text=""):
+    proc = subprocess.run(["rofi", "-dmenu", "-i", *args], input=input_text, text=True, capture_output=True, check=False)
+    return proc.stdout.strip() if proc.returncode == 0 else ""
+
+
+def search(query):
+    params = {
+        "name": query,
+        "count": 10,
+        "language": "en",
+        "format": "json",
+    }
+    data = fetch_json("https://geocoding-api.open-meteo.com/v1/search?" + urllib.parse.urlencode(params))
+    return data.get("results") or []
+
+
+def label(result):
+    parts = [result.get("name")]
+    admin = result.get("admin1")
+    country = result.get("country")
+    if admin and admin not in parts:
+        parts.append(admin)
+    if country:
+        parts.append(country)
+    return ", ".join(part for part in parts if part)
+
+
+def save(result):
+    os.makedirs(CONFIG_DIR, exist_ok=True)
+    os.makedirs(CACHE_DIR, exist_ok=True)
+    payload = {
+        "name": result.get("name", "Weather"),
+        "country": result.get("country", ""),
+        "latitude": result["latitude"],
+        "longitude": result["longitude"],
+        "timezone": result.get("timezone", "auto"),
+    }
+    with open(LOCATION_FILE, "w", encoding="utf-8") as handle:
+        json.dump(payload, handle, indent=2)
+    try:
+        os.remove(os.path.join(CACHE_DIR, "weather-widget.json"))
+    except FileNotFoundError:
+        pass
+    return payload
+
+
+def main():
+    query = " ".join(sys.argv[1:]).strip()
+    if not query:
+        query = rofi(["-p", "Weather area", "-mesg", "Type a city, town, or postcode"])
+    if not query:
+        return
+
+    results = search(query)
+    if not results:
+        subprocess.run(["notify-send", "Weather", f"No location found for {query}"], check=False)
+        return
+
+    if len(results) == 1 or len(sys.argv) > 1:
+        chosen = results[0]
+    else:
+        rows = "\n".join(label(result) for result in results)
+        selected = rofi(["-p", "Choose area"], rows)
+        chosen = next((result for result in results if label(result) == selected), None)
+        if not chosen:
+            return
+
+    saved = save(chosen)
+    subprocess.run(["notify-send", "Weather", f"Using {saved['name']}, {saved['country']}"], check=False)
+
+    qs = subprocess.run(["sh", "-c", "command -v quickshell || command -v qs"], text=True, capture_output=True, check=False).stdout.strip()
+    if qs:
+        subprocess.run(
+            [
+                "sh",
+                "-c",
+                "pgrep -f ThemeBar.qml | xargs -r kill; "
+                "hyprctl dispatch exec \"$HOME/.local/bin/theme-bar\" >/dev/null 2>&1 || "
+                "nohup \"$HOME/.local/bin/theme-bar\" >/dev/null 2>&1 &",
+            ],
+            check=False,
+        )
+
+
+if __name__ == "__main__":
+    main()

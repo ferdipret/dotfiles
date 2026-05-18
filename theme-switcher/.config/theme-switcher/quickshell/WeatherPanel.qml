@@ -26,6 +26,7 @@ PanelWindow {
     property string precipitation: "--"
     property string humidity: "--"
     property string wind: "--"
+    property string activeMetric: "temperature"
 
     WlrLayershell.namespace: "theme-weather-panel"
     WlrLayershell.layer: WlrLayer.Overlay
@@ -48,6 +49,18 @@ PanelWindow {
         return out
     }
 
+    function metricValue(point) {
+        if (activeMetric === "precipitation") return point.precipitation || 0
+        if (activeMetric === "wind") return point.wind || 0
+        return point.tempValue || 0
+    }
+
+    function metricLabel(point) {
+        if (activeMetric === "precipitation") return String(point.precipitation || 0) + "%"
+        if (activeMetric === "wind") return String(point.wind || 0) + " mph"
+        return point.temp || "--"
+    }
+
     function applyWeather(data) {
         if (data.error) {
             currentDesc = data.error
@@ -62,7 +75,7 @@ PanelWindow {
 
         if (data.current) {
             currentTemp = data.current.temp || "--"
-            currentIcon = data.current.icon || "☁"
+            currentIcon = data.current.icon || ""
             currentDesc = data.current.description || ""
             currentTime = data.current.time || ""
             precipitation = String(data.current.precipitation || 0) + " mm"
@@ -162,10 +175,19 @@ PanelWindow {
                     color: "#8ab4f8"
                     font.family: "JetBrainsMono Nerd Font"
                     font.pixelSize: 13
+
+                    MouseArea {
+                        anchors.fill: parent
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: {
+                            Quickshell.execDetached([root.homeDir + "/.local/bin/theme-weather-location"])
+                            Qt.quit()
+                        }
+                    }
                 }
 
                 Text {
-                    text: "⋮"
+                    text: ""
                     color: root.muted
                     font.pixelSize: 20
                 }
@@ -177,6 +199,7 @@ PanelWindow {
 
                 Text {
                     text: root.currentIcon
+                    font.family: "JetBrainsMono Nerd Font"
                     font.pixelSize: 48
                     color: root.fg
                 }
@@ -191,7 +214,7 @@ PanelWindow {
                         font.weight: Font.Light
                     }
                     Text {
-                        text: "°C | °F"
+                        text: "°C"
                         color: root.muted
                         font.family: "JetBrainsMono Nerd Font"
                         font.pixelSize: 13
@@ -249,14 +272,26 @@ PanelWindow {
             }
 
             Row {
-                spacing: 18
-                Text { text: "Temperature"; color: root.fg; font.family: "JetBrainsMono Nerd Font"; font.pixelSize: 14 }
-                Text { text: "Precipitation"; color: root.fg; font.family: "JetBrainsMono Nerd Font"; font.pixelSize: 14 }
-                Text { text: "Wind"; color: root.fg; font.family: "JetBrainsMono Nerd Font"; font.pixelSize: 14 }
+                spacing: 8
+
+                MetricTab {
+                    label: "Temperature"
+                    metric: "temperature"
+                }
+
+                MetricTab {
+                    label: "Precipitation"
+                    metric: "precipitation"
+                }
+
+                MetricTab {
+                    label: "Wind"
+                    metric: "wind"
+                }
             }
 
             Rectangle {
-                width: 79
+                width: root.activeMetric === "precipitation" ? 92 : (root.activeMetric === "wind" ? 38 : 79)
                 height: 3
                 color: root.primary
             }
@@ -274,8 +309,9 @@ PanelWindow {
                         let points = root.sampleHours()
                         if (!points || points.length < 2) return
 
-                        let minTemp = Math.min.apply(Math, points.map((p) => p.tempValue))
-                        let maxTemp = Math.max.apply(Math, points.map((p) => p.tempValue))
+                        let values = points.map((p) => root.metricValue(p))
+                        let minTemp = Math.min.apply(Math, values)
+                        let maxTemp = Math.max.apply(Math, values)
                         let spread = Math.max(1, maxTemp - minTemp)
                         let left = 10
                         let right = width - 10
@@ -286,7 +322,7 @@ PanelWindow {
                         ctx.beginPath()
                         for (let i = 0; i < points.length; i++) {
                             let x = left + (right - left) * (i / (points.length - 1))
-                            let y = bottom - ((points[i].tempValue - minTemp) / spread) * (bottom - top)
+                            let y = bottom - ((root.metricValue(points[i]) - minTemp) / spread) * (bottom - top)
                             if (i === 0) ctx.moveTo(x, y)
                             else ctx.lineTo(x, y)
                         }
@@ -300,7 +336,7 @@ PanelWindow {
                         ctx.beginPath()
                         for (let j = 0; j < points.length; j++) {
                             let lx = left + (right - left) * (j / (points.length - 1))
-                            let ly = bottom - ((points[j].tempValue - minTemp) / spread) * (bottom - top)
+                            let ly = bottom - ((root.metricValue(points[j]) - minTemp) / spread) * (bottom - top)
                             if (j === 0) ctx.moveTo(lx, ly)
                             else ctx.lineTo(lx, ly)
                         }
@@ -325,7 +361,7 @@ PanelWindow {
 
                             Text {
                                 anchors.horizontalCenter: parent.horizontalCenter
-                                text: modelData.temp
+                                text: root.metricLabel(modelData)
                                 color: root.fg
                                 font.family: "JetBrainsMono Nerd Font"
                                 font.pixelSize: 11
@@ -372,6 +408,7 @@ PanelWindow {
                             Text {
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 text: modelData.icon
+                                font.family: "JetBrainsMono Nerd Font"
                                 font.pixelSize: 28
                             }
                             Text {
@@ -404,6 +441,12 @@ PanelWindow {
                     font.family: "JetBrainsMono Nerd Font"
                     font.pixelSize: 11
                     font.underline: true
+
+                    MouseArea {
+                        anchors.fill: parent
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: Quickshell.execDetached(["xdg-open", "https://open-meteo.com/"])
+                    }
                 }
                 Text {
                     text: " • "
@@ -422,6 +465,26 @@ PanelWindow {
                         onClicked: Qt.quit()
                     }
                 }
+            }
+        }
+    }
+
+    component MetricTab: Text {
+        required property string label
+        required property string metric
+
+        text: label
+        color: root.activeMetric === metric ? root.fg : root.muted
+        font.family: "JetBrainsMono Nerd Font"
+        font.pixelSize: 14
+        font.bold: root.activeMetric === metric
+
+        MouseArea {
+            anchors.fill: parent
+            cursorShape: Qt.PointingHandCursor
+            onClicked: {
+                root.activeMetric = metric
+                chart.requestPaint()
             }
         }
     }

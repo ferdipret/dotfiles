@@ -26,7 +26,7 @@ Variants {
             property string timeText: Qt.formatDateTime(new Date(), "HH:mm:ss")
             property string dateText: Qt.formatDateTime(new Date(), "dddd, d MMMM")
             property string weatherTemp: "--"
-            property string weatherIcon: "☁"
+            property string weatherIcon: ""
             property string weatherDesc: "Weather"
             property int activeWorkspace: 1
             property var occupiedWorkspaces: []
@@ -93,7 +93,7 @@ Variants {
                             let w = JSON.parse(this.text)
                             if (w.current) {
                                 bar.weatherTemp = w.current.temp || "--"
-                                bar.weatherIcon = w.current.icon || "☁"
+                                bar.weatherIcon = w.current.icon || ""
                                 bar.weatherDesc = w.current.description || "Weather"
                             }
                         } catch (e) {}
@@ -294,6 +294,7 @@ Variants {
                         Text {
                             text: bar.weatherIcon
                             color: bar.fg
+                            font.family: "JetBrainsMono Nerd Font"
                             font.pixelSize: 18
                         }
 
