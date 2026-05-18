@@ -79,7 +79,7 @@ theme_menu() {
         | while IFS= read -r -d '' wallpaper; do
             name="${wallpaper##*/}"
             name="${name%.*}"
-            printf '%s\0display\x1f%s\0icon\x1f%s\n' "$wallpaper" "$name" "$wallpaper"
+            printf '%s\0display\x1f%s\0icon\x1fthumbnail://%s\n' "$wallpaper" "$name" "$wallpaper"
           done
     fi
   } | rofi \
