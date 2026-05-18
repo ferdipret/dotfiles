@@ -47,7 +47,7 @@ Variants {
             }
 
             implicitHeight: 40
-            margins { top: 0; bottom: 0; left: 0; right: 0 }
+            margins { top: 12; bottom: 0; left: 12; right: 12 }
             exclusiveZone: 40
 
             function isLeftScreen() {
@@ -173,8 +173,8 @@ Variants {
 
             RowLayout {
                 anchors.fill: parent
-                anchors.leftMargin: 12
-                anchors.rightMargin: 12
+                anchors.leftMargin: 0
+                anchors.rightMargin: 0
                 anchors.topMargin: 0
                 anchors.bottomMargin: 0
                 spacing: 5
