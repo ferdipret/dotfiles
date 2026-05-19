@@ -419,6 +419,136 @@ EOF
     --in-content-link-color: var(--theme-primary) !important;
   }
 }
+
+@-moz-document domain("github.com") {
+  html[data-color-mode],
+  html[data-color-mode] body {
+    --bgColor-default: var(--theme-bg) !important;
+    --bgColor-muted: var(--theme-bg-alt) !important;
+    --bgColor-inset: var(--theme-bg) !important;
+    --bgColor-emphasis: var(--theme-primary) !important;
+    --fgColor-default: var(--theme-fg) !important;
+    --fgColor-muted: var(--theme-fg-muted) !important;
+    --fgColor-accent: var(--theme-primary) !important;
+    --fgColor-success: var(--theme-green) !important;
+    --fgColor-danger: var(--theme-red) !important;
+    --borderColor-default: color-mix(in srgb, var(--theme-border) 58%, transparent) !important;
+    --borderColor-muted: color-mix(in srgb, var(--theme-border) 34%, transparent) !important;
+    --button-default-bgColor-rest: var(--theme-bg-alt) !important;
+    --button-default-bgColor-hover: var(--theme-surface-hover) !important;
+    --button-primary-bgColor-rest: var(--theme-primary) !important;
+    --button-primary-fgColor-rest: var(--theme-bg) !important;
+    background: var(--theme-bg) !important;
+    color: var(--theme-fg) !important;
+  }
+
+  .application-main,
+  .AppHeader,
+  .Header,
+  .pagehead,
+  .Box,
+  .Box-header,
+  .Box-body,
+  .TimelineItem-body,
+  .markdown-body,
+  .discussion-timeline-actions,
+  .js-snippet-clipboard-copy-unpositioned,
+  .file,
+  .blob-wrapper,
+  .react-directory-row,
+  .feed-item-content {
+    background-color: var(--theme-bg) !important;
+    color: var(--theme-fg) !important;
+    border-color: color-mix(in srgb, var(--theme-border) 42%, transparent) !important;
+  }
+
+  .AppHeader,
+  .Header,
+  .Box-header,
+  .UnderlineNav,
+  .repository-content .Box-header,
+  .js-notice,
+  .flash,
+  .commit-tease,
+  .react-directory-filename-column,
+  .color-bg-subtle,
+  .color-bg-muted,
+  .bgColor-muted {
+    background-color: var(--theme-bg-alt) !important;
+  }
+
+  input,
+  textarea,
+  select,
+  .form-control,
+  .FormControl-input,
+  .AppHeader-search,
+  .header-search-input,
+  .QueryBuilder,
+  .SelectMenu-modal,
+  .Overlay,
+  .Popover-message,
+  .dropdown-menu,
+  details-menu,
+  action-menu {
+    background-color: var(--theme-bg-alt) !important;
+    color: var(--theme-fg) !important;
+    border-color: color-mix(in srgb, var(--theme-border) 52%, transparent) !important;
+    border-radius: var(--theme-radius) !important;
+    box-shadow: none !important;
+  }
+
+  input:focus,
+  textarea:focus,
+  .form-control:focus,
+  .FormControl-input:focus {
+    border-color: var(--theme-primary) !important;
+    box-shadow: 0 0 0 1px var(--theme-primary) !important;
+  }
+
+  .btn,
+  .Button,
+  .Label,
+  .IssueLabel,
+  .Counter,
+  .ActionListItem {
+    border-radius: var(--theme-radius) !important;
+  }
+
+  .btn-primary,
+  .Button--primary {
+    background-color: var(--theme-primary) !important;
+    color: var(--theme-bg) !important;
+    border-color: var(--theme-primary) !important;
+  }
+
+  a,
+  .Link--primary:hover,
+  .markdown-body a,
+  .AppHeader-context-item-label {
+    color: var(--theme-primary) !important;
+  }
+
+  .blob-code,
+  .blob-num,
+  .react-code-text,
+  pre,
+  code,
+  .highlight {
+    background-color: var(--theme-bg) !important;
+    color: var(--theme-fg) !important;
+  }
+
+  .blob-code-addition,
+  .blob-num-addition {
+    background-color: color-mix(in srgb, var(--theme-green) 18%, var(--theme-bg)) !important;
+  }
+
+  .blob-code-deletion,
+  .blob-num-deletion {
+    background-color: color-mix(in srgb, var(--theme-red) 18%, var(--theme-bg)) !important;
+  }
+}
 EOF
 
     append_once "$chrome_dir/userChrome.css" '@import url("theme-switcher.css");'
@@ -438,6 +568,131 @@ EOF
     }
   ' "$profiles_ini" | sort -u)
 done
+
+mkdir -p "$config_dir/discord"
+cat > "$config_dir/discord/theme-switcher.css" <<EOF
+/**
+ * Discord adapter generated from ~/.config/theme-switcher/current.*.
+ * Stock Discord does not load custom CSS by itself; import this from
+ * Vesktop/Vencord/BetterDiscord/OpenAsar once one of those is installed.
+ */
+:root,
+.theme-dark,
+.theme-light {
+  --theme-bg: $BASE;
+  --theme-bg-alt: $BASE_ALT;
+  --theme-surface: $SURFACE;
+  --theme-surface-hover: $SURFACE_HOVER;
+  --theme-fg: $TEXT;
+  --theme-fg-muted: $TEXT_MUTED;
+  --theme-border: $BORDER;
+  --theme-primary: $PRIMARY;
+  --theme-secondary: $SECONDARY;
+  --theme-cyan: $CYAN;
+  --theme-green: $GREEN;
+  --theme-yellow: $YELLOW;
+  --theme-red: $RED;
+  --theme-radius: $RADIUS_NONE;
+
+  --background-primary: var(--theme-bg);
+  --background-secondary: var(--theme-bg-alt);
+  --background-secondary-alt: var(--theme-bg-alt);
+  --background-tertiary: var(--theme-bg);
+  --background-floating: var(--theme-bg-alt);
+  --background-accent: var(--theme-surface-hover);
+  --background-modifier-hover: color-mix(in srgb, var(--theme-primary) 14%, transparent);
+  --background-modifier-active: color-mix(in srgb, var(--theme-primary) 22%, transparent);
+  --background-modifier-selected: color-mix(in srgb, var(--theme-primary) 18%, transparent);
+  --background-mentioned: color-mix(in srgb, var(--theme-yellow) 12%, transparent);
+  --background-mentioned-hover: color-mix(in srgb, var(--theme-yellow) 18%, transparent);
+  --channeltextarea-background: var(--theme-bg-alt);
+  --modal-background: var(--theme-bg);
+  --modal-footer-background: var(--theme-bg-alt);
+  --input-background: var(--theme-bg-alt);
+  --text-normal: var(--theme-fg);
+  --text-muted: var(--theme-fg-muted);
+  --text-link: var(--theme-primary);
+  --interactive-normal: var(--theme-fg-muted);
+  --interactive-hover: var(--theme-fg);
+  --interactive-active: var(--theme-fg);
+  --interactive-muted: color-mix(in srgb, var(--theme-fg-muted) 52%, transparent);
+  --header-primary: var(--theme-fg);
+  --header-secondary: var(--theme-fg-muted);
+  --brand-experiment: var(--theme-primary);
+  --brand-experiment-560: var(--theme-primary);
+  --status-positive: var(--theme-green);
+  --status-warning: var(--theme-yellow);
+  --status-danger: var(--theme-red);
+}
+
+body,
+#app-mount,
+.app_a3002d,
+.appMount_ea7e65,
+.bg__960e4,
+.container__2637a,
+.sidebar_c48ade,
+.chat_f75fb0,
+.chatContent_f75fb0,
+.container_c48ade,
+.container__9293f,
+.members_c8ffbb,
+.panels_c48ade,
+.privateChannels__35e86,
+.scroller__99e7c,
+.content__99f8c {
+  background: var(--theme-bg) !important;
+  color: var(--theme-fg) !important;
+}
+
+.container__9293f,
+.themed__9293f,
+.searchBar__35e86,
+.channelTextArea_f75fb0,
+.scrollableContainer__74017,
+.form_f75fb0,
+.members_c8ffbb,
+.member_c8ffbb,
+.message__5126c,
+.markup__75297 code,
+.embedFull__623de,
+.menu_c1e9c4,
+.layer__960e4,
+.root__49fc1,
+.footer__49fc1 {
+  background-color: var(--theme-bg-alt) !important;
+  color: var(--theme-fg) !important;
+  border-color: color-mix(in srgb, var(--theme-border) 42%, transparent) !important;
+  border-radius: var(--theme-radius) !important;
+}
+
+.mentioned__5126c,
+.message__5126c:hover,
+.interactive_bf202d:hover,
+.wrapper__2ea32:hover,
+.selected_bf202d,
+.modeSelected__2ea32 .link__2ea32 {
+  background-color: color-mix(in srgb, var(--theme-primary) 15%, transparent) !important;
+}
+
+.newMessagesBar__0f481,
+.barBase__0f481,
+.unreadPill__908e2,
+.lookFilled__201d5.colorBrand__201d5,
+.button__201d5 {
+  background-color: var(--theme-primary) !important;
+  color: var(--theme-bg) !important;
+}
+
+a,
+.anchor_edefb8,
+.timestamp_c19a55,
+.username_c19a55,
+.name__2ea32,
+.title_f75fb0 {
+  color: var(--theme-primary) !important;
+}
+EOF
 
 codex_state="$HOME/.codex/.codex-global-state.json"
 if [ -f "$codex_state" ] && command -v python3 >/dev/null 2>&1; then
