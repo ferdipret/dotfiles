@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="../current.css">
+    <link rel="stylesheet" href="./dashboard.css">
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero" aria-label="Search">
+        <div>
+          <p class="eyebrow" id="dateLabel">Ready</p>
+          <h1 id="timeLabel">00:00</h1>
+        </div>
+
+        <form id="searchForm" class="search" autocomplete="off">
+          <label class="sr-only" for="searchInput">Search or enter address</label>
+          <input id="searchInput" name="q" type="text" spellcheck="false" placeholder="Search or enter address" autofocus>
+          <button type="submit">Go</button>
+        </form>
+      </section>
+
+      <section class="grid" aria-label="Dashboard links">
+        <article class="panel wide">
+          <header>
+            <h2>Daily</h2>
+            <span>work loop</span>
+          </header>
+          <div class="links">
+            <a href="https://github.com">GitHub</a>
+            <a href="https://chatgpt.com">ChatGPT</a>
+            <a href="https://mail.proton.me">Proton Mail</a>
+            <a href="https://calendar.google.com">Calendar</a>
+          </div>
+        </article>
+
+        <article class="panel">
+          <header>
+            <h2>Code</h2>
+            <span>common stops</span>
+          </header>
+          <div class="links compact">
+            <a href="https://github.com/pulls">Pull requests</a>
+            <a href="https://github.com/issues">Issues</a>
+            <a href="https://developer.mozilla.org">MDN</a>
+            <a href="https://wiki.archlinux.org">Arch Wiki</a>
+          </div>
+        </article>
+
+        <article class="panel">
+          <header>
+            <h2>Media</h2>
+            <span>quick reach</span>
+          </header>
+          <div class="links compact">
+            <a href="https://youtube.com">YouTube</a>
+            <a href="https://open.spotify.com">Spotify</a>
+            <a href="https://letterboxd.com">Letterboxd</a>
+            <a href="https://www.imdb.com">IMDb</a>
+          </div>
+        </article>
+
+        <article class="panel wide">
+          <header>
+            <h2>Shortcuts</h2>
+            <span>search bangs</span>
+          </header>
+          <div class="hints">
+            <kbd>g</kbd><span>GitHub</span>
+            <kbd>gh</kbd><span>GitHub code search</span>
+            <kbd>yt</kbd><span>YouTube</span>
+            <kbd>w</kbd><span>Wikipedia</span>
+            <kbd>aw</kbd><span>Arch Wiki</span>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <script src="./dashboard.js"></script>
+  </body>
+</html>

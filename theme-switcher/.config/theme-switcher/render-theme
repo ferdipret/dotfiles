@@ -555,6 +555,8 @@ EOF
     append_once "$chrome_dir/userContent.css" '@import url("theme-switcher-content.css");'
     append_once "$profile_dir/user.js" 'user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);'
     append_once "$profile_dir/user.js" 'user_pref("svg.context-properties.content.enabled", true);'
+    append_once "$profile_dir/user.js" "user_pref(\"browser.startup.homepage\", \"file://$theme_dir/firefox-dashboard/index.html\");"
+    append_once "$profile_dir/user.js" 'user_pref("browser.startup.page", 1);'
   done < <(awk -F= '
     $1 == "Path" { path=$2 }
     $1 == "IsRelative" { relative=$2 }
