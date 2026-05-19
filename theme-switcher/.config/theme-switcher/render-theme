@@ -425,7 +425,7 @@ EOF
   html[data-color-mode] body {
     --bgColor-default: var(--theme-bg) !important;
     --bgColor-muted: var(--theme-bg-alt) !important;
-    --bgColor-inset: var(--theme-bg) !important;
+    --bgColor-inset: var(--theme-surface) !important;
     --bgColor-emphasis: var(--theme-primary) !important;
     --fgColor-default: var(--theme-fg) !important;
     --fgColor-muted: var(--theme-fg-muted) !important;
@@ -434,10 +434,30 @@ EOF
     --fgColor-danger: var(--theme-red) !important;
     --borderColor-default: color-mix(in srgb, var(--theme-border) 58%, transparent) !important;
     --borderColor-muted: color-mix(in srgb, var(--theme-border) 34%, transparent) !important;
+    --control-bgColor-rest: var(--theme-bg-alt) !important;
+    --control-bgColor-hover: var(--theme-surface-hover) !important;
+    --control-bgColor-active: var(--theme-surface-hover) !important;
+    --control-bgColor-selected: var(--theme-surface-hover) !important;
+    --control-fgColor-rest: var(--theme-fg) !important;
+    --control-borderColor-rest: color-mix(in srgb, var(--theme-border) 58%, transparent) !important;
+    --control-borderColor-emphasis: var(--theme-primary) !important;
+    --control-transparent-bgColor-hover: color-mix(in srgb, var(--theme-primary) 14%, transparent) !important;
+    --control-transparent-bgColor-active: color-mix(in srgb, var(--theme-primary) 20%, transparent) !important;
+    --overlay-bgColor: var(--theme-bg-alt) !important;
+    --input-bgColor-rest: var(--theme-bg-alt) !important;
+    --input-borderColor-rest: color-mix(in srgb, var(--theme-border) 58%, transparent) !important;
     --button-default-bgColor-rest: var(--theme-bg-alt) !important;
     --button-default-bgColor-hover: var(--theme-surface-hover) !important;
+    --button-default-bgColor-active: var(--theme-surface-hover) !important;
+    --button-default-fgColor-rest: var(--theme-fg) !important;
+    --button-default-borderColor-rest: color-mix(in srgb, var(--theme-border) 58%, transparent) !important;
     --button-primary-bgColor-rest: var(--theme-primary) !important;
+    --button-primary-bgColor-hover: color-mix(in srgb, var(--theme-primary) 84%, var(--theme-fg)) !important;
     --button-primary-fgColor-rest: var(--theme-bg) !important;
+    --button-primary-borderColor-rest: var(--theme-primary) !important;
+    --button-danger-fgColor-rest: var(--theme-red) !important;
+    --button-danger-bgColor-rest: var(--theme-bg-alt) !important;
+    --button-danger-borderColor-rest: color-mix(in srgb, var(--theme-red) 44%, transparent) !important;
     background: var(--theme-bg) !important;
     color: var(--theme-fg) !important;
   }
@@ -453,8 +473,6 @@ EOF
   .markdown-body,
   .discussion-timeline-actions,
   .js-snippet-clipboard-copy-unpositioned,
-  .file,
-  .blob-wrapper,
   .react-directory-row,
   .feed-item-content {
     background-color: var(--theme-bg) !important;
@@ -470,10 +488,12 @@ EOF
   .js-notice,
   .flash,
   .commit-tease,
-  .react-directory-filename-column,
   .color-bg-subtle,
   .color-bg-muted,
-  .bgColor-muted {
+  .bgColor-muted,
+  .file,
+  .blob-wrapper,
+  .react-directory-row:hover {
     background-color: var(--theme-bg-alt) !important;
   }
 
@@ -490,7 +510,17 @@ EOF
   .Popover-message,
   .dropdown-menu,
   details-menu,
-  action-menu {
+  action-menu,
+  button:not(.btn-primary):not(.Button--primary),
+  [role="button"]:not(.btn-primary):not(.Button--primary),
+  [class*="Button"]:not(.btn-primary):not(.Button--primary),
+  [class*="TextInput"],
+  [class*="SelectPanel"],
+  [class*="Overlay"],
+  [class*="Autocomplete"],
+  [class*="ActionList"],
+  [data-component="button"],
+  [data-component="input"] {
     background-color: var(--theme-bg-alt) !important;
     color: var(--theme-fg) !important;
     border-color: color-mix(in srgb, var(--theme-border) 52%, transparent) !important;
@@ -508,6 +538,8 @@ EOF
 
   .btn,
   .Button,
+  [class*="Button"],
+  [data-component="button"],
   .Label,
   .IssueLabel,
   .Counter,
@@ -516,7 +548,8 @@ EOF
   }
 
   .btn-primary,
-  .Button--primary {
+  .Button--primary,
+  [class*="Button--primary"] {
     background-color: var(--theme-primary) !important;
     color: var(--theme-bg) !important;
     border-color: var(--theme-primary) !important;
@@ -529,14 +562,40 @@ EOF
     color: var(--theme-primary) !important;
   }
 
+  .markdown-body pre,
+  pre,
+  .highlight,
+  .blob-wrapper,
+  .file,
+  .react-code-view,
+  .react-code-lines,
+  .react-code-text {
+    background-color: var(--theme-bg-alt) !important;
+    color: var(--theme-fg) !important;
+  }
+
   .blob-code,
   .blob-num,
-  .react-code-text,
-  pre,
-  code,
-  .highlight {
-    background-color: var(--theme-bg) !important;
+  .react-code-text {
+    background-color: var(--theme-bg-alt) !important;
     color: var(--theme-fg) !important;
+  }
+
+  .markdown-body code:not(pre code),
+  code:not(pre code) {
+    background-color: var(--theme-surface) !important;
+    color: var(--theme-fg) !important;
+    border: 1px solid color-mix(in srgb, var(--theme-border) 28%, transparent) !important;
+    border-radius: var(--theme-radius) !important;
+  }
+
+  .react-directory-filename-column,
+  .react-directory-commit-message,
+  .react-directory-commit-age,
+  .react-directory-row td,
+  .Box-row {
+    background-color: transparent !important;
+    border-color: color-mix(in srgb, var(--theme-border) 34%, transparent) !important;
   }
 
   .blob-code-addition,
