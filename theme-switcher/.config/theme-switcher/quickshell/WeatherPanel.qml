@@ -58,6 +58,26 @@ PanelWindow {
         return out
     }
 
+    function displayDays() {
+        return daily ? daily.slice(0, 5) : []
+    }
+
+    function dailyScaleMin() {
+        let days = displayDays()
+        if (days.length === 0) return 0
+        let value = days[0].tempMin
+        for (let i = 1; i < days.length; i++) value = Math.min(value, days[i].tempMin)
+        return value
+    }
+
+    function dailyScaleMax() {
+        let days = displayDays()
+        if (days.length === 0) return 1
+        let value = days[0].tempMax
+        for (let i = 1; i < days.length; i++) value = Math.max(value, days[i].tempMax)
+        return value
+    }
+
     function tempNumber(temp) {
         return String(temp || "--").replace("°", "")
     }
@@ -295,7 +315,7 @@ PanelWindow {
                     spacing: 10
 
                     Repeater {
-                        model: root.daily.slice(0, 5)
+                        model: root.displayDays()
 
                         DayRow {
                             required property var modelData
@@ -308,6 +328,8 @@ PanelWindow {
                             highText: modelData.high
                             minTemp: modelData.tempMin
                             maxTemp: modelData.tempMax
+                            scaleMin: root.dailyScaleMin()
+                            scaleMax: root.dailyScaleMax()
                             fg: root.fg
                             muted: root.muted
                             accent: root.primary
@@ -474,11 +496,25 @@ PanelWindow {
         required property string highText
         required property int minTemp
         required property int maxTemp
+        required property int scaleMin
+        required property int scaleMax
         required property color fg
         required property color muted
         required property color accent
 
         Layout.preferredHeight: 42
+
+        function rangeStart(trackWidth) {
+            let span = Math.max(1, scaleMax - scaleMin)
+            return trackWidth * Math.max(0, Math.min(1, (minTemp - scaleMin) / span))
+        }
+
+        function rangeWidth(trackWidth) {
+            let span = Math.max(1, scaleMax - scaleMin)
+            let start = Math.max(0, Math.min(1, (minTemp - scaleMin) / span))
+            let end = Math.max(0, Math.min(1, (maxTemp - scaleMin) / span))
+            return Math.max(4, trackWidth * Math.max(0, end - start))
+        }
 
         RowLayout {
             anchors.fill: parent
@@ -528,8 +564,8 @@ PanelWindow {
 
                 Rectangle {
                     anchors.verticalCenter: parent.verticalCenter
-                    x: parent.width * 0.24
-                    width: Math.max(44, parent.width * Math.min(0.58, Math.max(0.22, (maxTemp - minTemp) / 18)))
+                    x: rangeStart(parent.width)
+                    width: rangeWidth(parent.width)
                     height: 4
                     color: accent
                     radius: 0
