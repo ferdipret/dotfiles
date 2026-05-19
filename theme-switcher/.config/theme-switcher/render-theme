@@ -9,6 +9,13 @@ theme_dir="$config_dir/theme-switcher"
 mkdir -p "$state_dir" "$config_dir/hypr/themes" "$config_dir/waybar/themes" "$config_dir/rofi/themes"
 mkdir -p "$config_dir/ghostty" "$config_dir/mako" "$config_dir/gtk-3.0" "$config_dir/gtk-4.0"
 
+append_once() {
+  local file="$1"
+  local line="$2"
+  touch "$file"
+  grep -Fqx "$line" "$file" || printf '%s\n' "$line" >> "$file"
+}
+
 load_palette() {
   case "$mode" in
     tokyonight-night)
@@ -231,6 +238,206 @@ palette = 13=$SECONDARY
 palette = 14=$CYAN
 palette = 15=$TEXT
 EOF
+
+for firefox_root in "$config_dir/mozilla/firefox" "$HOME/.mozilla/firefox"; do
+  profiles_ini="$firefox_root/profiles.ini"
+  [ -f "$profiles_ini" ] || continue
+
+  while IFS= read -r profile_path; do
+    [ -n "$profile_path" ] || continue
+    case "$profile_path" in
+      /*) profile_dir="$profile_path" ;;
+      *) profile_dir="$firefox_root/$profile_path" ;;
+    esac
+    [ -d "$profile_dir" ] || continue
+
+    chrome_dir="$profile_dir/chrome"
+    mkdir -p "$chrome_dir"
+
+    cat > "$chrome_dir/theme-switcher.css" <<EOF
+/* Firefox adapter generated from ~/.config/theme-switcher/current.* */
+:root {
+  --theme-bg: $BASE;
+  --theme-bg-alt: $BASE_ALT;
+  --theme-surface: $SURFACE;
+  --theme-surface-hover: $SURFACE_HOVER;
+  --theme-fg: $TEXT;
+  --theme-fg-muted: $TEXT_MUTED;
+  --theme-border: $BORDER;
+  --theme-primary: $PRIMARY;
+  --theme-secondary: $SECONDARY;
+  --theme-cyan: $CYAN;
+  --theme-green: $GREEN;
+  --theme-yellow: $YELLOW;
+  --theme-red: $RED;
+  --theme-radius: $RADIUS_NONE;
+}
+
+#navigator-toolbox,
+#TabsToolbar,
+#nav-bar,
+#PersonalToolbar,
+#titlebar,
+browser,
+panel,
+menupopup {
+  --toolbar-bgcolor: var(--theme-bg) !important;
+  --toolbar-color: var(--theme-fg) !important;
+  --toolbar-field-background-color: var(--theme-bg-alt) !important;
+  --toolbar-field-color: var(--theme-fg) !important;
+  --toolbar-field-border-color: var(--theme-border) !important;
+  --lwt-accent-color: var(--theme-bg) !important;
+  --lwt-text-color: var(--theme-fg) !important;
+  --lwt-selected-tab-background-color: var(--theme-bg-alt) !important;
+  background-color: var(--theme-bg) !important;
+  color: var(--theme-fg) !important;
+}
+
+#urlbar-background,
+#searchbar,
+.tab-background,
+toolbarbutton,
+.toolbarbutton-1,
+menupopup,
+panel,
+richlistbox,
+tree {
+  border-radius: var(--theme-radius) !important;
+}
+
+#urlbar-background,
+#searchbar {
+  background-color: var(--theme-bg-alt) !important;
+  border-color: color-mix(in srgb, var(--theme-border) 58%, transparent) !important;
+}
+
+#urlbar[focused] > #urlbar-background,
+#searchbar:focus-within {
+  border-color: var(--theme-primary) !important;
+  box-shadow: none !important;
+}
+
+.tabbrowser-tab[selected] .tab-background {
+  background-color: var(--theme-bg-alt) !important;
+  border: 1px solid color-mix(in srgb, var(--theme-primary) 54%, transparent) !important;
+}
+
+.tabbrowser-tab:not([selected]) .tab-background {
+  background-color: transparent !important;
+}
+
+#sidebar-box,
+#sidebar-header,
+findbar {
+  background-color: var(--theme-bg) !important;
+  color: var(--theme-fg) !important;
+  border-color: color-mix(in srgb, var(--theme-border) 45%, transparent) !important;
+}
+
+panelview,
+panelmultiview,
+.panel-subview-body,
+menupopup {
+  background-color: var(--theme-bg-alt) !important;
+  color: var(--theme-fg) !important;
+}
+
+menuitem:hover,
+menu:hover,
+toolbarbutton:hover,
+.toolbarbutton-1:hover {
+  background-color: color-mix(in srgb, var(--theme-primary) 18%, transparent) !important;
+}
+EOF
+
+    cat > "$chrome_dir/theme-switcher-content.css" <<EOF
+/* Firefox content adapter generated from ~/.config/theme-switcher/current.* */
+:root {
+  --theme-bg: $BASE;
+  --theme-bg-alt: $BASE_ALT;
+  --theme-surface: $SURFACE;
+  --theme-surface-hover: $SURFACE_HOVER;
+  --theme-fg: $TEXT;
+  --theme-fg-muted: $TEXT_MUTED;
+  --theme-border: $BORDER;
+  --theme-primary: $PRIMARY;
+  --theme-secondary: $SECONDARY;
+  --theme-cyan: $CYAN;
+  --theme-green: $GREEN;
+  --theme-yellow: $YELLOW;
+  --theme-red: $RED;
+  --theme-radius: $RADIUS_NONE;
+}
+
+@-moz-document url("about:home"), url("about:newtab"), url("about:privatebrowsing") {
+  body,
+  html,
+  .activity-stream,
+  .outer-wrapper,
+  main {
+    background: var(--theme-bg) !important;
+    color: var(--theme-fg) !important;
+  }
+
+  .search-wrapper input,
+  .search-handoff-button,
+  .top-site-outer .tile,
+  .card-outer,
+  .ds-card,
+  .section-top-bar {
+    background-color: var(--theme-bg-alt) !important;
+    color: var(--theme-fg) !important;
+    border-color: color-mix(in srgb, var(--theme-border) 50%, transparent) !important;
+    border-radius: var(--theme-radius) !important;
+    box-shadow: none !important;
+  }
+
+  .search-wrapper input:focus,
+  .search-handoff-button:focus {
+    border-color: var(--theme-primary) !important;
+    box-shadow: none !important;
+  }
+
+  a,
+  .icon,
+  .wordmark {
+    color: var(--theme-primary) !important;
+    fill: var(--theme-primary) !important;
+  }
+}
+
+@-moz-document url-prefix("about:") {
+  :root,
+  body {
+    --in-content-page-background: var(--theme-bg) !important;
+    --in-content-box-background: var(--theme-bg-alt) !important;
+    --in-content-text-color: var(--theme-fg) !important;
+    --in-content-deemphasized-text: var(--theme-fg-muted) !important;
+    --in-content-primary-button-background: var(--theme-primary) !important;
+    --in-content-primary-button-text-color: var(--theme-bg) !important;
+    --in-content-border-color: var(--theme-border) !important;
+    --in-content-link-color: var(--theme-primary) !important;
+  }
+}
+EOF
+
+    append_once "$chrome_dir/userChrome.css" '@import url("theme-switcher.css");'
+    append_once "$chrome_dir/userContent.css" '@import url("theme-switcher-content.css");'
+    append_once "$profile_dir/user.js" 'user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);'
+    append_once "$profile_dir/user.js" 'user_pref("svg.context-properties.content.enabled", true);'
+  done < <(awk -F= '
+    $1 == "Path" { path=$2 }
+    $1 == "IsRelative" { relative=$2 }
+    /^\[/ {
+      if (path != "") print path
+      path=""
+      relative=""
+    }
+    END {
+      if (path != "") print path
+    }
+  ' "$profiles_ini" | sort -u)
+done
 
 codex_state="$HOME/.codex/.codex-global-state.json"
 if [ -f "$codex_state" ] && command -v python3 >/dev/null 2>&1; then
