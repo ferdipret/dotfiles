@@ -182,7 +182,7 @@ Variants {
                 spacing: 5
 
                 BarBlock {
-                    width: 44
+                    Layout.preferredWidth: 44
                     blockBg: bar.bg
                     blockFg: bar.green
                     borderColor: bar.muted
@@ -202,7 +202,7 @@ Variants {
                 }
 
                 BarBlock {
-                    width: 208
+                    Layout.preferredWidth: 208
                     blockBg: bar.bg
                     blockFg: bar.fg
                     borderColor: bar.muted
@@ -268,7 +268,7 @@ Variants {
                 Item { Layout.fillWidth: true }
 
                 BarBlock {
-                    width: 276
+                    Layout.preferredWidth: 276
                     blockBg: bar.bg
                     blockFg: bar.fg
                     borderColor: bar.muted
@@ -322,7 +322,8 @@ Variants {
                 }
 
                 BarBlock {
-                    width: trayRow.implicitWidth + 20
+                    Layout.preferredWidth: trayRow.implicitWidth + 20
+                    Layout.minimumWidth: trayRow.implicitWidth + 20
                     visible: SystemTray.items.values.length > 0
                     blockBg: bar.bg
                     blockFg: bar.fg
@@ -367,7 +368,7 @@ Variants {
                 }
 
                 BarBlock {
-                    width: 92
+                    Layout.preferredWidth: 92
                     blockBg: bar.bg
                     blockFg: bar.cyan
                     borderColor: bar.muted
@@ -386,7 +387,7 @@ Variants {
                 }
 
                 BarBlock {
-                    width: 88
+                    Layout.preferredWidth: 88
                     visible: bar.batteryText.length > 0
                     blockBg: bar.bg
                     blockFg: bar.green
