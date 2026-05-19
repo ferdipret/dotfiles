@@ -1,0 +1,78 @@
+#!/usr/bin/env python3
+import json
+import os
+import struct
+import sys
+import time
+from pathlib import Path
+from urllib.parse import urlparse
+
+
+def state_dir() -> Path:
+    base = os.environ.get("XDG_STATE_HOME")
+    if base:
+        return Path(base) / "theme-switcher"
+    return Path.home() / ".local/state/theme-switcher"
+
+
+def read_message():
+    raw_len = sys.stdin.buffer.read(4)
+    if len(raw_len) == 0:
+        return None
+    if len(raw_len) != 4:
+        raise EOFError("short native-message header")
+
+    msg_len = struct.unpack("@I", raw_len)[0]
+    if msg_len <= 0 or msg_len > 1024 * 1024:
+        raise ValueError("invalid native-message length")
+
+    raw = sys.stdin.buffer.read(msg_len)
+    if len(raw) != msg_len:
+        raise EOFError("short native-message body")
+    return json.loads(raw.decode("utf-8"))
+
+
+def clean_domain(url: str) -> str:
+    try:
+        host = (urlparse(url).hostname or "").lower()
+    except Exception:
+        return ""
+    if host.startswith("www."):
+        host = host[4:]
+    for domain in ("youtube.com", "youtu.be", "chatgpt.com", "chat.openai.com", "github.com"):
+        if host == domain or host.endswith(f".{domain}"):
+            return domain
+    return host
+
+
+def main() -> int:
+    out_dir = state_dir()
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_file = out_dir / "firefox-active-tab.json"
+
+    while True:
+        message = read_message()
+        if message is None:
+            return 0
+
+        url = str(message.get("url") or "")
+        payload = {
+            "timestamp": time.time(),
+            "url": url,
+            "domain": clean_domain(url),
+            "title": str(message.get("title") or ""),
+            "windowId": message.get("windowId"),
+            "tabId": message.get("tabId"),
+        }
+
+        tmp = out_file.with_suffix(".json.tmp")
+        tmp.write_text(json.dumps(payload, separators=(",", ":")), encoding="utf-8")
+        tmp.replace(out_file)
+
+
+if __name__ == "__main__":
+    try:
+        raise SystemExit(main())
+    except Exception as exc:
+        print(f"theme-firefox-tab-host: {exc}", file=sys.stderr)
+        raise SystemExit(1)
