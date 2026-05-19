@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/theme-switcher"
+wallpaper_file="$state_dir/current-wallpaper"
+
+if [ ! -s "$wallpaper_file" ]; then
+  exit 0
+fi
+
+wallpaper="$(cat "$wallpaper_file")"
+if [ ! -f "$wallpaper" ]; then
+  exit 0
+fi
+
+if ! command -v hyprctl >/dev/null 2>&1 || ! pgrep -x hyprpaper >/dev/null 2>&1; then
+  exit 0
+fi
+
+hyprctl hyprpaper preload "$wallpaper" >/dev/null 2>&1 || true
+hyprctl monitors -j 2>/dev/null \
+  | python3 -c 'import json,sys; print("\n".join(m.get("name","") for m in json.load(sys.stdin)))' 2>/dev/null \
+  | while IFS= read -r monitor; do
+      [ -n "$monitor" ] || continue
+      hyprctl hyprpaper wallpaper "$monitor,$wallpaper" >/dev/null 2>&1 || true
+    done

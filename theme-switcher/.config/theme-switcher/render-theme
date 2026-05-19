@@ -232,6 +232,48 @@ palette = 14=$CYAN
 palette = 15=$TEXT
 EOF
 
+codex_state="$HOME/.codex/.codex-global-state.json"
+if [ -f "$codex_state" ] && command -v python3 >/dev/null 2>&1; then
+  CODEX_STATE="$codex_state" \
+  CODEX_SURFACE="$BASE" \
+  CODEX_INK="$TEXT" \
+  CODEX_ACCENT="$PRIMARY" \
+  CODEX_DIFF_ADDED="$GREEN" \
+  CODEX_DIFF_REMOVED="$RED" \
+  CODEX_SKILL="$SECONDARY" \
+  CODEX_CODE_FONT="$FONT_UI" \
+  python3 - <<'PY'
+import json
+import os
+from pathlib import Path
+
+state_path = Path(os.environ["CODEX_STATE"])
+original = state_path.read_text(encoding="utf-8")
+data = json.loads(original)
+theme = dict(data.get("appearanceDarkChromeTheme") or {})
+fonts = dict(theme.get("fonts") or {})
+semantics = dict(theme.get("semanticColors") or {})
+
+fonts["code"] = os.environ["CODEX_CODE_FONT"]
+semantics.update({
+    "diffAdded": os.environ["CODEX_DIFF_ADDED"],
+    "diffRemoved": os.environ["CODEX_DIFF_REMOVED"],
+    "skill": os.environ["CODEX_SKILL"],
+})
+theme.update({
+    "accent": os.environ["CODEX_ACCENT"],
+    "fonts": fonts,
+    "ink": os.environ["CODEX_INK"],
+    "semanticColors": semantics,
+    "surface": os.environ["CODEX_SURFACE"],
+})
+
+data["appearanceDarkChromeTheme"] = theme
+state_path.with_suffix(state_path.suffix + ".bak-theme-switcher").write_text(original, encoding="utf-8")
+state_path.write_text(json.dumps(data, separators=(",", ":")), encoding="utf-8")
+PY
+fi
+
 cat "$config_dir/mako/config.base" > "$config_dir/mako/config"
 cat >> "$config_dir/mako/config" <<EOF
 

@@ -13,4 +13,4 @@ fi
 pkill -x waybar >/dev/null 2>&1 || true
 pgrep -f "$bar_qml" | xargs -r kill >/dev/null 2>&1 || true
 
-exec "$qs_bin" -p "$bar_qml"
+exec "$qs_bin" -d -p "$bar_qml"

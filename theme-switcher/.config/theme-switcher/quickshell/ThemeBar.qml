@@ -3,7 +3,9 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Io
+import Quickshell.Services.SystemTray
 import Quickshell.Wayland
+import Quickshell.Widgets
 
 Variants {
     model: Quickshell.screens
@@ -316,6 +318,51 @@ Variants {
                         anchors.fill: parent
                         cursorShape: Qt.PointingHandCursor
                         onClicked: Quickshell.execDetached([bar.homeDir + "/.local/bin/theme-weather-panel"])
+                    }
+                }
+
+                BarBlock {
+                    width: trayRow.implicitWidth + 20
+                    visible: SystemTray.items.values.length > 0
+                    blockBg: bar.bg
+                    blockFg: bar.fg
+                    borderColor: bar.muted
+
+                    Row {
+                        id: trayRow
+                        anchors.centerIn: parent
+                        spacing: 8
+
+                        Repeater {
+                            model: SystemTray.items
+
+                            Item {
+                                required property var modelData
+                                width: 18
+                                height: 18
+
+                                IconImage {
+                                    anchors.fill: parent
+                                    source: parent.modelData.icon
+                                    implicitSize: 18
+                                }
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
+                                    cursorShape: Qt.PointingHandCursor
+                                    onClicked: (mouse) => {
+                                        if (mouse.button === Qt.LeftButton) {
+                                            parent.modelData.activate()
+                                        } else if (mouse.button === Qt.MiddleButton) {
+                                            parent.modelData.secondaryActivate()
+                                        } else {
+                                            parent.modelData.display(bar, parent.x, parent.y + parent.height)
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
 
