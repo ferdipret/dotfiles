@@ -15,6 +15,9 @@ alias pme="pnpm exec"
 alias review='$HOME/.config/zsh/scripts/review.zsh'
 alias cleanup='$HOME/.config/zsh/scripts/cleanup.zsh'
 
+# Notes aliases
+alias daily='$HOME/Documents/notes/.scripts/generate_daily_note.py'
+
 # Source core alias files
 for alias_file in "$ZSH_CONFIG_DIR/aliases/"*.zsh; do
 	[[ -f $alias_file ]] && source "$alias_file"
