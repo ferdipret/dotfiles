@@ -2,20 +2,67 @@
 set -euo pipefail
 
 lock_cmd='pidof hyprlock || hyprlock --immediate-render'
+log_file="${XDG_RUNTIME_DIR:-/tmp}/theme-idle.log"
 
-if command -v swayidle >/dev/null 2>&1; then
-  exec swayidle -w \
-    timeout 180 "$lock_cmd" \
-    timeout 240 'hyprctl dispatch dpms off' \
-      resume 'hyprctl dispatch dpms on' \
-    before-sleep "$lock_cmd" \
-    after-resume 'hyprctl dispatch dpms on'
-fi
+status() {
+  if pgrep -x swayidle >/dev/null 2>&1; then
+    pgrep -af swayidle
+    return 0
+  fi
 
-cat >&2 <<'EOF'
+  echo "theme-idle is not running."
+  return 1
+}
+
+stop() {
+  pkill -x swayidle >/dev/null 2>&1 || true
+}
+
+run() {
+  if command -v swayidle >/dev/null 2>&1; then
+    exec swayidle -w \
+      timeout 180 "$lock_cmd" \
+      timeout 240 'hyprctl dispatch dpms off' \
+        resume 'hyprctl dispatch dpms on' \
+      before-sleep "$lock_cmd" \
+      after-resume 'hyprctl dispatch dpms on'
+  fi
+
+  cat >&2 <<'EOF'
 theme-idle needs swayidle.
 Install it with:
   sudo pacman -S --needed swayidle
 EOF
 
-exit 127
+  exit 127
+}
+
+case "${1:-run}" in
+  run)
+    run
+    ;;
+  start)
+    if pgrep -x swayidle >/dev/null 2>&1; then
+      status
+      exit 0
+    fi
+    setsid "$0" run >"$log_file" 2>&1 < /dev/null &
+    ;;
+  restart)
+    stop
+    setsid "$0" run >"$log_file" 2>&1 < /dev/null &
+    ;;
+  stop)
+    stop
+    ;;
+  status)
+    status
+    ;;
+  log)
+    cat "$log_file"
+    ;;
+  *)
+    echo "usage: theme-idle [run|start|restart|stop|status|log]" >&2
+    exit 2
+    ;;
+esac
