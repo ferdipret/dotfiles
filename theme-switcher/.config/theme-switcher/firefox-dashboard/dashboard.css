@@ -178,9 +178,13 @@ h1 {
   outline: none;
 }
 
+.shortcuts-panel {
+  grid-column: span 1;
+}
+
 .hints {
   display: grid;
-  grid-template-columns: auto 1fr auto 1fr;
+  grid-template-columns: auto 1fr;
   gap: 10px 12px;
   align-items: center;
 }
@@ -204,7 +208,7 @@ kbd {
 }
 
 .panel.contributions-panel {
-  grid-column: span 4;
+  grid-column: span 3;
   min-height: 272px;
 }
 
