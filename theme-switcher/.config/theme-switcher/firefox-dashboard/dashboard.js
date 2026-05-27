@@ -128,7 +128,15 @@ function renderContributions(data) {
 async function loadContributions() {
   if (!githubGrid) return;
 
+  if (window.__themeGithubContributions) {
+    renderContributions(window.__themeGithubContributions);
+    return;
+  }
+
   try {
+    if (window.location.protocol === "file:") {
+      throw new Error("file pages cannot fetch contribution cache");
+    }
     const response = await fetch("../github-contributions.json", { cache: "no-store" });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     renderContributions(await response.json());

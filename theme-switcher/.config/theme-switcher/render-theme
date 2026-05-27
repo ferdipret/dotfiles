@@ -458,6 +458,9 @@ EOF
       if [ -f "$theme_dir/github-contributions.json" ]; then
         cp "$theme_dir/github-contributions.json" "$extension_build/github-contributions.json"
       fi
+      if [ -f "$theme_dir/github-contributions.js" ]; then
+        cp "$theme_dir/github-contributions.js" "$extension_build/github-contributions.js"
+      fi
       cat > "$extension_build/background.js" <<'EOF'
 const HOST_NAME = "theme_activity_firefox";
 

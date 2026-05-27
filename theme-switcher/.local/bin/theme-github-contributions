@@ -79,11 +79,20 @@ def main() -> int:
     out_dir = config_dir()
     out_dir.mkdir(parents=True, exist_ok=True)
     out_file = out_dir / "github-contributions.json"
+    script_file = out_dir / "github-contributions.js"
 
     payload = parse(fetch())
     tmp = out_file.with_suffix(".json.tmp")
     tmp.write_text(json.dumps(payload, separators=(",", ":")), encoding="utf-8")
     tmp.replace(out_file)
+    script_tmp = script_file.with_suffix(".js.tmp")
+    script_tmp.write_text(
+        "window.__themeGithubContributions="
+        + json.dumps(payload, separators=(",", ":"))
+        + ";\n",
+        encoding="utf-8",
+    )
+    script_tmp.replace(script_file)
     print(f"Wrote {len(payload['days'])} contribution days to {out_file}")
     return 0
 
