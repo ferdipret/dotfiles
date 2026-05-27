@@ -1,0 +1,8 @@
+[Unit]
+Description=Refresh theme dashboard GitHub contributions
+Documentation=https://github.com/ferdipret/dotfiles
+
+[Service]
+Type=oneshot
+ExecStart=-/home/ferdi/.local/bin/theme-github-contributions
+ExecStartPost=/usr/bin/bash -lc '/home/ferdi/.config/theme-switcher/render-theme "$(cat /home/ferdi/.local/state/theme-switcher/current-mode 2>/dev/null || printf tokyonight-night)"'

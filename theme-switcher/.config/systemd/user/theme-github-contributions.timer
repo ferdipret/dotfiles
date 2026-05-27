@@ -1,0 +1,11 @@
+[Unit]
+Description=Hourly theme dashboard GitHub contribution refresh
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=1h
+Persistent=true
+Unit=theme-github-contributions.service
+
+[Install]
+WantedBy=timers.target
