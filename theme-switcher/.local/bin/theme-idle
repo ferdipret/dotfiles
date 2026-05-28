@@ -20,9 +20,9 @@ stop() {
 
 run() {
   if command -v swayidle >/dev/null 2>&1; then
-    exec swayidle -w \
-      timeout 180 "$lock_cmd" \
-      timeout 240 'hyprctl dispatch dpms off' \
+    exec swayidle \
+      timeout 600 "$lock_cmd" \
+      timeout 1200 'hyprctl dispatch dpms off' \
         resume 'hyprctl dispatch dpms on' \
       before-sleep "$lock_cmd" \
       after-resume 'hyprctl dispatch dpms on'
